@@ -99,6 +99,7 @@ async function loadStations() {                      // ← NEW
       };
     }
   });
+  drawStations();
 }                                                    // ← NEW
 
 /* --------------------------------------------------
@@ -114,8 +115,9 @@ async function loadWalksheds() {
   populateStationDropdown();
 }
 
-// Load both files at startup
-Promise.all([loadStations(), loadWalksheds()]);      // ← CHANGED (was just loadWalksheds())
+// Load both files at startup but individually so stations always loads
+loadStations();
+loadWalksheds();
 
 /* --------------------------------------------------
    UI HELPERS
@@ -150,6 +152,23 @@ function colorForMinutes(min) {
   if (min === 5)  return "#22c55e";
   if (min === 10) return "#f59e0b";
   return "#ef4444";                                  // fallback for any other value
+}
+
+/* --------------------------------------------------
+   DRAW ALL STATIONS ON LOAD
+-------------------------------------------------- */
+
+function drawStations() {
+  Object.values(stationLookup).forEach(station => {
+    L.circleMarker([station.lat, station.lon], {
+      radius: 5,
+      color: "#3b82f6",
+      fillColor: "#3b82f6",
+      fillOpacity: 1
+    })
+    .bindTooltip(station.name, { permanent: false })
+    .addTo(map);
+  });
 }
 
 function drawWalksheds() {
