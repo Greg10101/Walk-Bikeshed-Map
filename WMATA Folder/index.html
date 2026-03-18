@@ -2,222 +2,201 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Walkable WMATA — Demo</title>
+  <title>Walkable WMATA (Precomputed Walksheds)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
   <style>
-    :root {
-      --bg: #0f172a;        /* slate-900 */
-      --panel: #7f8081;     /* gray-900 */
-      --text: #e5e7eb;      /* gray-200 */
-      --accent: #22c55e;    /* green-500 */
-      --iso5: #22c55e;
-      --iso10: #f59e0b;
-      --iso15: #ef4444;
-    }
-    * { box-sizing: border-box; }
     html, body { height: 100%; margin: 0; }
-    #app { display: grid; grid-template-columns: 320px 1fr; height: 100%; background: var(--bg); color: var(--text); }
-    #sidebar { padding: 16px 16px 0 16px; background: var(--panel); border-right: 1px solid #1f2937; overflow-y: auto; }
-    #map { height: 100%; width: 100%; }
-    .brand { font-weight: 700; letter-spacing: .2px; margin: 0 0 8px 0; }
-    .muted { color: #9ca3af; font-size: 0.9rem; }
-    label { font-size: .9rem; display:block; margin-bottom: 6px; }
-    select, input, button {
-      width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #374151; background: #0b1220; color: var(--text);
+    #app { display: grid; grid-template-columns: 320px 1fr; height: 100%; }
+    #sidebar {
+      padding: 16px;
+      background: #111827;
+      color: #e5e7eb;
+      border-right: 1px solid #1f2937;
     }
-    button { background: var(--accent); color: #052e16; border: none; font-weight: 700; cursor:pointer; }
-    button:disabled { opacity:.6; cursor:not-allowed; }
-    .row { margin: 12px 0; }
-    .legend { display:flex; gap:8px; align-items:center; margin-top: 8px; flex-wrap: wrap; }
-    .chip { display:inline-flex; align-items:center; gap:6px; padding:4px 8px; border-radius: 999px; background:#0b1220; border:1px solid #1f2937; }
-    .swatch { width:12px; height:12px; border-radius:3px; display:inline-block; }
-    .foot { padding: 10px 0 16px 0; font-size: .8rem; color:#9ca3af; }
-    a { color:#93c5fd; text-decoration: none; }
-    a:hover { text-decoration: underline; }
+    #map { width: 100%; height: 100%; }
+    select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      background: #0b1220;
+      color: #e5e7eb;
+      border: 1px solid #374151;
+      border-radius: 6px;
+    }
+    button {
+      background: #22c55e;
+      color: #052e16;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .checkboxes label {
+      display: block;
+      margin-top: 6px;
+    }
   </style>
 </head>
+
 <body>
 <div id="app">
   <aside id="sidebar">
-    <h2 class="brand">Walkable WMATA — Demo</h2>
-    <p class="muted">Select a station to draw 5/10/15‑minute walking sheds.</p>
+    <h2>Walkable WMATA</h2>
+    <p>Precomputed walking sheds (no API calls)</p>
 
-    <div class="row">
-      <label for="station">Station</label>
-      <select id="station">
-        <!-- Sample subset; you can load the full 98-station dataset later -->
-      </select>
+    <label for="stationSelect">Station</label>
+    <select id="stationSelect"></select>
+
+    <div class="checkboxes">
+      <label><input type="checkbox" value="5" checked> 5 minutes</label>
+      <label><input type="checkbox" value="10" checked> 10 minutes</label>
+      <label><input type="checkbox" value="15" checked> 15 minutes</label>
     </div>
 
-    <div class="row">
-      <label>Walking times</label>
-      <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:8px;">
-        <label><input type="checkbox" class="minutes" value="5" checked> 5 min</label>
-        <label><input type="checkbox" class="minutes" value="10" checked> 10 min</label>
-        <label><input type="checkbox" class="minutes" value="15" checked> 15 min</label>
-      </div>
-    </div>
-
-    <div class="row">
-      <button id="goBtn">Draw walking sheds</button>
-    </div>
-
-    <div class="legend">
-      <span class="chip"><span class="swatch" style="background:var(--iso5)"></span>5 min</span>
-      <span class="chip"><span class="swatch" style="background:var(--iso10)"></span>10 min</span>
-      <span class="chip"><span class="swatch" style="background:var(--iso15)"></span>15 min</span>
-    </div>
-
-    <div class="foot">
-      Data & APIs:
-      <ul>
-        <li>OpenRouteService Isochrones API (walking) — https://giscience.github.io/openrouteservice/api-reference/endpoints/isochrones/docs</a></li>
-        <li>WMATA station open data (98 stations) — https://rtdc-mwcog.opendata.arcgis.com/datasets/metro-rail-stations-1/exploreRTDC/COG</a></li>
-      </ul>
-    </div>
+    <button id="drawBtn">Show walksheds</button>
   </aside>
 
   <div id="map"></div>
 </div>
 
-<!-- Leaflet -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
-  /***** CONFIG *****/
-  const ORS_API_KEY = "eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6IjBjZDUxMmE3MTNhNDRiNzZhZTZiOTAwMjRiNTk5YTcxIiwiaCI6Im11cm11cjY0In0="; // https://api.openrouteservice.org/ (free) 
-  const ORS_URL = "https://api.openrouteservice.org/v2/isochrones/foot-walking";
+/* --------------------------------------------------
+   BASIC MAP SETUP
+-------------------------------------------------- */
 
-  // Sample subset of WMATA stations (lon, lat in EPSG:4326)
-  // Replace with the full dataset later.
-  const STATIONS = [
-    { code: "A01", name: "Metro Center",        lon: -77.0281, lat: 38.8983 },
-    { code: "B35", name: "Union Station",       lon: -77.0074, lat: 38.8970 },
-    { code: "C01", name: "L’Enfant Plaza",      lon: -77.0219, lat: 38.8850 },
-    { code: "D03", name: "Smithsonian",         lon: -77.0281, lat: 38.8880 },
-    { code: "E06", name: "Columbia Heights",    lon: -77.0326, lat: 38.9286 },
-    { code: "G05", name: "Rosslyn",             lon: -77.0709, lat: 38.8954 }
-  ];
+const map = L.map("map").setView([38.905, -77.036], 12);
 
-  // Map & layers
-  const map = L.map('map', { zoomControl: true }).setView([38.905, -77.036], 12);
-  const tiles = L.tileLayer(
-    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-    { maxZoom: 19, attribution: "© OpenStreetMap contributors" }
-  ).addTo(map);
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  maxZoom: 19,
+  attribution: "© OpenStreetMap contributors"
+}).addTo(map);
 
-  const stationsLayer = L.layerGroup().addTo(map);
-  const isochronesLayer = L.layerGroup().addTo(map);
-  let activeMarker = null;
+const walkshedLayer = L.layerGroup().addTo(map);
+let stationMarker = null;
 
-  // Populate station dropdown + markers
-  const selectEl = document.getElementById('station');
-  STATIONS.forEach((s, idx) => {
-    const opt = document.createElement('option');
-    opt.value = s.code;
-    opt.textContent = `${s.name} (${s.code})`;
-    if (idx === 0) opt.selected = true;
-    selectEl.appendChild(opt);
+/* --------------------------------------------------
+   LOAD STATIONS GEOJSON                       ← NEW
+   Reads stations.geojson and builds a lookup
+   table so we can find any station by its code.
+-------------------------------------------------- */
 
-    const marker = L.marker([s.lat, s.lon]).bindTooltip(`${s.name}`);
-    marker.on('click', () => {
-      selectEl.value = s.code;
-      drawIsochrones(s);
-    });
-    stationsLayer.addLayer(marker);
-  });
+let stationLookup = {};                              // ← NEW
 
-  // Helper to read selected minutes [300, 600, 900]
-  function getSelectedSeconds() {
-    return Array.from(document.querySelectorAll('.minutes:checked'))
-      .map(el => Number(el.value) * 60)
-      .sort((a,b) => a - b);
-  }
-
-  // Call ORS Isochrones API (POST)
-  async function fetchIsochrones(lon, lat, rangesSeconds) {
-    const body = {
-      locations: [[lon],[lat]],
-      range: [rangesSeconds],
-      interval: null,        // using explicit `range` above
-      smoothing: 0.25,       // nicer shapes
-    };
-
-    const res = await fetch(ORS_URL, {
-      method: "POST",
-      headers: {
-        "Authorization": ORS_API_KEY,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(body)
-    });
-    if (!res.ok) {
-      const t = await res.text().catch(()=> "");
-      throw new Error(`ORS error ${res.status}: ${t}`);
+async function loadStations() {                      // ← NEW
+  const data = await fetch("stations.geojson").then(r => r.json());
+  data.features.forEach(f => {
+    // Skip duplicates — some codes share a physical station (e.g. Metro Center)
+    if (!stationLookup[f.properties.code]) {
+      stationLookup[f.properties.code] = {
+        name: f.properties.name,
+        lat:  f.geometry.coordinates[1],
+        lon:  f.geometry.coordinates[0],
+        lines: f.properties.lines
+      };
     }
-    return res.json();
-  }
-
-  // Render polygons with colors for 5/10/15
-  function colorForMinutes(mins) {
-    if (mins <= 5)  return getComputedStyle(document.documentElement).getPropertyValue('--iso5').trim();
-    if (mins <= 10) return getComputedStyle(document.documentElement).getPropertyValue('--iso10').trim();
-    return getComputedStyle(document.documentElement).getPropertyValue('--iso15').trim();
-  }
-
-  function drawIsoLayer(geojson) {
-    isochronesLayer.clearLayers();
-    return L.geoJSON(geojson, {
-      style: (feature) => {
-        // ORS returns seconds in 'value'
-        const minutes = (feature.properties.value || 0) / 60;
-        return {
-          color: colorForMinutes(minutes),
-          weight: 1,
-          fillOpacity: 0.25
-        };
-      }
-    }).addTo(isochronesLayer);
-  }
-
-  async function drawIsochrones(station) {
-    const ranges = getSelectedSeconds();
-    if (!ranges.length) { alert("Select at least one time."); return; }
-
-    // Marker
-    if (activeMarker) { map.removeLayer(activeMarker); }
-    activeMarker = L.circleMarker([station.lat, station.lon], {
-      radius: 6, color: "#93c5fd", fillColor: "#93c5fd", fillOpacity: 1
-    }).bindTooltip(`${station.name}`).addTo(map);
-
-    // Fetch + render
-    document.getElementById('goBtn').disabled = true;
-    try {
-      const data = await fetchIsochrones(station.lon, station.lat, ranges);
-      drawIsoLayer(data);
-
-      // Zoom to bounds (stations + isochrones)
-      const group = L.featureGroup([stationsLayer, isochronesLayer]);
-      map.fitBounds(group.getBounds().pad(0.2));
-
-    } catch (err) {
-      console.error(err);
-      alert("Failed to get isochrones. Check your API key or console for details.");
-    } finally {
-      document.getElementById('goBtn').disabled = false;
-    }
-  }
-
-  document.getElementById('goBtn').addEventListener('click', () => {
-    const code = selectEl.value;
-    const st = STATIONS.find(s => s.code === code);
-    if (st) drawIsochrones(st);
   });
+}                                                    // ← NEW
 
-  // Initial draw
-  drawIsochrones(STATIONS[0]);
+/* --------------------------------------------------
+   LOAD WALKSHED GEOJSON
+-------------------------------------------------- */
+
+let walkshedData = null;
+
+async function loadWalksheds() {
+  walkshedData = await fetch("walksheds.geojson")
+    .then(r => { if (!r.ok) throw new Error(r.statusText); return r.json(); })
+    .catch(err => { console.error("Failed to load walksheds:", err); });
+  populateStationDropdown();
+}
+
+// Load both files at startup
+Promise.all([loadStations(), loadWalksheds()]);      // ← CHANGED (was just loadWalksheds())
+
+/* --------------------------------------------------
+   UI HELPERS
+-------------------------------------------------- */
+
+function populateStationDropdown() {
+  const select = document.getElementById("stationSelect");
+
+  const stationIds = [
+    ...new Set(walkshedData.features.map(f => f.properties.station_id))
+  ].sort();
+
+  stationIds.forEach(id => {
+    const option = document.createElement("option");
+    option.value = id;
+    option.textContent = stationLookup[id]?.name ?? id; // ← CHANGED (was just id)
+    select.appendChild(option);
+  });
+}
+
+function selectedMinutes() {
+  return Array.from(
+    document.querySelectorAll(".checkboxes input:checked")
+  ).map(cb => Number(cb.value));
+}
+
+/* --------------------------------------------------
+   DRAW WALKSHEDS
+-------------------------------------------------- */
+
+function colorForMinutes(min) {
+  if (min === 5)  return "#22c55e";
+  if (min === 10) return "#f59e0b";
+  return "#ef4444";                                  // fallback for any other value
+}
+
+function drawWalksheds() {
+  if (!walkshedData) return;                         // ← NEW: guard against early click
+
+  const stationId = document.getElementById("stationSelect").value;
+  const minutes = selectedMinutes();
+
+  walkshedLayer.clearLayers();
+
+  const filtered = {
+    type: "FeatureCollection",
+    features: walkshedData.features.filter(f =>
+      f.properties.station_id === stationId &&
+      minutes.includes(f.properties.minutes)
+    )
+  };
+
+  const geojsonLayer = L.geoJSON(filtered, {
+    style: f => ({
+      color: colorForMinutes(f.properties.minutes),
+      weight: 1,
+      fillOpacity: 0.3
+    })
+  }).addTo(walkshedLayer);
+
+  if (stationMarker) map.removeLayer(stationMarker);
+
+  // ← CHANGED: use stationLookup instead of grabbing a polygon corner
+  const station = stationLookup[stationId];
+  if (station) {
+    stationMarker = L.circleMarker([station.lat, station.lon], {
+      radius: 7,
+      color: "#3b82f6",
+      fillColor: "#3b82f6",
+      fillOpacity: 1
+    })
+    .bindTooltip(station.name, { permanent: false })
+    .addTo(map);
+  }
+
+  if (filtered.features.length > 0) {
+    map.fitBounds(geojsonLayer.getBounds().pad(0.2));
+  }
+}
+
+document.getElementById("drawBtn").addEventListener("click", drawWalksheds);
 </script>
 </body>
 </html>
