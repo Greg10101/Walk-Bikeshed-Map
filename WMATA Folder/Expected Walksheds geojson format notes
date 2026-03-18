@@ -1,0 +1,23 @@
+The walksheds.geojson must follow this pattern:
+
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "station_id": "A01",
+        "station_name": "Metro Center",
+        "minutes": 5
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [...]
+      }
+    }
+  ]
+}
+Required properties:
+
+station_id → WMATA station code (string)
+minutes → integer (5, 10, 15)
