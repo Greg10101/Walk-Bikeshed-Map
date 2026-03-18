@@ -13,7 +13,7 @@
     #app { display: grid; grid-template-columns: 320px 1fr; height: 100%; }
     #sidebar {
       padding: 16px;
-      background: #111827;
+      background: #013D4A;
       color: #e5e7eb;
       border-right: 1px solid #1f2937;
     }
@@ -28,7 +28,7 @@
       border-radius: 6px;
     }
     button {
-      background: #22c55e;
+      background: #1BBF54;
       color: #052e16;
       font-weight: bold;
       cursor: pointer;
@@ -36,6 +36,9 @@
     .checkboxes label {
       display: block;
       margin-top: 6px;
+    }
+    .checkboxes input[type="checkbox"] {
+      accent-color: #1BBF54;
     }
   </style>
 </head>
@@ -46,13 +49,14 @@
     <h2>Walkable WMATA</h2>
     <p>Precomputed walking sheds (no API calls)</p>
 
-    <label for="stationSelect">Station</label>
+    <label for="stationSelect">Select a Station from the dropdown:</label>
     <select id="stationSelect"></select>
 
     <div class="checkboxes">
       <label><input type="checkbox" value="5" checked> 5 minutes</label>
       <label><input type="checkbox" value="10" checked> 10 minutes</label>
       <label><input type="checkbox" value="15" checked> 15 minutes</label>
+      <label><input type="checkbox" value="20" checked> 20 minutes</label>
     </div>
 
     <button id="drawBtn">Show walksheds</button>
