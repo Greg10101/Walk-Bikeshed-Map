@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agency — What's the Walkshed?</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f5f2eb;
+      --ink: #1a1a18;
+      --accent: #e8500a;
+      --muted: #7a7a72;
+      --border: #dedad2;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+    }
+
+    header {
+      border-bottom: 2px solid var(--ink);
+      padding: 0 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      background: var(--bg);
+    }
+
+    .logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      text-decoration: none;
+      color: var(--ink);
+    }
+
+    .logo span { color: var(--accent); }
+
+    .back-link {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .back-link:hover { color: var(--accent); }
+
+    .page-content {
+      max-width: 860px;
+      padding: 5rem 2.5rem;
+    }
+
+    .eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.4rem;
+    }
+
+    .placeholder-box {
+      border: 2px dashed var(--border);
+      border-radius: 8px;
+      padding: 5rem 2rem;
+      text-align: center;
+      margin-top: 3rem;
+      color: var(--muted);
+    }
+
+    .placeholder-box p {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.8rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .map-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      opacity: 0.3;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a class="logo" href="index.html">What's the <span>Walkshed?</span></a>
+    <a class="back-link" href="../index.html">← All Agencies</a>
+  </header>
+
+  <main class="page-content">
+    <p class="eyebrow">Agency Walkshed</p>
+    <h1>Agency Name</h1>
+    <p style="color: var(--muted); line-height: 1.7;">This page will display walkshed maps for this transit agency. Replace this template with your map content.</p>
+
+    <div class="placeholder-box">
+      <div class="map-icon">🗺️</div>
+      <p>Walkshed map coming soon</p>
+    </div>
+  </main>
+
+</body>
+</html>
