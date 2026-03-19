@@ -1,225 +1,457 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>Walkable WMATA (Precomputed Walksheds)</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <!-- Leaflet -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>What's the Walkshed?</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
-    html, body { height: 100%; margin: 0; }
-    #app { display: grid; grid-template-columns: 320px 1fr; height: 100%; }
-    #sidebar {
-      padding: 16px;
-      background: #013D4A;
-      color: #e5e7eb;
-      border-right: 1px solid #1f2937;
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f5f2eb;
+      --ink: #1a1a18;
+      --accent: #e8500a;
+      --muted: #7a7a72;
+      --border: #dedad2;
     }
-    #map { width: 100%; height: 100%; }
-    select, button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 8px;
-      background: #0b1220;
-      color: #e5e7eb;
-      border: 1px solid #374151;
-      border-radius: 6px;
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      overflow: hidden;
     }
-    button {
-      background: #1BBF54;
-      color: #052e16;
-      font-weight: bold;
-      cursor: pointer;
+
+    /* ── Header ── */
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      border-bottom: 2px solid var(--ink);
+      padding: 0 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+      background: var(--bg);
     }
-    .checkboxes label {
-      display: block;
-      margin-top: 6px;
+
+    .logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      text-decoration: none;
+      color: var(--ink);
     }
-    .checkboxes input[type="checkbox"] {
-      accent-color: #1BBF54;
+    .logo span { color: var(--accent); }
+
+    nav a {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-decoration: none;
+      margin-left: 1.8rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    nav a:hover { color: var(--accent); }
+
+    /* ── Hero panel ── */
+    .hero-panel {
+      position: fixed;
+      top: 60px;
+      left: 0;
+      width: 340px;
+      bottom: 0;
+      z-index: 500;
+      background: var(--bg);
+      border-right: 2px solid var(--ink);
+      padding: 2.8rem 2rem 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.6rem;
+      overflow-y: auto;
+    }
+
+    .hero-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .hero-panel h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+
+    .hero-panel h1 em {
+      font-style: normal;
+      color: var(--accent);
+    }
+
+    .hero-panel p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── Selected agency card ── */
+    .selected-agency {
+      display: none;
+      flex-direction: column;
+      gap: 0.5rem;
+      animation: fadeUp 0.25s ease;
+    }
+
+    .selected-agency.visible { display: flex; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .selected-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .selected-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .selected-city {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+
+    .selected-btn {
+      display: inline-block;
+      margin-top: 0.6rem;
+      background: var(--accent);
+      color: #fff;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 0.65rem 1.1rem;
+      border-radius: 4px;
+      transition: background 0.15s, transform 0.15s;
+      align-self: flex-start;
+    }
+
+    .selected-btn:hover { background: #c93f00; transform: translateX(2px); }
+
+    .coming-soon-badge {
+      display: inline-block;
+      margin-top: 0.6rem;
+      background: #f0ede6;
+      color: var(--muted);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.5rem 0.9rem;
+      border-radius: 4px;
+      align-self: flex-start;
+    }
+
+    /* ── Legend + count ── */
+    .legend {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .legend-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
+    .legend-dot.dim { background: #b0ada6; }
+
+    .agency-count {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-top: auto;
+      padding-top: 1rem;
+    }
+    .agency-count strong { color: var(--accent); font-weight: 500; }
+
+    /* ── Map ── */
+    #map {
+      position: fixed;
+      top: 60px;
+      left: 340px;
+      right: 0;
+      bottom: 0;
+      z-index: 1;
+    }
+
+    /* ── Hover tooltip ── */
+    .map-tooltip {
+      position: fixed;
+      pointer-events: none;
+      z-index: 2000;
+      background: var(--ink);
+      color: #fff;
+      padding: 0.55rem 0.9rem;
+      border-radius: 5px;
+      display: none;
+      white-space: nowrap;
+      transform: translate(-50%, calc(-100% - 12px));
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 500;
+    }
+    .map-tooltip.visible { display: block; }
+    .map-tooltip::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 5px solid var(--ink);
+    }
+
+    /* ── Instruction pill ── */
+    .instruction {
+      position: fixed;
+      bottom: 1.8rem;
+      left: calc(340px + 50%);
+      transform: translateX(-50%);
+      z-index: 1000;
+      background: var(--ink);
+      color: #fff;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.5rem 1.1rem;
+      border-radius: 100px;
+      transition: opacity 0.8s ease;
+      pointer-events: none;
+    }
+    .instruction.hidden { opacity: 0; }
+
+    /* ── Leaflet overrides ── */
+    .leaflet-control-attribution {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem;
+    }
+
+    /* ── Mobile ── */
+    @media (max-width: 700px) {
+      html, body { overflow: auto; }
+      .hero-panel {
+        width: 100%;
+        position: relative;
+        top: 60px;
+        border-right: none;
+        border-bottom: 2px solid var(--ink);
+      }
+      #map {
+        position: relative;
+        left: 0;
+        top: 0;
+        height: 60vh;
+      }
+      .instruction { left: 50%; }
     }
   </style>
 </head>
-
 <body>
-<div id="app">
-  <aside id="sidebar">
-    <h2>Walkable WMATA</h2>
-    <p>Precomputed walking sheds (no API calls)</p>
 
-    <label for="stationSelect">Select a Station from the dropdown:</label>
-    <select id="stationSelect"></select>
+  <header>
+    <a class="logo" href="index.html">What's the <span>Walkshed?</span></a>
+    <nav>
+      <a href="#">About</a>
+      <a href="#">Methodology</a>
+    </nav>
+  </header>
 
-    <div class="checkboxes">
-      <label><input type="checkbox" value="5" checked> 5 minutes</label>
-      <label><input type="checkbox" value="10" checked> 10 minutes</label>
-      <label><input type="checkbox" value="15" checked> 15 minutes</label>
-      <label><input type="checkbox" value="20" checked> 20 minutes</label>
+  <aside class="hero-panel">
+    <p class="hero-eyebrow">Transit Walkshed Explorer</p>
+    <h1>How far can you walk from a <em>transit stop?</em></h1>
+    <p>Click an agency on the map to explore its walkshed — the real pedestrian catchment area around stops, not just a radius.</p>
+
+    <div class="divider"></div>
+
+    <div class="selected-agency" id="selected-agency">
+      <div class="selected-label">Selected agency</div>
+      <div class="selected-name" id="sel-name"></div>
+      <div class="selected-city" id="sel-city"></div>
+      <a class="selected-btn" id="sel-link" href="#">Explore walkshed →</a>
     </div>
 
-    <button id="drawBtn">Show walksheds</button>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot"></div> Agency with walkshed data</div>
+      <div class="legend-item"><div class="legend-dot dim"></div> Coming soon</div>
+    </div>
+
+    <div class="agency-count"><strong>6</strong> agencies mapped · 6 coming soon</div>
   </aside>
 
   <div id="map"></div>
-</div>
+  <div class="map-tooltip" id="tooltip"></div>
+  <div class="instruction" id="instruction">Click a dot to select an agency</div>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    const agencies = [
+      { id: 'nyc',       name: 'MTA New York City Transit',   city: 'New York, NY',       lat: 40.7128,  lng: -74.0060,  ready: true  },
+      { id: 'bart',      name: 'BART',                        city: 'San Francisco, CA',  lat: 37.7749,  lng: -122.4194, ready: true  },
+      { id: 'ttc',       name: 'Toronto Transit Commission',  city: 'Toronto, ON',        lat: 43.6532,  lng: -79.3832,  ready: true  },
+      { id: 'cta',       name: 'Chicago Transit Authority',   city: 'Chicago, IL',        lat: 41.8781,  lng: -87.6298,  ready: true  },
+      { id: 'stm',       name: 'STM Montréal',                city: 'Montréal, QC',       lat: 45.5017,  lng: -73.5673,  ready: true  },
+      { id: 'sound',     name: 'Sound Transit',               city: 'Seattle, WA',        lat: 47.6062,  lng: -122.3321, ready: true  },
+      { id: 'wmata',     name: 'WMATA Metro',                 city: 'Washington, DC',     lat: 38.9072,  lng: -77.0369,  ready: false },
+      { id: 'lacmta',    name: 'LA Metro',                    city: 'Los Angeles, CA',    lat: 34.0522,  lng: -118.2437, ready: false },
+      { id: 'mbta',      name: 'MBTA',                        city: 'Boston, MA',         lat: 42.3601,  lng: -71.0589,  ready: false },
+      { id: 'trimet',    name: 'TriMet',                      city: 'Portland, OR',       lat: 45.5051,  lng: -122.675,  ready: false },
+      { id: 'septa',     name: 'SEPTA',                       city: 'Philadelphia, PA',   lat: 39.9526,  lng: -75.1652,  ready: false },
+      { id: 'translink', name: 'TransLink',                   city: 'Vancouver, BC',      lat: 49.2827,  lng: -123.1207, ready: false },
+    ];
 
-<script>
-/* --------------------------------------------------
-   BASIC MAP SETUP
--------------------------------------------------- */
+    const map = L.map('map', { center: [42, -97], zoom: 4, scrollWheelZoom: true });
 
-const map = L.map("map").setView([38.905, -77.036], 12);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      attribution: '© <a href="https://carto.com/">CARTO</a> © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      subdomains: 'abcd', maxZoom: 14,
+    }).addTo(map);
 
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-  maxZoom: 19,
-  attribution: "© OpenStreetMap contributors"
-}).addTo(map);
+    const tooltip     = document.getElementById('tooltip');
+    const instruction = document.getElementById('instruction');
+    const selPanel    = document.getElementById('selected-agency');
+    const selName     = document.getElementById('sel-name');
+    const selCity     = document.getElementById('sel-city');
+    const selLink     = document.getElementById('sel-link');
 
-const walkshedLayer = L.layerGroup().addTo(map);
-let stationMarker = null;
+    let instructionHidden = false;
+    let activeMarker = null;
 
-/* --------------------------------------------------
-   LOAD STATIONS GEOJSON                       ← NEW
-   Reads stations.geojson and builds a lookup
-   table so we can find any station by its code.
--------------------------------------------------- */
-
-let stationLookup = {};                              // ← NEW
-
-async function loadStations() {                      // ← NEW
-  const data = await fetch("stations.geojson").then(r => r.json());
-  data.features.forEach(f => {
-    // Skip duplicates — some codes share a physical station (e.g. Metro Center)
-    if (!stationLookup[f.properties.code]) {
-      stationLookup[f.properties.code] = {
-        name: f.properties.name,
-        lat:  f.geometry.coordinates[1],
-        lon:  f.geometry.coordinates[0],
-        lines: f.properties.lines
-      };
+    function hideInstruction() {
+      if (!instructionHidden) {
+        instructionHidden = true;
+        instruction.classList.add('hidden');
+        setTimeout(() => instruction.remove(), 900);
+      }
     }
-  });
-  drawStations();
-}                                                    // ← NEW
 
-/* --------------------------------------------------
-   LOAD WALKSHED GEOJSON
--------------------------------------------------- */
+    function makeIcon(ready, active = false) {
+      const color = ready ? '#e8500a' : '#b0ada6';
+      const s = active ? 28 : 22;
+      const sw = active ? 3 : 2;
+      const pulse = (ready && !active) ? `
+        <circle cx="${s/2}" cy="${s/2}" r="${s/2-2}" fill="${color}" opacity="0.15">
+          <animate attributeName="r" from="${s/2-4}" to="${s/2+5}" dur="2.2s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" from="0.2" to="0" dur="2.2s" repeatCount="indefinite"/>
+        </circle>` : '';
+      const inner = active ? `<circle cx="${s/2}" cy="${s/2}" r="${s/2-sw-4}" fill="white" opacity="0.35"/>` : '';
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${s}" height="${s}" viewBox="0 0 ${s} ${s}">
+        ${pulse}
+        <circle cx="${s/2}" cy="${s/2}" r="${s/2-sw-1}" fill="${color}" stroke="white" stroke-width="${sw}"/>
+        ${inner}
+      </svg>`;
+      return L.divIcon({ html: svg, className: '', iconSize: [s, s], iconAnchor: [s/2, s/2] });
+    }
 
-let walkshedData = null;
+    agencies.forEach(agency => {
+      const marker = L.marker([agency.lat, agency.lng], {
+        icon: makeIcon(agency.ready),
+        title: agency.name,
+      }).addTo(map);
 
-async function loadWalksheds() {
-  walkshedData = await fetch("walksheds.geojson")
-    .then(r => { if (!r.ok) throw new Error(r.statusText); return r.json(); })
-    .catch(err => { console.error("Failed to load walksheds:", err); });
-  populateStationDropdown();
-}
+      marker.on('mouseover', () => {
+        tooltip.textContent = agency.name;
+        tooltip.classList.add('visible');
+      });
+      marker.on('mousemove', e => {
+        tooltip.style.left = e.originalEvent.clientX + 'px';
+        tooltip.style.top  = e.originalEvent.clientY + 'px';
+      });
+      marker.on('mouseout', () => tooltip.classList.remove('visible'));
 
-// Load both files at startup but individually so stations always loads
-loadStations();
-loadWalksheds();
+      marker.on('click', () => {
+        hideInstruction();
+        tooltip.classList.remove('visible');
 
-/* --------------------------------------------------
-   UI HELPERS
--------------------------------------------------- */
+        // Reset previous active marker
+        if (activeMarker && activeMarker !== marker) {
+          activeMarker.setIcon(makeIcon(activeMarker._ready, false));
+        }
+        marker.setIcon(makeIcon(agency.ready, true));
+        activeMarker = marker;
+        activeMarker._ready = agency.ready;
 
-function populateStationDropdown() {
-  const select = document.getElementById("stationSelect");
+        // Update sidebar
+        selName.textContent = agency.name;
+        selCity.textContent = agency.city;
+        selPanel.classList.add('visible');
 
-  const stationIds = [
-    ...new Set(walkshedData.features.map(f => f.properties.station_id))
-  ].sort();
+        // Remove stale badge
+        const oldBadge = document.getElementById('sel-badge');
+        if (oldBadge) oldBadge.remove();
 
-  stationIds.forEach(id => {
-    const option = document.createElement("option");
-    option.value = id;
-    option.textContent = stationLookup[id]?.name ?? id; // ← CHANGED (was just id)
-    select.appendChild(option);
-  });
-}
+        if (agency.ready) {
+          selLink.style.display = 'inline-block';
+          selLink.href = `${agency.id}/index.html`;
+        } else {
+          selLink.style.display = 'none';
+          const badge = document.createElement('span');
+          badge.id = 'sel-badge';
+          badge.className = 'coming-soon-badge';
+          badge.textContent = 'Coming soon';
+          selPanel.appendChild(badge);
+        }
+      });
+    });
 
-function selectedMinutes() {
-  return Array.from(
-    document.querySelectorAll(".checkboxes input:checked")
-  ).map(cb => Number(cb.value));
-}
-
-/* --------------------------------------------------
-   DRAW WALKSHEDS
--------------------------------------------------- */
-
-function colorForMinutes(min) {
-  if (min === 5)  return "#22c55e";
-  if (min === 10) return "#f59e0b";
-  return "#ef4444";                                  // fallback for any other value
-}
-
-/* --------------------------------------------------
-   DRAW ALL STATIONS ON LOAD
--------------------------------------------------- */
-
-function drawStations() {
-  Object.values(stationLookup).forEach(station => {
-    L.circleMarker([station.lat, station.lon], {
-      radius: 5,
-      color: "#3b82f6",
-      fillColor: "#3b82f6",
-      fillOpacity: 1
-    })
-    .bindTooltip(station.name, { permanent: false })
-    .addTo(map);
-  });
-}
-
-function drawWalksheds() {
-  if (!walkshedData) return;                         // ← NEW: guard against early click
-
-  const stationId = document.getElementById("stationSelect").value;
-  const minutes = selectedMinutes();
-
-  walkshedLayer.clearLayers();
-
-  const filtered = {
-    type: "FeatureCollection",
-    features: walkshedData.features.filter(f =>
-      f.properties.station_id === stationId &&
-      minutes.includes(f.properties.minutes)
-    )
-  };
-
-  const geojsonLayer = L.geoJSON(filtered, {
-    style: f => ({
-      color: colorForMinutes(f.properties.minutes),
-      weight: 1,
-      fillOpacity: 0.3
-    })
-  }).addTo(walkshedLayer);
-
-  if (stationMarker) map.removeLayer(stationMarker);
-
-  // ← CHANGED: use stationLookup instead of grabbing a polygon corner
-  const station = stationLookup[stationId];
-  if (station) {
-    stationMarker = L.circleMarker([station.lat, station.lon], {
-      radius: 7,
-      color: "#3b82f6",
-      fillColor: "#3b82f6",
-      fillOpacity: 1
-    })
-    .bindTooltip(station.name, { permanent: false })
-    .addTo(map);
-  }
-
-  if (filtered.features.length > 0) {
-    map.fitBounds(geojsonLayer.getBounds().pad(0.2));
-  }
-}
-
-document.getElementById("drawBtn").addEventListener("click", drawWalksheds);
-</script>
+    // Ensure pointer cursor on markers
+    map.on('layeradd', () => {
+      document.querySelectorAll('.leaflet-marker-icon').forEach(el => {
+        el.style.cursor = 'pointer';
+      });
+    });
+  </script>
 </body>
 </html>
