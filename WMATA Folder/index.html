@@ -97,28 +97,45 @@ const LINE_COLORS = {
 };
 
 /* --------------------------------------------------
-   LOAD STATIONS GEOJSON                       ← NEW
+   LOAD STATIONS GEOJSON                       
    Reads stations.geojson and builds a lookup
-   table so we can find any station by its code.
+   table so we can find any station by its code. Also
+   references/stores stations by name so two level stations
+   like Metro Center, L'Enfant, etc. will display as 
+   one combined symbol on the map.
 -------------------------------------------------- */
 
-let stationLookup = {};                              // ← NEW
+let stationLookup = {};                              
 
-async function loadStations() {                      // ← NEW
+async function loadStations() {
   const data = await fetch("stations.geojson").then(r => r.json());
+  // Merge duplicates — some codes share a physical station (e.g. Metro Center)
   data.features.forEach(f => {
-    // Skip duplicates — some codes share a physical station (e.g. Metro Center)
-    if (!stationLookup[f.properties.code]) {
-      stationLookup[f.properties.code] = {
-        name: f.properties.name,
-        lat:  f.geometry.coordinates[1],
-        lon:  f.geometry.coordinates[0],
-        lines: f.properties.lines
+    const code = f.properties.code;
+    const name = f.properties.name;
+
+    // Check if a station with this name already exists under a different code
+    const existing = Object.values(stationLookup).find(s => s.name === name);
+
+    if (existing) {
+      // Merge lines into the existing entry
+      f.properties.lines.forEach(line => {
+        if (!existing.lines.includes(line)) {
+          existing.lines.push(line);
+        }
+      });
+    } else {
+      // New station — store it under its code
+      stationLookup[code] = {
+        name:  name,
+        lat:   f.geometry.coordinates[1],
+        lon:   f.geometry.coordinates[0],
+        lines: [...f.properties.lines]
       };
     }
   });
   drawStations();
-}                                                    // ← NEW
+}                                                  
 
 /* --------------------------------------------------
    LOAD WALKSHED GEOJSON
@@ -145,13 +162,13 @@ function populateStationDropdown() {
   const select = document.getElementById("stationSelect");
 
   const stationIds = [
-    ...new Set(walkshedData.features.map(f => f.properties.station_id))
+    ...new Set(walkshedData.features.map(f => f.properties.station_name))
   ].sort();
 
   stationIds.forEach(id => {
     const option = document.createElement("option");
     option.value = id;
-    option.textContent = stationLookup[id]?.name ?? id; // ← CHANGED (was just id)
+    option.textContent = id;
     select.appendChild(option);
   });
 }
@@ -239,7 +256,7 @@ function drawWalksheds() {
   const filtered = {
     type: "FeatureCollection",
     features: walkshedData.features.filter(f =>
-      f.properties.station_id === stationId &&
+      f.properties.station_name === stationId &&
       minutes.includes(f.properties.minutes)
     )
   };
@@ -253,19 +270,6 @@ function drawWalksheds() {
   }).addTo(walkshedLayer);
 
   if (stationMarker) map.removeLayer(stationMarker);
-
-  // ← CHANGED: use stationLookup instead of grabbing a polygon corner
-  const station = stationLookup[stationId];
-  if (station) {
-    stationMarker = L.circleMarker([station.lat, station.lon], {
-      radius: 7,
-      color: "#3b82f6",
-      fillColor: "#3b82f6",
-      fillOpacity: 1
-    })
-    .bindTooltip(station.name, { permanent: false })
-    .addTo(map);
-  }
 
   if (filtered.features.length > 0) {
     map.fitBounds(geojsonLayer.getBounds().pad(0.2));
