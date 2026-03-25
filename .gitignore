@@ -1,0 +1,6 @@
+# .gitignore
+*.env
+.env.local
+config.js
+secrets.js
+api_keys.txt
