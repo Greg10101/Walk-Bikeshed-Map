@@ -20,4 +20,4 @@ The walksheds.geojson must follow this pattern:
 Required properties:
 
 station_id → WMATA station code (string)
-minutes → integer (5, 10, 15)
+minutes → integer (5, 10, 15, 20)
