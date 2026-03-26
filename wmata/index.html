@@ -71,6 +71,25 @@
   #sidebar {
     width: 100%;
   }
+
+  /* Keep the header row layout consistent on mobile */
+  #sidebar-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* When collapsed on mobile, sidebar only takes up header height */
+  #app.sidebar-collapsed {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+
+  /* Prevent collapsed sidebar from shrinking the map on mobile */
+  #app.sidebar-collapsed #sidebar {
+    height: auto;
+    min-height: 0;
+  }
 }
 
     #map { width: 100%; height: 100%; }
