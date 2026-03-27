@@ -5,362 +5,417 @@
   <title>Walkable WMATA (Precomputed Walksheds)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
 
-<!-- Load fonts (open source only) -->
- <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
-
- <!-- Helvitica is WMATA official font, rest are backups -->
   <style>
-    html, body { height: 100%; margin: 0; font-family: Helvetica, Arial, Inter, sans-serif; } 
-    #app { display: grid; grid-template-columns: 320px 1fr; height: 100%; }
+    html, body { height: 100%; margin: 0; font-family: Helvetica, Arial, Inter, sans-serif; }
+    #app { position: relative; width: 100%; height: 100%; }
+    #map { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
+
+    /* ── Floating sidebar ── */
     #sidebar {
-      padding: 16px;
-      background: #014554;
-      color: #e5e7eb;
-      border-right: 1px solid #1f2937;
+      position: absolute; top: 16px; left: 16px; z-index: 1000;
+      width: 300px; padding: 12px 14px;
+      background: #014554; color: #e5e7eb;
+      border-radius: 14px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.45), 0 2px 8px rgba(0,0,0,0.3);
+      transition: width 0.3s ease; overflow: hidden;
     }
-    #app.sidebar-collapsed {
-  grid-template-columns: 60px 1fr;
-}
-/* Header with toggle button */
-#sidebar-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  min-width: 0;
-}
+    #app.sidebar-collapsed #sidebar { width: 46px; }
 
-#app.sidebar-collapsed #sidebar-header h2 {
-  display: none;
-}
+    /* ── Header ── */
+    #sidebar-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; white-space: nowrap; }
+    #sidebar-header h2 { margin: 0; font-size: 1rem; white-space: nowrap; overflow: hidden; opacity: 1; transition: opacity 0.15s ease; }
+    #app.sidebar-collapsed #sidebar-header h2 { opacity: 0; pointer-events: none; }
+    #app.sidebar-collapsed #sidebar-header { justify-content: center; }
 
-#toggleBtn {
-  display: block;
-  width: auto;
-  padding: 6px 10px;
-  background: transparent;
-  color: #e5e7eb;
-  border: 1px solid #e5e7eb;
-  font-size: 18px;
-  cursor: pointer;
-  margin-top: 0;
-  flex-shrink: 0;
-}
-
-#sidebar-content {
-  overflow: hidden;
-  transition: max-height 0.3s ease;
-}
-
-#sidebar-content.collapsed {
-  max-height: 0;
-}
-
-#sidebar-content.expanded {
-  max-height: 500px;
-}
-
-@media (max-width: 768px) {
-  #app {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr;
-  }
-
-  #sidebar {
-    width: 100%;
-  }
-
-  /* Keep the header row layout consistent on mobile */
-  #sidebar-header {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  /* When collapsed on mobile, sidebar only takes up header height */
-  #app.sidebar-collapsed {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr;
-  }
-
-  /* Prevent collapsed sidebar from shrinking the map on mobile */
-  #app.sidebar-collapsed #sidebar {
-    height: auto;
-    min-height: 0;
-  }
-}
-
-    #map { width: 100%; height: 100%; }
-    select, button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 8px;
-      background: #0b1220;
-      color: #e5e7eb;
-      border: 1px solid #374151;
-      border-radius: 6px;
+    #toggleBtn {
+      flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+      padding: 5px 7px; background: transparent; color: #e5e7eb;
+      border: 1px solid #e5e7eb; border-radius: 6px; cursor: pointer;
+      line-height: 1; width: auto !important; margin-top: 0 !important;
     }
-    button {
-      background: #1BBF54;
-      color: #052e16;
-      font-weight: bold;
-      cursor: pointer;
+    #toggleBtn svg { display: block; width: 16px; height: 16px; transition: transform 0.3s ease; }
+    #toggleBtn svg { transform: rotate(0deg); }
+    #app.sidebar-collapsed #toggleBtn svg { transform: rotate(180deg); }
+
+    /* ── Collapsible content ── */
+    #sidebar-content { overflow: hidden; transition: max-height 0.35s ease, opacity 0.25s ease, margin-top 0.3s ease; }
+    #sidebar-content.expanded { max-height: 700px; opacity: 1; margin-top: 10px; }
+    #sidebar-content.collapsed { max-height: 0; opacity: 0; margin-top: 0; }
+
+    /* ── Station search ── */
+    .search-wrap { position: relative; }
+    #stationSearch {
+      width: 100%; padding: 8px 10px;
+      background: #0b1220; color: #e5e7eb;
+      border: 1px solid #374151; border-radius: 6px;
+      font-size: 0.875rem; box-sizing: border-box; outline: none;
     }
-    .checkboxes label {
-      display: block;
-      margin-top: 6px;
+    #stationSearch::placeholder { color: #6b7280; }
+    #stationSearch:focus { border-color: #1BBF54; }
+
+    #stationDropdown {
+      display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+      background: #0b1220; border: 1px solid #374151; border-radius: 6px;
+      max-height: 180px; overflow-y: auto; z-index: 2000;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.4);
     }
-    .checkboxes input[type="checkbox"] {
-      accent-color: #1BBF54;
+    #stationDropdown.open { display: block; }
+
+    .dropdown-item {
+      padding: 7px 10px; font-size: 0.85rem; cursor: pointer;
+      color: #e5e7eb; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .dropdown-item:hover, .dropdown-item.highlighted { background: #014554; }
+    .dropdown-item.already-selected { color: #1BBF54; }
+
+    /* ── Section labels ── */
+    .section-label {
+      font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em;
+      color: #9ca3af; margin: 12px 0 6px;
+    }
+
+    /* ── Checkboxes ── */
+    .checkboxes label { display: inline-flex; align-items: center; gap: 5px; margin-right: 10px; margin-top: 4px; font-size: 0.875rem; cursor: pointer; }
+    .checkboxes input[type="checkbox"] { accent-color: #1BBF54; }
+
+    /* ── Selected stations section ── */
+    .section-header { display: flex; align-items: center; justify-content: space-between; margin: 12px 0 6px; }
+    .section-header .section-label { margin: 0; }
+
+    #clearAllBtn {
+      font-size: 0.75rem; color: #f87171; background: none; border: none;
+      padding: 0; cursor: pointer; width: auto !important; margin-top: 0 !important;
+      font-weight: normal; text-decoration: underline; text-underline-offset: 2px;
+    }
+    #clearAllBtn:hover { color: #fca5a5; }
+
+    #selectAllBtn {
+      font-size: 0.75rem; color: #1BBF54; background: none; border: none;
+      padding: 0; cursor: pointer; width: auto !important; margin-top: 0 !important;
+      font-weight: normal; text-decoration: underline; text-underline-offset: 2px;
+    }
+    #selectAllBtn:hover { color: #4ade80; }
+
+    #selectedList { display: flex; flex-direction: column; gap: 5px; }
+    #selectedList:empty::before { content: "No stations selected"; font-size: 0.8rem; color: #6b7280; font-style: italic; }
+
+    .station-chip {
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 6px; padding: 5px 8px; font-size: 0.82rem; gap: 6px;
+      animation: chipIn 0.15s ease;
+    }
+    @keyframes chipIn { from { opacity:0; transform:translateY(-4px); } to { opacity:1; transform:translateY(0); } }
+    .chip-name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .chip-remove {
+      flex-shrink: 0; background: none; border: none; color: #9ca3af; cursor: pointer;
+      padding: 0 2px; font-size: 14px; line-height: 1;
+      width: auto !important; margin-top: 0 !important;
+      display: flex; align-items: center;
+    }
+    .chip-remove:hover { color: #f87171; }
+
+    /* ── Draw button ── */
+    #drawBtn {
+      width: 100%; padding: 10px; margin-top: 12px;
+      background: #1BBF54; color: #052e16; font-weight: bold;
+      border: none; border-radius: 6px; cursor: pointer; box-sizing: border-box;
+    }
+    #drawBtn:hover { background: #17a84a; }
+
+    /* ── Zoom controls ── */
+    .leaflet-top.leaflet-left .leaflet-control-zoom { display: none; }
+    .leaflet-top.leaflet-right { top: 16px; right: 16px; }
+    .leaflet-top.leaflet-right .leaflet-control-zoom { margin: 0; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.35); }
+    .leaflet-control-zoom-in, .leaflet-control-zoom-out { background: #014554 !important; color: #e5e7eb !important; border: none !important; }
+    .leaflet-control-zoom-in:hover, .leaflet-control-zoom-out:hover { background: #025f73 !important; color: #fff !important; }
+
+    /* ── Mobile ── */
+    @media (max-width: 768px) {
+      #sidebar { top: auto; left: 50%; transform: translateX(-50%); bottom: 20px; width: calc(100% - 40px); max-width: 420px; border-radius: 16px; padding: 12px 16px; }
+      #app.sidebar-collapsed #sidebar { width: calc(100% - 40px); max-width: 420px; padding: 10px 16px; }
+      #sidebar-header { flex-direction: row; justify-content: space-between; }
+      #app.sidebar-collapsed #sidebar-header h2 { opacity: 1; pointer-events: auto; }
+      #toggleBtn svg { transform: rotate(-90deg); }
+      #app.sidebar-collapsed #toggleBtn svg { transform: rotate(90deg); }
     }
   </style>
 </head>
 
 <body>
 <div id="app">
+  <div id="map"></div>
+
   <aside id="sidebar">
     <div id="sidebar-header">
       <h2>Walkable WMATA</h2>
-      <button id="toggleBtn" aria-label="Toggle sidebar">☰</button>
+      <button id="toggleBtn" aria-label="Toggle sidebar">
+        <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <polyline points="10,3 5,8 10,13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
     </div>
-    <div id="sidebar-content" class="expanded">
-      <p>Precomputed walking sheds (no API calls)</p>
-      <label for="stationSelect">Select a Station from the dropdown:</label>
-      <select id="stationSelect"></select>
-      <div class="checkboxes">
-        <label><input type="checkbox" value="5" checked> 5 minutes</label>
-        <label><input type="checkbox" value="10" checked> 10 minutes</label>
-        <label><input type="checkbox" value="15" checked> 15 minutes</label>
-        <label><input type="checkbox" value="20" checked> 20 minutes</label>
-      </div>
-      <button id="drawBtn">Show walksheds</button>
-    </div>                                         
-  </aside>
 
-  <div id="map"></div>
+    <div id="sidebar-content" class="expanded">
+      <p style="margin:0 0 8px;font-size:0.85rem;color:#9ca3af;">Precomputed walking sheds &middot; click map or search</p>
+
+      <div class="search-wrap">
+        <input id="stationSearch" type="text" placeholder="Search stations&hellip;" autocomplete="off" />
+        <div id="stationDropdown"></div>
+      </div>
+
+      <div class="section-label">Walk time</div>
+      <div class="checkboxes">
+        <label><input type="checkbox" value="5"  checked> 5 min</label>
+        <label><input type="checkbox" value="10" checked> 10 min</label>
+        <label><input type="checkbox" value="15" checked> 15 min</label>
+        <label><input type="checkbox" value="20" checked> 20 min</label>
+      </div>
+
+      <div class="section-header">
+        <div class="section-label">Selected stations</div>
+        <div style="display:flex;gap:10px;">
+          <button id="selectAllBtn">Select all</button>
+          <button id="clearAllBtn">Clear all</button>
+        </div>
+      </div>
+      <div id="selectedList"></div>
+
+      <button id="drawBtn">Show walksheds</button>
+    </div>
+  </aside>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
 <script>
-/* --------------------------------------------------
-   BASIC MAP SETUP 
--------------------------------------------------- */
-
-const map = L.map("map").setView([38.905, -77.036], 12);
-
+/* ── Map setup ── */
+const map = L.map("map", { zoomControl: false }).setView([38.905, -77.036], 12);
+L.control.zoom({ position: "topright" }).addTo(map);
 L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
-	attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
-	maxZoom: 16
+  attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ', maxZoom: 16
 }).addTo(map);
 
 const walkshedLayer = L.layerGroup().addTo(map);
-let stationMarker = null;
+const LINE_COLORS = { RD:"#E5262E", BL:"#1574C4", OR:"#F7941D", SV:"#A0A2A0", GR:"#00A65C", YL:"#FFD32A" };
 
-/* Define the colors of the metro lines*/
-const LINE_COLORS = {
-  RD: "#E5262E",
-  BL: "#1574C4",
-  OR: "#F7941D",
-  SV: "#A0A2A0",
-  GR: "#00A65C",
-  YL: "#FFD32A"
-};
+/* ── State ── */
+let stationLookup = {};
+let walkshedData  = null;
+const selectedStations = new Set();
 
-/* --------------------------------------------------
-   LOAD STATIONS GEOJSON                       
-   Reads stations.geojson and builds a lookup
-   table so we can find any station by its code. Also
-   references/stores stations by name so two level stations
-   like Metro Center, L'Enfant, etc. will display as 
-   one combined symbol on the map.
--------------------------------------------------- */
-
-let stationLookup = {};                              
-
+/* ── Load data ── */
 async function loadStations() {
   const data = await fetch("stations.geojson").then(r => r.json());
-  // Merge duplicates — some codes share a physical station (e.g. Metro Center)
   data.features.forEach(f => {
-    const code = f.properties.code;
     const name = f.properties.name;
-
-    // Check if a station with this name already exists under a different code
+    const code = f.properties.code;
     const existing = Object.values(stationLookup).find(s => s.name === name);
-
     if (existing) {
-      // Merge lines into the existing entry
-      f.properties.lines.forEach(line => {
-        if (!existing.lines.includes(line)) {
-          existing.lines.push(line);
-        }
-      });
+      // Merge lines into the primary entry
+      f.properties.lines.forEach(l => { if (!existing.lines.includes(l)) existing.lines.push(l); });
+      // Also index this secondary code → same entry, so walkshed lookups work
+      // regardless of which platform code the walkshed file uses
+      stationLookup[code] = existing;
     } else {
-      // New station — store it under its code
-      stationLookup[code] = {
-        name:  name,
-        lat:   f.geometry.coordinates[1],
-        lon:   f.geometry.coordinates[0],
-        lines: [...f.properties.lines]
-      };
+      stationLookup[code] = { name, lat: f.geometry.coordinates[1], lon: f.geometry.coordinates[0], lines: [...f.properties.lines], marker: null };
     }
   });
-  drawStations();
-}                                                  
-
-/* --------------------------------------------------
-   LOAD WALKSHED GEOJSON
--------------------------------------------------- */
-
-let walkshedData = null;
+  drawStationMarkers();
+  resolveDropdownNames(); // resolve names in case walksheds loaded first
+}
 
 async function loadWalksheds() {
   walkshedData = await fetch("walksheds.geojson")
     .then(r => { if (!r.ok) throw new Error(r.statusText); return r.json(); })
-    .catch(err => { console.error("Failed to load walksheds:", err); });
-  populateStationDropdown();
+    .catch(err => console.error("Failed to load walksheds:", err));
+  buildDropdownData();
 }
 
-// Load both files at startup but individually so stations always loads
+// Load both files. stations.geojson is the name authority; walksheds.geojson
+// uses station_id (code) to identify stations. We join on code at draw time.
 loadStations();
 loadWalksheds();
 
-/* --------------------------------------------------
-   UI HELPERS
--------------------------------------------------- */
-
-function populateStationDropdown() {
-  const select = document.getElementById("stationSelect");
-
-  const stationIds = [
-    ...new Set(walkshedData.features.map(f => f.properties.station_name))
-  ].sort();
-
-  stationIds.forEach(id => {
-    const option = document.createElement("option");
-    option.value = id;
-    option.textContent = id;
-    select.appendChild(option);
-  });
+/* ── Marker SVG ── */
+function buildMarkerSVG(lines, selected) {
+  const OUTER_R=16, MID_R=10, GAP=1.5, SIZE=40, CX=20, CY=20;
+  const sa = 360 / lines.length;
+  function polar(cx,cy,r,deg){ const rad=(deg-90)*Math.PI/180; return {x:cx+r*Math.cos(rad),y:cy+r*Math.sin(rad)}; }
+  function arc(cx,cy,oR,iR,a1,a2){ const o1=polar(cx,cy,oR,a1),o2=polar(cx,cy,oR,a2),i1=polar(cx,cy,iR,a2),i2=polar(cx,cy,iR,a1),lg=(a2-a1)>180?1:0; return `M${o1.x} ${o1.y} A${oR} ${oR} 0 ${lg} 1 ${o2.x} ${o2.y} L${i1.x} ${i1.y} A${iR} ${iR} 0 ${lg} 0 ${i2.x} ${i2.y}Z`; }
+  let s = selected ? `<circle cx="${CX}" cy="${CY}" r="19" fill="none" stroke="#fff" stroke-width="2.5" stroke-dasharray="4 2"/>` : "";
+  if (lines.length===1) { s += `<circle cx="${CX}" cy="${CY}" r="${MID_R-GAP}" fill="${LINE_COLORS[lines[0]]}"/>`; }
+  else { lines.forEach((l,i) => { s += `<path d="${arc(CX,CY,OUTER_R,MID_R+GAP,i*sa,(i+1)*sa)}" fill="${LINE_COLORS[l]}"/>`; }); s += `<circle cx="${CX}" cy="${CY}" r="${MID_R}" fill="#111827"/><circle cx="${CX}" cy="${CY}" r="${MID_R-GAP}" fill="white"/>`; }
+  return `<svg width="${SIZE}" height="${SIZE}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
 }
 
-function selectedMinutes() {
-  return Array.from(
-    document.querySelectorAll(".checkboxes input:checked")
-  ).map(cb => Number(cb.value));
+function refreshMarker(station) {
+  if (!station.marker) return;
+  const sel = selectedStations.has(station.name);
+  const size = station.lines.length === 1 ? 20 : 40;
+  station.marker.setIcon(L.divIcon({ html: buildMarkerSVG(station.lines, sel), className: "", iconSize:[size,size], iconAnchor:[size/2,size/2] }));
 }
 
-/* --------------------------------------------------
-   DRAW WALKSHEDS
--------------------------------------------------- */
-
-function colorForMinutes(min) {
-  if (min === 5)  return "#22c55e";
-  if (min === 10) return "#f59e0b";
-  return "#ef4444";                                  // fallback for any other value
-}
-
-/* --------------------------------------------------
-   DRAW ALL STATIONS ON LOAD
--------------------------------------------------- */
-
-/*Create station markers showing line colors*/
-function buildMarkerSVG(lines) {
-  const OUTER_R = 16, MID_R = 10, GAP = 1.5, SIZE = 40, CX = SIZE / 2, CY = SIZE / 2;
-  const sliceAngle = 360 / lines.length;
-
-  function polarToCartesian(cx, cy, r, angleDeg) {
-    const rad = (angleDeg - 90) * Math.PI / 180;
-    return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
-  }
-
-  function slicePath(cx, cy, outerR, innerR, startAngle, endAngle) {
-    const o1 = polarToCartesian(cx, cy, outerR, startAngle);
-    const o2 = polarToCartesian(cx, cy, outerR, endAngle);
-    const i1 = polarToCartesian(cx, cy, innerR, endAngle);
-    const i2 = polarToCartesian(cx, cy, innerR, startAngle);
-    const large = (endAngle - startAngle) > 180 ? 1 : 0;
-    return `M ${o1.x} ${o1.y} A ${outerR} ${outerR} 0 ${large} 1 ${o2.x} ${o2.y} L ${i1.x} ${i1.y} A ${innerR} ${innerR} 0 ${large} 0 ${i2.x} ${i2.y} Z`;
-  }
-
-  let shapes = "";
-
-  if (lines.length === 1) {
-    shapes = `<circle cx="${CX}" cy="${CY}" r="${MID_R - GAP}" fill="${LINE_COLORS[lines[0]]}"/>`;
-  } else {
-    lines.forEach((line, i) => {
-      shapes += `<path d="${slicePath(CX, CY, OUTER_R, MID_R + GAP, i * sliceAngle, (i + 1) * sliceAngle)}" fill="${LINE_COLORS[line]}"/>`;
-    });
-    shapes += `<circle cx="${CX}" cy="${CY}" r="${MID_R}" fill="#111827"/>`;
-    shapes += `<circle cx="${CX}" cy="${CY}" r="${MID_R - GAP}" fill="white"/>`;
-  }
-
-  return `<svg width="${SIZE}" height="${SIZE}" xmlns="http://www.w3.org/2000/svg">${shapes}</svg>`;
-}
-/* end station marker construction code*/
-
-function drawStations() {
+function drawStationMarkers() {
   Object.values(stationLookup).forEach(station => {
     const size = station.lines.length === 1 ? 20 : 40;
-
-    const icon = L.divIcon({
-      html:       buildMarkerSVG(station.lines),
-      className:  "",
-      iconSize:   [size, size],
-      iconAnchor: [size / 2, size / 2]
-    });
-
-    L.marker([station.lat, station.lon], { icon })
-      .bindTooltip(station.name, { permanent: false })
-      .addTo(map);
+    const marker = L.marker([station.lat, station.lon], {
+      icon: L.divIcon({ html: buildMarkerSVG(station.lines, false), className:"", iconSize:[size,size], iconAnchor:[size/2,size/2] })
+    }).bindTooltip(station.name, { permanent: false }).addTo(map);
+    marker.on("click", () => toggleStation(station.name));
+    station.marker = marker;
   });
 }
 
-function drawWalksheds() {
-  if (!walkshedData) return;                         // ← NEW: guard against early click
-
-  const stationId = document.getElementById("stationSelect").value;
-  const minutes = selectedMinutes();
-
-  walkshedLayer.clearLayers();
-
-  const filtered = {
-    type: "FeatureCollection",
-    features: walkshedData.features.filter(f =>
-      f.properties.station_name === stationId &&
-      minutes.includes(f.properties.minutes)
-    )
-  };
-
-  const geojsonLayer = L.geoJSON(filtered, {
-    style: f => ({
-      color: colorForMinutes(f.properties.minutes),
-      weight: 1,
-      fillOpacity: 0.3
-    })
-  }).addTo(walkshedLayer);
-
-  if (stationMarker) map.removeLayer(stationMarker);
-
-  if (filtered.features.length > 0) {
-    map.fitBounds(geojsonLayer.getBounds().pad(0.2));
-  }
+/* ── Selection ── */
+function toggleStation(name) {
+  const adding = !selectedStations.has(name);
+  if (adding) { selectedStations.add(name); } else { selectedStations.delete(name); }
+  const st = Object.values(stationLookup).find(s => s.name === name);
+  if (st) refreshMarker(st);
+  renderChips();
+  // Only zoom to fit when adding a station; just redraw when removing
+  drawWalksheds(adding);
 }
 
-document.getElementById("drawBtn").addEventListener("click", drawWalksheds);
+function removeStation(name) {
+  selectedStations.delete(name);
+  const st = Object.values(stationLookup).find(s => s.name === name);
+  if (st) refreshMarker(st);
+  renderChips();
+  drawWalksheds(false);
+}
 
-/* JS for collapsible menu */
+function selectAll() {
+  allStationNames.forEach(name => {
+    selectedStations.add(name);
+    const st = Object.values(stationLookup).find(s => s.name === name);
+    if (st) refreshMarker(st);
+  });
+  renderChips();
+  drawWalksheds(true);
+}
 
-document.getElementById("toggleBtn").addEventListener("click", () => {
-  const content = document.getElementById("sidebar-content");
-  const app = document.getElementById("app");
-  content.classList.toggle("collapsed");
-  content.classList.toggle("expanded");
-  app.classList.toggle("sidebar-collapsed");
+
+function clearAll() {
+  const names = [...selectedStations];
+  selectedStations.clear();
+  names.forEach(name => { const st = Object.values(stationLookup).find(s => s.name === name); if (st) refreshMarker(st); });
+  renderChips();
+  drawWalksheds(false);
+}
+
+/* ── Chips ── */
+function renderChips() {
+  const list = document.getElementById("selectedList");
+  list.innerHTML = "";
+  selectedStations.forEach(name => {
+    const chip = document.createElement("div");
+    chip.className = "station-chip";
+    chip.innerHTML = `<span class="chip-name">${name}</span><button class="chip-remove" aria-label="Remove ${name}"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><line x1="1" y1="1" x2="11" y2="11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><line x1="11" y1="1" x2="1" y2="11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>`;
+    chip.querySelector(".chip-remove").addEventListener("click", () => removeStation(name));
+    list.appendChild(chip);
+  });
+}
+
+/* ── Search dropdown ── */
+let allStationNames = [];
+let highlightIndex = -1;
+
+function buildDropdownData() {
+  // Build set of codes that actually have walkshed data
+  const codesWithData = new Set(walkshedData.features.map(f => f.properties.station_id));
+  // Map to proper names via stationLookup (code is the key)
+  // stationLookup may not be populated yet if stations loads after walksheds —
+  // so we also store the raw codes and resolve names lazily in renderDropdown.
+  walkshedCodes = codesWithData;
+  // Resolve names immediately if stationLookup is already populated
+  resolveDropdownNames();
+}
+
+let walkshedCodes = new Set();
+
+function resolveDropdownNames() {
+  if (!walkshedCodes.size || !Object.keys(stationLookup).length) return;
+  const names = [];
+  walkshedCodes.forEach(code => {
+    if (stationLookup[code]) names.push(stationLookup[code].name);
+  });
+  allStationNames = names.sort();
+}
+
+const searchInput = document.getElementById("stationSearch");
+const dropdown    = document.getElementById("stationDropdown");
+
+function renderDropdown(query) {
+  const q = query.trim().toLowerCase();
+  const matches = q ? allStationNames.filter(n => n.toLowerCase().includes(q)) : allStationNames;
+  dropdown.innerHTML = "";
+  highlightIndex = -1;
+  if (!matches.length) { dropdown.classList.remove("open"); return; }
+  matches.forEach(name => {
+    const item = document.createElement("div");
+    item.className = "dropdown-item" + (selectedStations.has(name) ? " already-selected" : "");
+    item.textContent = name;
+    item.addEventListener("mousedown", e => { e.preventDefault(); toggleStation(name); searchInput.value = ""; renderDropdown(""); });
+    dropdown.appendChild(item);
+  });
+  dropdown.classList.add("open");
+}
+
+searchInput.addEventListener("input",  () => renderDropdown(searchInput.value));
+searchInput.addEventListener("focus",  () => renderDropdown(searchInput.value));
+searchInput.addEventListener("blur",   () => setTimeout(() => dropdown.classList.remove("open"), 150));
+searchInput.addEventListener("keydown", e => {
+  const items = dropdown.querySelectorAll(".dropdown-item");
+  if (!items.length) return;
+  if (e.key==="ArrowDown") { e.preventDefault(); highlightIndex=Math.min(highlightIndex+1,items.length-1); }
+  else if (e.key==="ArrowUp") { e.preventDefault(); highlightIndex=Math.max(highlightIndex-1,0); }
+  else if (e.key==="Enter" && highlightIndex>=0) { e.preventDefault(); toggleStation(items[highlightIndex].textContent); searchInput.value=""; renderDropdown(""); return; }
+  else if (e.key==="Escape") { dropdown.classList.remove("open"); return; }
+  items.forEach((el,i) => el.classList.toggle("highlighted", i===highlightIndex));
+  if (highlightIndex>=0) items[highlightIndex].scrollIntoView({block:"nearest"});
 });
 
+/* ── Draw walksheds ── */
+function colorForMinutes(min) { if(min===5) return "#22c55e"; if(min===10) return "#f59e0b"; if(min===15) return "#f97316"; return "#ef4444"; }
+function selectedMinutes() { return Array.from(document.querySelectorAll(".checkboxes input:checked")).map(cb=>Number(cb.value)); }
+
+function drawWalksheds(shouldFit) {
+  if (!walkshedData) return;
+  walkshedLayer.clearLayers();
+  if (!selectedStations.size) return;
+  const minutes = selectedMinutes();
+  // Join walkshed features to selected stations via station_id → proper name
+  const filtered = {
+    type: "FeatureCollection",
+    features: walkshedData.features.filter(f => {
+      const station = stationLookup[f.properties.station_id];
+      return station &&
+             selectedStations.has(station.name) &&
+             minutes.includes(f.properties.minutes);
+    })
+  };
+  if (!filtered.features.length) return;
+  const geojsonLayer = L.geoJSON(filtered, {
+    style: f => ({ color: colorForMinutes(f.properties.minutes), weight: 1, fillOpacity: 0.25 })
+  }).addTo(walkshedLayer);
+  // Only re-fit the map when explicitly requested (adding a station or button click)
+  if (shouldFit) map.fitBounds(geojsonLayer.getBounds().pad(0.15));
+}
+
+/* ── Events ── */
+document.getElementById("drawBtn").addEventListener("click", () => drawWalksheds(true));
+document.getElementById("selectAllBtn").addEventListener("click", selectAll);
+document.getElementById("clearAllBtn").addEventListener("click", clearAll);
+document.querySelectorAll(".checkboxes input").forEach(cb => cb.addEventListener("change", () => drawWalksheds(false)));
+document.getElementById("toggleBtn").addEventListener("click", () => {
+  document.getElementById("sidebar-content").classList.toggle("collapsed");
+  document.getElementById("sidebar-content").classList.toggle("expanded");
+  document.getElementById("app").classList.toggle("sidebar-collapsed");
+});
 </script>
 </body>
 </html>
