@@ -1,6 +1,6 @@
 # Walkable Transit
 
-An set of interactive maps showing precomputed walking shed polygons around transit stations, starting with the Washington DC Metro (WMATA). Select an agency from the main map and then one or more stations from the agency map to visualize how far you can walk in 5, 10, 15, or 20 minutes.
+A set of interactive maps showing precomputed walking shed polygons around transit stations, starting with the Washington DC Metro (WMATA). Select an agency from the main map and then one or more stations from the agency map to visualize how far you can walk in 5, 10, 15, or 20 minutes from a station.
 
 **[View the live map →](https://greg10101.github.io/Walk-Bikeshed-Map/)**
 
@@ -8,7 +8,7 @@ An set of interactive maps showing precomputed walking shed polygons around tran
 
 ## About
 
-Walkable Transit is a growing project that maps pedestrian accessibility around public transit stations. Rather than straight-line ("as the crow flies") distance, walking sheds trace the actual street network — giving a realistic picture of what's reachable on foot from any given station.
+"What's The Walkshed" is a growing project that maps pedestrian accessibility around public transit stations. Rather than straight-line ("as the crow flies") distance, walking sheds trace the actual street network — giving a realistic picture of what's reachable on foot from any given station.
 
 All walkshed polygons are precomputed and served as static GeoJSON, so the map loads instantly with no routing API calls at runtime.
 
