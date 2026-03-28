@@ -32,7 +32,7 @@ All walkshed polygons are precomputed and served as static GeoJSON, so the map l
 
 ## Screenshots
 
-> ![Alt text](/../<main>/Screenshots/2026-3-27 WMATA Screencapture.png?raw=true "Optional Title")
+![WMATA Screencapture](Screenshots/2026-3-27%20WMATA%20Screencapture.png?raw=true)
 
 ---
 
