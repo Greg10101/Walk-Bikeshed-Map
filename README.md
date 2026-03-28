@@ -63,7 +63,7 @@ Walking isochrone polygons generated using ArcGIS network analysis tools against
 Walk-Bikeshed-Map/
 ├── index.html          # Map application (GitHub Pages entry point)
 ├── README.md   
-└── "Agency Code"       # Folder for EACH individual agency
+└── "Agency Code"/      # Folder for EACH individual agency
     ├── stations.geojson    # Station locations and metadata
     ├── walksheds.geojson   # Precomputed walking shed polygons
     └── index.html          # Agency map page
