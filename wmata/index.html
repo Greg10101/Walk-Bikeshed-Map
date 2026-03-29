@@ -69,7 +69,7 @@
     #sidebar {
       position: absolute; top: 76px; left: 16px; z-index: 1000;
       width: 300px; padding: 12px 14px;
-      background: #014554; color: #e5e7eb;
+      background: #4679b0; color: #ffffff;
       border-radius: 14px;
       box-shadow: 0 8px 32px rgba(0,0,0,0.45), 0 2px 8px rgba(0,0,0,0.3);
       transition: width 0.3s ease; overflow: hidden;
@@ -84,8 +84,8 @@
 
     #toggleBtn {
       flex-shrink: 0; display: flex; align-items: center; justify-content: center;
-      padding: 5px 7px; background: transparent; color: #e5e7eb;
-      border: 1px solid #e5e7eb; border-radius: 6px; cursor: pointer;
+      padding: 5px 7px; background: transparent; color: #ffffff;
+      border: 1px solid #ffffff; border-radius: 6px; cursor: pointer;
       line-height: 1; width: auto !important; margin-top: 0 !important;
     }
     #toggleBtn svg { display: block; width: 16px; height: 16px; transition: transform 0.3s ease; }
@@ -106,7 +106,7 @@
       font-size: 0.875rem; box-sizing: border-box; outline: none;
     }
     #stationSearch::placeholder { color: #6b7280; }
-    #stationSearch:focus { border-color: #1BBF54; }
+    #stationSearch:focus { border-color: #ffffff; }
 
     #stationDropdown {
       display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0;
@@ -126,12 +126,12 @@
     /* ── Section labels ── */
     .section-label {
       font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em;
-      color: #9ca3af; margin: 12px 0 6px;
+      color: #ffffff; margin: 12px 0 6px;
     }
 
     /* ── Checkboxes ── */
     .checkboxes label { display: inline-flex; align-items: center; gap: 5px; margin-right: 10px; margin-top: 4px; font-size: 0.875rem; cursor: pointer; }
-    .checkboxes input[type="checkbox"] { accent-color: #1BBF54; }
+    .checkboxes input[type="checkbox"] { accent-color: #3e3e3e; }
 
     /* ── Selected stations section ── */
     .section-header { display: flex; align-items: center; justify-content: space-between; margin: 12px 0 6px; }
@@ -152,7 +152,7 @@
     #selectAllBtn:hover { color: #4ade80; }
 
     #selectedList { display: flex; flex-direction: column; gap: 5px; }
-    #selectedList:empty::before { content: "No stations selected"; font-size: 0.8rem; color: #6b7280; font-style: italic; }
+    #selectedList:empty::before { content: "No stations selected"; font-size: 0.8rem; color: #e5e7eb; font-style: italic; }
 
     .station-chip {
       display: flex; align-items: center; justify-content: space-between;
@@ -163,7 +163,7 @@
     @keyframes chipIn { from { opacity:0; transform:translateY(-4px); } to { opacity:1; transform:translateY(0); } }
     .chip-name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .chip-remove {
-      flex-shrink: 0; background: none; border: none; color: #9ca3af; cursor: pointer;
+      flex-shrink: 0; background: none; border: none; color: #ffffff; cursor: pointer;
       padding: 0 2px; font-size: 14px; line-height: 1;
       width: auto !important; margin-top: 0 !important;
       display: flex; align-items: center;
@@ -173,7 +173,7 @@
     /* ── Draw button ── */
     #drawBtn {
       width: 100%; padding: 10px; margin-top: 12px;
-      background: #1BBF54; color: #052e16; font-weight: bold;
+      background: #3e3e3e; color: #ffffff; font-weight: bold;
       border: none; border-radius: 6px; cursor: pointer; box-sizing: border-box;
     }
     #drawBtn:hover { background: #17a84a; }
@@ -182,7 +182,7 @@
     .leaflet-top.leaflet-left .leaflet-control-zoom { display: none; }
     .leaflet-top.leaflet-right { top: 16px; right: 16px; }
     .leaflet-top.leaflet-right .leaflet-control-zoom { margin: 0; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.35); }
-    .leaflet-control-zoom-in, .leaflet-control-zoom-out { background: #014554 !important; color: #e5e7eb !important; border: none !important; }
+    .leaflet-control-zoom-in, .leaflet-control-zoom-out { background: #3e3e3e !important; color: #ffffff !important; border: none !important; }
     .leaflet-control-zoom-in:hover, .leaflet-control-zoom-out:hover { background: #025f73 !important; color: #fff !important; }
 
     /* ── Mobile ── */
@@ -217,7 +217,7 @@
 
   <aside id="sidebar">
     <div id="sidebar-header">
-      <h2>Walkable WMATA</h2>
+      <h2>WMATA Rail Station Walksheds</h2>
       <button id="toggleBtn" aria-label="Toggle sidebar">
         <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
           <polyline points="10,3 5,8 10,13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -226,7 +226,7 @@
     </div>
 
     <div id="sidebar-content" class="expanded">
-      <p style="margin:0 0 8px;font-size:0.85rem;color:#9ca3af;">Precomputed walking sheds &middot; click map or search</p>
+      <p style="margin:0 0 8px;font-size:0.85rem;color:#ffffff">Click map or search below to select a station(s)</p>
 
       <div class="search-wrap">
         <input id="stationSearch" type="text" placeholder="Search stations&hellip;" autocomplete="off" />
