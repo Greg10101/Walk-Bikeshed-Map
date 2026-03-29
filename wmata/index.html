@@ -211,7 +211,7 @@ async function loadStations() {
   const data = await fetch("stations.geojson").then(r => r.json());
   data.features.forEach(f => {
     const name = f.properties.name;
-    const code = f.properties.code;
+    const code = f.properties.station_id;
     const existing = Object.values(stationLookup).find(s => s.name === name);
     if (existing) {
       // Merge lines into the primary entry

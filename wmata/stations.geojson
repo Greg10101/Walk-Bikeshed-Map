@@ -1,116 +1,2403 @@
 {
   "type": "FeatureCollection",
   "features": [
-    { "type": "Feature", "properties": { "code": "A01", "name": "Metro Center", "lines": ["RD"] }, "geometry": { "type": "Point", "coordinates": [-77.0282, 38.8983] } },
-    { "type": "Feature", "properties": { "code": "A02", "name": "Farragut North", "lines": ["RD"] }, "geometry": { "type": "Point", "coordinates": [-77.0400, 38.9018] } },
-    { "type": "Feature", "properties": { "code": "A03", "name": "Dupont Circle", "lines": ["RD"] }, "geometry": { "type": "Point", "coordinates": [-77.0434, 38.9096] } },
-    { "type": "Feature", "properties": { "code": "A04", "name": "Woodley Park-Zoo/Adams Morgan", "lines": ["RD"] }, "geometry": { "type": "Point", "coordinates": [-77.0524, 38.9244] } },
-    { "type": "Feature", "properties": { "code": "A05", "name": "Cleveland Park", "lines": ["RD"] }, "geometry": { "type": "Point", "coordinates": [-77.0580, 38.9342] } },
-    { "type": "Feature", "properties": { "code": "A06", "name": "Van Ness-UDC", "lines": ["RD"] }, "geometry": { "type": "Point", "coordinates": [-77.0632, 38.9444] } },
-    { "type": "Feature", "properties": { "code": "A07", "name": "Tenleytown-AU", "lines": ["RD"] }, "geometry": { "type": "Point", "coordinates": [-77.0797, 38.9478] } },
-    { "type": "Feature", "properties": { "code": "A08", "name": "Friendship Heights", "lines": ["RD"] }, "geometry": { "type": "Point", "coordinates": [-77.0857, 38.9601] } },
-    { "type": "Feature", "properties": { "code": "A09", "name": "Bethesda", "lines": ["RD"] }, "geometry": { "type": "Point", "coordinates": [-77.0989, 38.9844] } },
-    { "type": "Feature", "properties": { "code": "A10", "name": "Medical Center", "lines": ["RD"] }, "geometry": { "type": "Point", "coordinates": [-77.0944, 38.9999] } },
-    { "type": "Feature", "properties": { "code": "A11", "name": "Grosvenor-Strathmore", "lines": ["RD"] }, "geometry": { "type": "Point", "coordinates": [-77.1065, 39.0294] } },
-    { "type": "Feature", "properties": { "code": "A12", "name": "North Bethesda", "lines": ["RD"] }, "geometry": { "type": "Point", "coordinates": [-77.1172, 39.0444] } },
-    { "type": "Feature", "properties": { "code": "A13", "name": "Twinbrook", "lines": ["RD"] }, "geometry": { "type": "Point", "coordinates": [-77.1218, 39.0625] } },
-    { "type": "Feature", "properties": { "code": "A14", "name": "Rockville", "lines": ["RD"] }, "geometry": { "type": "Point", "coordinates": [-77.1464, 39.0845] } },
-    { "type": "Feature", "properties": { "code": "A15", "name": "Shady Grove", "lines": ["RD"] }, "geometry": { "type": "Point", "coordinates": [-77.1660, 39.1198] } },
-
-    { "type": "Feature", "properties": { "code": "B01", "name": "Gallery Pl-Chinatown", "lines": ["RD","GR","YL"] }, "geometry": { "type": "Point", "coordinates": [-77.0219, 38.8982] } },
-    { "type": "Feature", "properties": { "code": "B02", "name": "Judiciary Square", "lines": ["RD"] }, "geometry": { "type": "Point", "coordinates": [-77.0166, 38.8964] } },
-    { "type": "Feature", "properties": { "code": "B03", "name": "Union Station", "lines": ["RD"] }, "geometry": { "type": "Point", "coordinates": [-77.0077, 38.8975] } },
-    { "type": "Feature", "properties": { "code": "B04", "name": "Rhode Island Ave-Brentwood", "lines": ["RD"] }, "geometry": { "type": "Point", "coordinates": [-76.9954, 38.9207] } },
-    { "type": "Feature", "properties": { "code": "B05", "name": "Brookland-CUA", "lines": ["RD"] }, "geometry": { "type": "Point", "coordinates": [-76.9944, 38.9337] } },
-    { "type": "Feature", "properties": { "code": "B06", "name": "Fort Totten", "lines": ["RD","GR","YL"] }, "geometry": { "type": "Point", "coordinates": [-77.0021, 38.9516] } },
-    { "type": "Feature", "properties": { "code": "B07", "name": "Takoma", "lines": ["RD"] }, "geometry": { "type": "Point", "coordinates": [-77.0173, 38.9763] } },
-    { "type": "Feature", "properties": { "code": "B08", "name": "Silver Spring", "lines": ["RD"] }, "geometry": { "type": "Point", "coordinates": [-77.0289, 38.9940] } },
-    { "type": "Feature", "properties": { "code": "B09", "name": "Forest Glen", "lines": ["RD"] }, "geometry": { "type": "Point", "coordinates": [-77.0416, 39.0149] } },
-    { "type": "Feature", "properties": { "code": "B10", "name": "Wheaton", "lines": ["RD"] }, "geometry": { "type": "Point", "coordinates": [-77.0523, 39.0444] } },
-    { "type": "Feature", "properties": { "code": "B11", "name": "Glenmont", "lines": ["RD"] }, "geometry": { "type": "Point", "coordinates": [-77.0538, 39.0624] } },
-    { "type": "Feature", "properties": { "code": "B35", "name": "NoMa-Gallaudet U", "lines": ["RD"] }, "geometry": { "type": "Point", "coordinates": [-77.0029, 38.9079] } },
-
-    { "type": "Feature", "properties": { "code": "C01", "name": "Metro Center", "lines": ["BL","OR","SV"] }, "geometry": { "type": "Point", "coordinates": [-77.0282, 38.8983] } },
-    { "type": "Feature", "properties": { "code": "C02", "name": "McPherson Square", "lines": ["BL","OR","SV"] }, "geometry": { "type": "Point", "coordinates": [-77.0343, 38.9013] } },
-    { "type": "Feature", "properties": { "code": "C03", "name": "Farragut West", "lines": ["BL","OR","SV"] }, "geometry": { "type": "Point", "coordinates": [-77.0399, 38.9013] } },
-    { "type": "Feature", "properties": { "code": "C04", "name": "Foggy Bottom-GWU", "lines": ["BL","OR","SV"] }, "geometry": { "type": "Point", "coordinates": [-77.0502, 38.8999] } },
-    { "type": "Feature", "properties": { "code": "C05", "name": "Rosslyn", "lines": ["BL","OR","SV"] }, "geometry": { "type": "Point", "coordinates": [-77.0707, 38.8963] } },
-    { "type": "Feature", "properties": { "code": "C06", "name": "Arlington Cemetery", "lines": ["BL"] }, "geometry": { "type": "Point", "coordinates": [-77.0631, 38.8851] } },
-    { "type": "Feature", "properties": { "code": "C07", "name": "Pentagon", "lines": ["BL","YL"] }, "geometry": { "type": "Point", "coordinates": [-77.0524, 38.8691] } },
-    { "type": "Feature", "properties": { "code": "C08", "name": "Pentagon City", "lines": ["BL","YL"] }, "geometry": { "type": "Point", "coordinates": [-77.0600, 38.8631] } },
-    { "type": "Feature", "properties": { "code": "C09", "name": "Crystal City", "lines": ["BL","YL"] }, "geometry": { "type": "Point", "coordinates": [-77.0504, 38.8576] } },
-    { "type": "Feature", "properties": { "code": "C10", "name": "Ronald Reagan Washington National Airport", "lines": ["BL","YL"] }, "geometry": { "type": "Point", "coordinates": [-77.0402, 38.8526] } },
-    { "type": "Feature", "properties": { "code": "C11", "name": "Potomac Yard", "lines": ["BL","YL"] }, "geometry": { "type": "Point", "coordinates": [-77.0353, 38.8414] } },
-    { "type": "Feature", "properties": { "code": "C12", "name": "Braddock Road", "lines": ["BL","YL"] }, "geometry": { "type": "Point", "coordinates": [-77.0540, 38.8145] } },
-    { "type": "Feature", "properties": { "code": "C13", "name": "King St-Old Town", "lines": ["BL","YL"] }, "geometry": { "type": "Point", "coordinates": [-77.0609, 38.8063] } },
-    { "type": "Feature", "properties": { "code": "C14", "name": "Eisenhower Avenue", "lines": ["YL"] }, "geometry": { "type": "Point", "coordinates": [-77.0760, 38.8004] } },
-    { "type": "Feature", "properties": { "code": "C15", "name": "Huntington", "lines": ["YL"] }, "geometry": { "type": "Point", "coordinates": [-77.0703, 38.7944] } },
-
-    { "type": "Feature", "properties": { "code": "D01", "name": "Federal Triangle", "lines": ["BL","OR","SV"] }, "geometry": { "type": "Point", "coordinates": [-77.0278, 38.8932] } },
-    { "type": "Feature", "properties": { "code": "D02", "name": "Smithsonian", "lines": ["BL","OR","SV"] }, "geometry": { "type": "Point", "coordinates": [-77.0279, 38.8882] } },
-    { "type": "Feature", "properties": { "code": "D03", "name": "L'Enfant Plaza", "lines": ["BL","OR","SV","GR","YL"] }, "geometry": { "type": "Point", "coordinates": [-77.0217, 38.8846] } },
-    { "type": "Feature", "properties": { "code": "D04", "name": "Federal Center SW", "lines": ["BL","OR","SV"] }, "geometry": { "type": "Point", "coordinates": [-77.0162, 38.8852] } },
-    { "type": "Feature", "properties": { "code": "D05", "name": "Capitol South", "lines": ["BL","OR","SV"] }, "geometry": { "type": "Point", "coordinates": [-77.0049, 38.8849] } },
-    { "type": "Feature", "properties": { "code": "D06", "name": "Eastern Market", "lines": ["BL","OR","SV"] }, "geometry": { "type": "Point", "coordinates": [-76.9960, 38.8844] } },
-    { "type": "Feature", "properties": { "code": "D07", "name": "Potomac Ave", "lines": ["BL","OR","SV"] }, "geometry": { "type": "Point", "coordinates": [-76.9865, 38.8822] } },
-    { "type": "Feature", "properties": { "code": "D08", "name": "Stadium-Armory", "lines": ["BL","OR","SV"] }, "geometry": { "type": "Point", "coordinates": [-76.9728, 38.8851] } },
-    { "type": "Feature", "properties": { "code": "D09", "name": "Minnesota Ave", "lines": ["OR"] }, "geometry": { "type": "Point", "coordinates": [-76.9544, 38.8989] } },
-    { "type": "Feature", "properties": { "code": "D10", "name": "Deanwood", "lines": ["OR"] }, "geometry": { "type": "Point", "coordinates": [-76.9355, 38.9072] } },
-    { "type": "Feature", "properties": { "code": "D11", "name": "Cheverly", "lines": ["OR"] }, "geometry": { "type": "Point", "coordinates": [-76.9171, 38.9171] } },
-    { "type": "Feature", "properties": { "code": "D12", "name": "Landover", "lines": ["OR"] }, "geometry": { "type": "Point", "coordinates": [-76.8905, 38.9348] } },
-    { "type": "Feature", "properties": { "code": "D13", "name": "New Carrollton", "lines": ["OR","SV"] }, "geometry": { "type": "Point", "coordinates": [-76.8729, 38.9480] } },
-
-    { "type": "Feature", "properties": { "code": "E01", "name": "Mt Vernon Sq 7th St-Convention Center", "lines": ["GR","YL"] }, "geometry": { "type": "Point", "coordinates": [-77.0220, 38.9052] } },
-    { "type": "Feature", "properties": { "code": "E02", "name": "Shaw-Howard U", "lines": ["GR","YL"] }, "geometry": { "type": "Point", "coordinates": [-77.0222, 38.9126] } },
-    { "type": "Feature", "properties": { "code": "E03", "name": "U Street/African-Amer Civil War Memorial/Cardozo", "lines": ["GR","YL"] }, "geometry": { "type": "Point", "coordinates": [-77.0286, 38.9168] } },
-    { "type": "Feature", "properties": { "code": "E04", "name": "Columbia Heights", "lines": ["GR","YL"] }, "geometry": { "type": "Point", "coordinates": [-77.0326, 38.9280] } },
-    { "type": "Feature", "properties": { "code": "E05", "name": "Georgia Ave-Petworth", "lines": ["GR","YL"] }, "geometry": { "type": "Point", "coordinates": [-77.0245, 38.9372] } },
-    { "type": "Feature", "properties": { "code": "E06", "name": "Fort Totten", "lines": ["GR","YL"] }, "geometry": { "type": "Point", "coordinates": [-77.0021, 38.9516] } },
-    { "type": "Feature", "properties": { "code": "E07", "name": "West Hyattsville", "lines": ["GR","YL"] }, "geometry": { "type": "Point", "coordinates": [-76.9724, 38.9545] } },
-    { "type": "Feature", "properties": { "code": "E08", "name": "Hyattsville Crossing", "lines": ["GR","YL"] }, "geometry": { "type": "Point", "coordinates": [-76.9561, 38.9541] } },
-    { "type": "Feature", "properties": { "code": "E09", "name": "College Park-U of Md", "lines": ["GR","YL"] }, "geometry": { "type": "Point", "coordinates": [-76.9280, 38.9779] } },
-    { "type": "Feature", "properties": { "code": "E10", "name": "Greenbelt", "lines": ["GR","YL"] }, "geometry": { "type": "Point", "coordinates": [-76.9112, 39.0116] } },
-
-    { "type": "Feature", "properties": { "code": "F01", "name": "Gallery Pl-Chinatown", "lines": ["GR","YL"] }, "geometry": { "type": "Point", "coordinates": [-77.0219, 38.8982] } },
-    { "type": "Feature", "properties": { "code": "F02", "name": "Archives-Navy Memorial-Penn Quarter", "lines": ["GR","YL"] }, "geometry": { "type": "Point", "coordinates": [-77.0219, 38.8934] } },
-    { "type": "Feature", "properties": { "code": "F03", "name": "L'Enfant Plaza", "lines": ["GR","YL"] }, "geometry": { "type": "Point", "coordinates": [-77.0217, 38.8846] } },
-    { "type": "Feature", "properties": { "code": "F04", "name": "Waterfront", "lines": ["GR"] }, "geometry": { "type": "Point", "coordinates": [-77.0175, 38.8764] } },
-    { "type": "Feature", "properties": { "code": "F05", "name": "Navy Yard-Ballpark", "lines": ["GR"] }, "geometry": { "type": "Point", "coordinates": [-77.0055, 38.8762] } },
-    { "type": "Feature", "properties": { "code": "F06", "name": "Anacostia", "lines": ["GR"] }, "geometry": { "type": "Point", "coordinates": [-76.9954, 38.8630] } },
-    { "type": "Feature", "properties": { "code": "F07", "name": "Congress Heights", "lines": ["GR"] }, "geometry": { "type": "Point", "coordinates": [-76.9955, 38.8459] } },
-    { "type": "Feature", "properties": { "code": "F08", "name": "Southern Avenue", "lines": ["GR"] }, "geometry": { "type": "Point", "coordinates": [-76.9797, 38.8407] } },
-    { "type": "Feature", "properties": { "code": "F09", "name": "Naylor Road", "lines": ["GR"] }, "geometry": { "type": "Point", "coordinates": [-76.9564, 38.8522] } },
-    { "type": "Feature", "properties": { "code": "F10", "name": "Suitland", "lines": ["GR"] }, "geometry": { "type": "Point", "coordinates": [-76.9323, 38.8435] } },
-    { "type": "Feature", "properties": { "code": "F11", "name": "Branch Ave", "lines": ["GR"] }, "geometry": { "type": "Point", "coordinates": [-76.9122, 38.8268] } },
-
-    { "type": "Feature", "properties": { "code": "G01", "name": "Benning Road", "lines": ["BL","SV"] }, "geometry": { "type": "Point", "coordinates": [-76.9378, 38.8907] } },
-    { "type": "Feature", "properties": { "code": "G02", "name": "Capitol Heights", "lines": ["BL","SV"] }, "geometry": { "type": "Point", "coordinates": [-76.9133, 38.8897] } },
-    { "type": "Feature", "properties": { "code": "G03", "name": "Addison Road-Seat Pleasant", "lines": ["BL","SV"] }, "geometry": { "type": "Point", "coordinates": [-76.8959, 38.8877] } },
-    { "type": "Feature", "properties": { "code": "G04", "name": "Morgan Boulevard", "lines": ["BL","SV"] }, "geometry": { "type": "Point", "coordinates": [-76.8677, 38.8924] } },
-    { "type": "Feature", "properties": { "code": "G05", "name": "Downtown Largo", "lines": ["BL","SV"] }, "geometry": { "type": "Point", "coordinates": [-76.8471, 38.9003] } },
-
-    { "type": "Feature", "properties": { "code": "J02", "name": "Van Dorn Street", "lines": ["BL"] }, "geometry": { "type": "Point", "coordinates": [-77.1289, 38.7994] } },
-    { "type": "Feature", "properties": { "code": "J03", "name": "Franconia-Springfield", "lines": ["BL"] }, "geometry": { "type": "Point", "coordinates": [-77.1712, 38.7661] } },
-
-    { "type": "Feature", "properties": { "code": "K01", "name": "Court House", "lines": ["OR","SV"] }, "geometry": { "type": "Point", "coordinates": [-77.0826, 38.8912] } },
-    { "type": "Feature", "properties": { "code": "K02", "name": "Clarendon", "lines": ["OR","SV"] }, "geometry": { "type": "Point", "coordinates": [-77.0961, 38.8863] } },
-    { "type": "Feature", "properties": { "code": "K03", "name": "Virginia Square-GMU", "lines": ["OR","SV"] }, "geometry": { "type": "Point", "coordinates": [-77.1050, 38.8823] } },
-    { "type": "Feature", "properties": { "code": "K04", "name": "Ballston-MU", "lines": ["OR","SV"] }, "geometry": { "type": "Point", "coordinates": [-77.1122, 38.8822] } },
-    { "type": "Feature", "properties": { "code": "K05", "name": "East Falls Church", "lines": ["OR","SV"] }, "geometry": { "type": "Point", "coordinates": [-77.1561, 38.8856] } },
-    { "type": "Feature", "properties": { "code": "K06", "name": "West Falls Church", "lines": ["OR"] }, "geometry": { "type": "Point", "coordinates": [-77.1878, 38.9001] } },
-    { "type": "Feature", "properties": { "code": "K07", "name": "Dunn Loring-Merrifield", "lines": ["OR"] }, "geometry": { "type": "Point", "coordinates": [-77.2288, 38.8836] } },
-    { "type": "Feature", "properties": { "code": "K08", "name": "Vienna/Fairfax-GMU", "lines": ["OR"] }, "geometry": { "type": "Point", "coordinates": [-77.2713, 38.8780] } },
-
-    { "type": "Feature", "properties": { "code": "N01", "name": "McLean", "lines": ["SV"] }, "geometry": { "type": "Point", "coordinates": [-77.1269, 38.9239] } },
-    { "type": "Feature", "properties": { "code": "N02", "name": "Tysons", "lines": ["SV"] }, "geometry": { "type": "Point", "coordinates": [-77.1195, 38.9207] } },
-    { "type": "Feature", "properties": { "code": "N03", "name": "Greensboro", "lines": ["SV"] }, "geometry": { "type": "Point", "coordinates": [-77.1283, 38.9177] } },
-    { "type": "Feature", "properties": { "code": "N04", "name": "Spring Hill", "lines": ["SV"] }, "geometry": { "type": "Point", "coordinates": [-77.1566, 38.9278] } },
-    { "type": "Feature", "properties": { "code": "N06", "name": "Wiehle-Reston East", "lines": ["SV"] }, "geometry": { "type": "Point", "coordinates": [-77.3404, 38.9582] } },
-    { "type": "Feature", "properties": { "code": "N07", "name": "Reston Town Center", "lines": ["SV"] }, "geometry": { "type": "Point", "coordinates": [-77.3582, 38.9590] } },
-    { "type": "Feature", "properties": { "code": "N08", "name": "Herndon", "lines": ["SV"] }, "geometry": { "type": "Point", "coordinates": [-77.3866, 38.9595] } },
-    { "type": "Feature", "properties": { "code": "N09", "name": "Innovation Center", "lines": ["SV"] }, "geometry": { "type": "Point", "coordinates": [-77.4244, 38.9596] } },
-    { "type": "Feature", "properties": { "code": "N10", "name": "Washington Dulles International Airport", "lines": ["SV"] }, "geometry": { "type": "Point", "coordinates": [-77.4474, 38.9530] } },
-    { "type": "Feature", "properties": { "code": "N11", "name": "Loudoun Gateway", "lines": ["SV"] }, "geometry": { "type": "Point", "coordinates": [-77.4795, 38.9978] } },
-    { "type": "Feature", "properties": { "code": "N12", "name": "Ashburn", "lines": ["SV"] }, "geometry": { "type": "Point", "coordinates": [-77.5013, 39.0050] } }
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.028099,
+          38.898303
+        ]
+      },
+      "properties": {
+        "station_id": "A01",
+        "name": "Metro Center",
+        "lines": [
+          "RD"
+        ],
+        "station_together_1": "C01",
+        "station_together_2": "",
+        "address": "607 13th St. NW",
+        "city": "Washington",
+        "state": "DC",
+        "zip": "20005"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.039766,
+          38.903192
+        ]
+      },
+      "properties": {
+        "station_id": "A02",
+        "name": "Farragut North",
+        "lines": [
+          "RD"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "1001 Connecticut Avenue NW",
+        "city": "Washington",
+        "state": "DC",
+        "zip": "20036"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.04362,
+          38.909499
+        ]
+      },
+      "properties": {
+        "station_id": "A03",
+        "name": "Dupont Circle",
+        "lines": [
+          "RD"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "1525 20th St. NW",
+        "city": "Washington",
+        "state": "DC",
+        "zip": "20036"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.052648,
+          38.924999
+        ]
+      },
+      "properties": {
+        "station_id": "A04",
+        "name": "Woodley Park-Zoo/Adams Morgan",
+        "lines": [
+          "RD"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "2700 Connecticut Ave., NW",
+        "city": "Washington",
+        "state": "DC",
+        "zip": "20008"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.058226,
+          38.934703
+        ]
+      },
+      "properties": {
+        "station_id": "A05",
+        "name": "Cleveland Park",
+        "lines": [
+          "RD"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "3599 Connecticut Avenue NW",
+        "city": "Washington",
+        "state": "DC",
+        "zip": "20008"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.063511,
+          38.94362
+        ]
+      },
+      "properties": {
+        "station_id": "A06",
+        "name": "Van Ness-UDC",
+        "lines": [
+          "RD"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "4200 Connecticut Ave NW",
+        "city": "Washington",
+        "state": "DC",
+        "zip": "20008"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.079615,
+          38.947808
+        ]
+      },
+      "properties": {
+        "station_id": "A07",
+        "name": "Tenleytown-AU",
+        "lines": [
+          "RD"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "4501 Wisconsin Ave NW",
+        "city": "Washington",
+        "state": "DC",
+        "zip": "20016"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.085969,
+          38.960744
+        ]
+      },
+      "properties": {
+        "station_id": "A08",
+        "name": "Friendship Heights",
+        "lines": [
+          "RD"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "5337 Wisconsin Avenue NW",
+        "city": "Washington",
+        "state": "DC",
+        "zip": "20015"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.094431,
+          38.984282
+        ]
+      },
+      "properties": {
+        "station_id": "A09",
+        "name": "Bethesda",
+        "lines": [
+          "RD"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "800 North Ln",
+        "city": "Bethesda",
+        "state": "MD",
+        "zip": "20814"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.097253,
+          38.999947
+        ]
+      },
+      "properties": {
+        "station_id": "A10",
+        "name": "Medical Center",
+        "lines": [
+          "RD"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "8810 Rockville Pike",
+        "city": "Bethesda",
+        "state": "MD",
+        "zip": "20814"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.10415,
+          39.029158
+        ]
+      },
+      "properties": {
+        "station_id": "A11",
+        "name": "Grosvenor-Strathmore",
+        "lines": [
+          "RD"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "5301 Tuckerman Ln",
+        "city": "North Bethesda",
+        "state": "MD",
+        "zip": "20852"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.113131,
+          39.048043
+        ]
+      },
+      "properties": {
+        "station_id": "A12",
+        "name": "North Bethesda",
+        "lines": [
+          "RD"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "10000 Citadel Ave",
+        "city": "North Bethesda",
+        "state": "MD",
+        "zip": "20852"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.121113,
+          39.062359
+        ]
+      },
+      "properties": {
+        "station_id": "A13",
+        "name": "Twinbrook",
+        "lines": [
+          "RD"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "1600 Chapman Ave",
+        "city": "Rockville",
+        "state": "MD",
+        "zip": "20852"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.146424,
+          39.084215
+        ]
+      },
+      "properties": {
+        "station_id": "A14",
+        "name": "Rockville",
+        "lines": [
+          "RD"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "251 Hungerford Dr",
+        "city": "Rockville",
+        "state": "MD",
+        "zip": "20850"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.164921,
+          39.119819
+        ]
+      },
+      "properties": {
+        "station_id": "A15",
+        "name": "Shady Grove",
+        "lines": [
+          "RD"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "215903 Somerville Dr",
+        "city": "Rockville",
+        "state": "MD",
+        "zip": "20855"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.021851,
+          38.89834
+        ]
+      },
+      "properties": {
+        "station_id": "B01",
+        "name": "Gallery Pl-Chinatown",
+        "lines": [
+          "RD"
+        ],
+        "station_together_1": "F01",
+        "station_together_2": "",
+        "address": "630 H St. NW",
+        "city": "Washington",
+        "state": "DC",
+        "zip": "20001"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.016643,
+          38.896084
+        ]
+      },
+      "properties": {
+        "station_id": "B02",
+        "name": "Judiciary Square",
+        "lines": [
+          "RD"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "450 F Street NW",
+        "city": "Washington",
+        "state": "DC",
+        "zip": "20001"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.006745,
+          38.897723
+        ]
+      },
+      "properties": {
+        "station_id": "B03",
+        "name": "Union Station",
+        "lines": [
+          "RD"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "701 First St. NE",
+        "city": "Washington",
+        "state": "DC",
+        "zip": "20002"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.995984,
+          38.920741
+        ]
+      },
+      "properties": {
+        "station_id": "B04",
+        "name": "Rhode Island Ave-Brentwood",
+        "lines": [
+          "RD"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "2300 Washington Pl NE",
+        "city": "Washington",
+        "state": "DC",
+        "zip": "20018"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.994544,
+          38.933234
+        ]
+      },
+      "properties": {
+        "station_id": "B05",
+        "name": "Brookland-CUA",
+        "lines": [
+          "RD"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "801 Michigan Ave NE",
+        "city": "Washington",
+        "state": "DC",
+        "zip": "20017"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.002174,
+          38.951777
+        ]
+      },
+      "properties": {
+        "station_id": "B06",
+        "name": "Fort Totten",
+        "lines": [
+          "RD"
+        ],
+        "station_together_1": "E06",
+        "station_together_2": "",
+        "address": "550 Galloway St NE",
+        "city": "Washington",
+        "state": "DC",
+        "zip": "20011"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.017834,
+          38.975532
+        ]
+      },
+      "properties": {
+        "station_id": "B07",
+        "name": "Takoma",
+        "lines": [
+          "RD"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "327 Cedar St NW",
+        "city": "Washington",
+        "state": "DC",
+        "zip": "20012"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.031321,
+          38.993841
+        ]
+      },
+      "properties": {
+        "station_id": "B08",
+        "name": "Silver Spring",
+        "lines": [
+          "RD"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "8400 Colesville Rd",
+        "city": "Silver Spring",
+        "state": "MD",
+        "zip": "20910"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.042953,
+          39.015413
+        ]
+      },
+      "properties": {
+        "station_id": "B09",
+        "name": "Forest Glen",
+        "lines": [
+          "RD"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "9730 Georgia Ave",
+        "city": "Silver Spring",
+        "state": "MD",
+        "zip": "20910"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.051098,
+          39.038558
+        ]
+      },
+      "properties": {
+        "station_id": "B10",
+        "name": "Wheaton",
+        "lines": [
+          "RD"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "11171 Georgia Ave",
+        "city": "Wheaton",
+        "state": "MD",
+        "zip": "20902"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.05341,
+          39.061713
+        ]
+      },
+      "properties": {
+        "station_id": "B11",
+        "name": "Glenmont",
+        "lines": [
+          "RD"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "12601 Georgia Ave",
+        "city": "Silver Spring",
+        "state": "MD",
+        "zip": "20906"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.002961,
+          38.907407
+        ]
+      },
+      "properties": {
+        "station_id": "B35",
+        "name": "NoMa-Gallaudet U",
+        "lines": [
+          "RD"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "200 Florida Ave N.E.",
+        "city": "Washington",
+        "state": "DC",
+        "zip": "20002"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.028099,
+          38.898303
+        ]
+      },
+      "properties": {
+        "station_id": "C01",
+        "name": "Metro Center",
+        "lines": [
+          "BL",
+          "OR",
+          "SV"
+        ],
+        "station_together_1": "A01",
+        "station_together_2": "",
+        "address": "607 13th St. NW",
+        "city": "Washington",
+        "state": "DC",
+        "zip": "20005"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.033652,
+          38.901316
+        ]
+      },
+      "properties": {
+        "station_id": "C02",
+        "name": "McPherson Square",
+        "lines": [
+          "BL",
+          "OR",
+          "SV"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "1400 I St. NW",
+        "city": "Washington",
+        "state": "DC",
+        "zip": "20005"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.03981,
+          38.901311
+        ]
+      },
+      "properties": {
+        "station_id": "C03",
+        "name": "Farragut West",
+        "lines": [
+          "BL",
+          "OR",
+          "SV"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "900 18th St. NW",
+        "city": "Washington",
+        "state": "DC",
+        "zip": "20006"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.050273,
+          38.900599
+        ]
+      },
+      "properties": {
+        "station_id": "C04",
+        "name": "Foggy Bottom-GWU",
+        "lines": [
+          "BL",
+          "OR",
+          "SV"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "2301 I St. NW",
+        "city": "Washington",
+        "state": "DC",
+        "zip": "20037"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.07146,
+          38.896595
+        ]
+      },
+      "properties": {
+        "station_id": "C05",
+        "name": "Rosslyn",
+        "lines": [
+          "BL",
+          "OR",
+          "SV"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "1850 N. Moore Street",
+        "city": "Arlington",
+        "state": "VA",
+        "zip": "22209"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.063108,
+          38.884574
+        ]
+      },
+      "properties": {
+        "station_id": "C06",
+        "name": "Arlington Cemetery",
+        "lines": [
+          "BL"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "1000 North Memorial Drive",
+        "city": "Arlington",
+        "state": "VA",
+        "zip": "22211"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.054013,
+          38.869349
+        ]
+      },
+      "properties": {
+        "station_id": "C07",
+        "name": "Pentagon",
+        "lines": [
+          "BL",
+          "YL"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "2 South Rotary Road",
+        "city": "Arlington",
+        "state": "VA",
+        "zip": "22202"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.059507,
+          38.863045
+        ]
+      },
+      "properties": {
+        "station_id": "C08",
+        "name": "Pentagon City",
+        "lines": [
+          "BL",
+          "YL"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "1250 South Hayes St.",
+        "city": "Arlington",
+        "state": "VA",
+        "zip": "22202"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.050589,
+          38.85779
+        ]
+      },
+      "properties": {
+        "station_id": "C09",
+        "name": "Crystal City",
+        "lines": [
+          "BL",
+          "YL"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "1750 S. Bell St.",
+        "city": "Arlington",
+        "state": "VA",
+        "zip": "22202"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.043805,
+          38.852985
+        ]
+      },
+      "properties": {
+        "station_id": "C10",
+        "name": "Ronald Reagan Washington National Airport",
+        "lines": [
+          "BL",
+          "YL"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "2400 S. Smith Blvd.",
+        "city": "Arlington",
+        "state": "VA",
+        "zip": "22202"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.04642,
+          38.83321
+        ]
+      },
+      "properties": {
+        "station_id": "C11",
+        "name": "Potomac Yard",
+        "lines": [
+          "BL",
+          "YL"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "2900 Potomac Greens Drive",
+        "city": "Alexandria",
+        "state": "VA",
+        "zip": "22314"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.053763,
+          38.814009
+        ]
+      },
+      "properties": {
+        "station_id": "C12",
+        "name": "Braddock Road",
+        "lines": [
+          "BL",
+          "YL"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "700 N West St",
+        "city": "Alexandria",
+        "state": "VA",
+        "zip": "22314"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.061115,
+          38.806474
+        ]
+      },
+      "properties": {
+        "station_id": "C13",
+        "name": "King St-Old Town",
+        "lines": [
+          "BL",
+          "YL"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "1900 King Street",
+        "city": "Alexandria",
+        "state": "VA",
+        "zip": "22301"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.071173,
+          38.800313
+        ]
+      },
+      "properties": {
+        "station_id": "C14",
+        "name": "Eisenhower Avenue",
+        "lines": [
+          "YL"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "2400 Eisenhower Ave",
+        "city": "Alexandria",
+        "state": "VA",
+        "zip": "22314"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.075301,
+          38.793841
+        ]
+      },
+      "properties": {
+        "station_id": "C15",
+        "name": "Huntington",
+        "lines": [
+          "YL"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "2701 Huntington Ave",
+        "city": "Alexandria",
+        "state": "VA",
+        "zip": "22303"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.028218,
+          38.893757
+        ]
+      },
+      "properties": {
+        "station_id": "D01",
+        "name": "Federal Triangle",
+        "lines": [
+          "BL",
+          "OR",
+          "SV"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "302 12th St. NW",
+        "city": "Washington",
+        "state": "DC",
+        "zip": "20004"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.028232,
+          38.888022
+        ]
+      },
+      "properties": {
+        "station_id": "D02",
+        "name": "Smithsonian",
+        "lines": [
+          "BL",
+          "OR",
+          "SV"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "1200 Independence Avenue SW",
+        "city": "Washington",
+        "state": "DC",
+        "zip": "20004"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.021964,
+          38.884775
+        ]
+      },
+      "properties": {
+        "station_id": "D03",
+        "name": "L'Enfant Plaza",
+        "lines": [
+          "BL",
+          "OR",
+          "SV"
+        ],
+        "station_together_1": "F03",
+        "station_together_2": "",
+        "address": "600 Maryland Avenue SW",
+        "city": "Washington",
+        "state": "DC",
+        "zip": "20024"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.01586,
+          38.884958
+        ]
+      },
+      "properties": {
+        "station_id": "D04",
+        "name": "Federal Center SW",
+        "lines": [
+          "BL",
+          "OR",
+          "SV"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "401 3rd Street SW",
+        "city": "Washington",
+        "state": "DC",
+        "zip": "20024"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.005137,
+          38.884968
+        ]
+      },
+      "properties": {
+        "station_id": "D05",
+        "name": "Capitol South",
+        "lines": [
+          "BL",
+          "OR",
+          "SV"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "355 First Street SE",
+        "city": "Washington",
+        "state": "DC",
+        "zip": "20003"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.995334,
+          38.884124
+        ]
+      },
+      "properties": {
+        "station_id": "D06",
+        "name": "Eastern Market",
+        "lines": [
+          "BL",
+          "OR",
+          "SV"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "701 Pennsylvania Avenue SE",
+        "city": "Washington",
+        "state": "DC",
+        "zip": "20003"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.985721,
+          38.880841
+        ]
+      },
+      "properties": {
+        "station_id": "D07",
+        "name": "Potomac Ave",
+        "lines": [
+          "BL",
+          "OR",
+          "SV"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "700 14th Street SE",
+        "city": "Washington",
+        "state": "DC",
+        "zip": "20003"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.977485,
+          38.88594
+        ]
+      },
+      "properties": {
+        "station_id": "D08",
+        "name": "Stadium-Armory",
+        "lines": [
+          "BL",
+          "OR",
+          "SV"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "192 19th St. SE",
+        "city": "Washington",
+        "state": "DC",
+        "zip": "20003"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.948042,
+          38.898284
+        ]
+      },
+      "properties": {
+        "station_id": "D09",
+        "name": "Minnesota Ave",
+        "lines": [
+          "OR"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "4000 Minnesota Ave NE",
+        "city": "Washington",
+        "state": "DC",
+        "zip": "20019"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.936177,
+          38.907734
+        ]
+      },
+      "properties": {
+        "station_id": "D10",
+        "name": "Deanwood",
+        "lines": [
+          "OR"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "4720 Minnesota Ave NE",
+        "city": "Washington",
+        "state": "DC",
+        "zip": "20019"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.915427,
+          38.91652
+        ]
+      },
+      "properties": {
+        "station_id": "D11",
+        "name": "Cheverly",
+        "lines": [
+          "OR"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "5501 Columbia Park Rd",
+        "city": "Cheverly",
+        "state": "MD",
+        "zip": "20785"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.890988,
+          38.934411
+        ]
+      },
+      "properties": {
+        "station_id": "D12",
+        "name": "Landover",
+        "lines": [
+          "OR"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "3000 Pennsy Dr",
+        "city": "Landover",
+        "state": "MD",
+        "zip": "20785"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.872144,
+          38.947674
+        ]
+      },
+      "properties": {
+        "station_id": "D13",
+        "name": "New Carrollton",
+        "lines": [
+          "OR"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "4700 Garden City Dr",
+        "city": "New Carrollton",
+        "state": "MD",
+        "zip": "20784"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.022256,
+          38.905604
+        ]
+      },
+      "properties": {
+        "station_id": "E01",
+        "name": "Mt Vernon Sq 7th St-Convention Center",
+        "lines": [
+          "GR",
+          "YL"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "700 M St. NW",
+        "city": "Washington",
+        "state": "DC",
+        "zip": "20001"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.022194,
+          38.912919
+        ]
+      },
+      "properties": {
+        "station_id": "E02",
+        "name": "Shaw-Howard U",
+        "lines": [
+          "GR",
+          "YL"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "1701 8th St. NW",
+        "city": "Washington",
+        "state": "DC",
+        "zip": "20001"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.028938,
+          38.916489
+        ]
+      },
+      "properties": {
+        "station_id": "E03",
+        "name": "U Street/African-Amer Civil War Memorial/Cardozo",
+        "lines": [
+          "GR",
+          "YL"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "1240 U Street NW",
+        "city": "Washington",
+        "state": "DC",
+        "zip": "20009"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.032775,
+          38.928672
+        ]
+      },
+      "properties": {
+        "station_id": "E04",
+        "name": "Columbia Heights",
+        "lines": [
+          "GR",
+          "YL"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "3030 14th St. NW",
+        "city": "Washington",
+        "state": "DC",
+        "zip": "20009"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.024728,
+          38.936077
+        ]
+      },
+      "properties": {
+        "station_id": "E05",
+        "name": "Georgia Ave-Petworth",
+        "lines": [
+          "GR",
+          "YL"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "3700 Georgia Avenue NW",
+        "city": "Washington",
+        "state": "DC",
+        "zip": "20010"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.002174,
+          38.951777
+        ]
+      },
+      "properties": {
+        "station_id": "E06",
+        "name": "Fort Totten",
+        "lines": [
+          "GR",
+          "YL"
+        ],
+        "station_together_1": "B06",
+        "station_together_2": "",
+        "address": "550 Galloway St NE",
+        "city": "Washington",
+        "state": "DC",
+        "zip": "20011"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.969881,
+          38.954931
+        ]
+      },
+      "properties": {
+        "station_id": "E07",
+        "name": "West Hyattsville",
+        "lines": [
+          "GR"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "2700 Hamilton St",
+        "city": "Hyattsville",
+        "state": "MD",
+        "zip": "20782"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.956182,
+          38.965276
+        ]
+      },
+      "properties": {
+        "station_id": "E08",
+        "name": "Hyattsville Crossing",
+        "lines": [
+          "GR"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "3575 East-West Hwy",
+        "city": "Hyattsville",
+        "state": "MD",
+        "zip": "20782"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.928432,
+          38.978523
+        ]
+      },
+      "properties": {
+        "station_id": "E09",
+        "name": "College Park-U of Md",
+        "lines": [
+          "GR"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "4931 Calvert Rd",
+        "city": "College Park",
+        "state": "MD",
+        "zip": "20740"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.911362,
+          39.011036
+        ]
+      },
+      "properties": {
+        "station_id": "E10",
+        "name": "Greenbelt",
+        "lines": [
+          "GR"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "5500 Greenbelt Metro Dr",
+        "city": "Beltsville",
+        "state": "MD",
+        "zip": "20705"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.021851,
+          38.89834
+        ]
+      },
+      "properties": {
+        "station_id": "F01",
+        "name": "Gallery Pl-Chinatown",
+        "lines": [
+          "GR",
+          "YL"
+        ],
+        "station_together_1": "B01",
+        "station_together_2": "",
+        "address": "630 H St. NW",
+        "city": "Washington",
+        "state": "DC",
+        "zip": "20001"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.021902,
+          38.893893
+        ]
+      },
+      "properties": {
+        "station_id": "F02",
+        "name": "Archives-Navy Memorial-Penn Quarter",
+        "lines": [
+          "GR",
+          "YL"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "701 Pennsylvania Avenue NW",
+        "city": "Washington",
+        "state": "DC",
+        "zip": "20004"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.021964,
+          38.884775
+        ]
+      },
+      "properties": {
+        "station_id": "F03",
+        "name": "L'Enfant Plaza",
+        "lines": [
+          "GR",
+          "YL"
+        ],
+        "station_together_1": "D03",
+        "station_together_2": "",
+        "address": "600 Maryland Avenue SW",
+        "city": "Washington",
+        "state": "DC",
+        "zip": "20024"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.017491,
+          38.876221
+        ]
+      },
+      "properties": {
+        "station_id": "F04",
+        "name": "Waterfront",
+        "lines": [
+          "GR"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "399 M Street SW",
+        "city": "Washington",
+        "state": "DC",
+        "zip": "20024"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.005086,
+          38.876588
+        ]
+      },
+      "properties": {
+        "station_id": "F05",
+        "name": "Navy Yard-Ballpark",
+        "lines": [
+          "GR"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "200 M Street SE",
+        "city": "Washington",
+        "state": "DC",
+        "zip": "20003"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.995648,
+          38.862072
+        ]
+      },
+      "properties": {
+        "station_id": "F06",
+        "name": "Anacostia",
+        "lines": [
+          "GR"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "1101 Howard Rd SE",
+        "city": "Washington",
+        "state": "DC",
+        "zip": "20020"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.98817,
+          38.845334
+        ]
+      },
+      "properties": {
+        "station_id": "F07",
+        "name": "Congress Heights",
+        "lines": [
+          "GR"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "1290 Alabama Ave SE",
+        "city": "Washington",
+        "state": "DC",
+        "zip": "20020"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.97536,
+          38.840974
+        ]
+      },
+      "properties": {
+        "station_id": "F08",
+        "name": "Southern Avenue",
+        "lines": [
+          "GR"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "1411 Southern Ave SE",
+        "city": "Hillcrest Heights",
+        "state": "MD",
+        "zip": "20748"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.956565,
+          38.851187
+        ]
+      },
+      "properties": {
+        "station_id": "F09",
+        "name": "Naylor Road",
+        "lines": [
+          "GR"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "3226 Naylor Rd",
+        "city": "Hillcrest Heights",
+        "state": "MD",
+        "zip": "20748"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.932022,
+          38.843891
+        ]
+      },
+      "properties": {
+        "station_id": "F10",
+        "name": "Suitland",
+        "lines": [
+          "GR"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "4500 Silver Hill Rd",
+        "city": "Suitland",
+        "state": "MD",
+        "zip": "20746"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.912134,
+          38.826995
+        ]
+      },
+      "properties": {
+        "station_id": "F11",
+        "name": "Branch Ave",
+        "lines": [
+          "GR"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "4707 Old Soper Rd",
+        "city": "Suitland",
+        "state": "MD",
+        "zip": "20746"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.938291,
+          38.890488
+        ]
+      },
+      "properties": {
+        "station_id": "G01",
+        "name": "Benning Road",
+        "lines": [
+          "BL",
+          "SV"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "4500 Benning Rd NE",
+        "city": "Washington",
+        "state": "DC",
+        "zip": "20019"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.913382,
+          38.889757
+        ]
+      },
+      "properties": {
+        "station_id": "G02",
+        "name": "Capitol Heights",
+        "lines": [
+          "BL",
+          "SV"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "133 Central Ave",
+        "city": "Capitol Heights",
+        "state": "MD",
+        "zip": "20743"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.893592,
+          38.886713
+        ]
+      },
+      "properties": {
+        "station_id": "G03",
+        "name": "Addison Road-Seat Pleasant",
+        "lines": [
+          "BL",
+          "SV"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "100 Addison Rd S",
+        "city": "Capitol Heights",
+        "state": "MD",
+        "zip": "20743"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.8682,
+          38.8913
+        ]
+      },
+      "properties": {
+        "station_id": "G04",
+        "name": "Morgan Boulevard",
+        "lines": [
+          "BL",
+          "SV"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "401 Garrett A Morgan Blvd",
+        "city": "Landover",
+        "state": "MD",
+        "zip": "20785"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.8449,
+          38.9008
+        ]
+      },
+      "properties": {
+        "station_id": "G05",
+        "name": "Downtown Largo",
+        "lines": [
+          "BL",
+          "SV"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "9000 Lottsford Rd",
+        "city": "Largo",
+        "state": "MD",
+        "zip": "20774"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.129407,
+          38.799193
+        ]
+      },
+      "properties": {
+        "station_id": "J02",
+        "name": "Van Dorn Street",
+        "lines": [
+          "BL"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "5690 Eisenhower Ave",
+        "city": "Alexandria",
+        "state": "VA",
+        "zip": "22310"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.168797,
+          38.766129
+        ]
+      },
+      "properties": {
+        "station_id": "J03",
+        "name": "Franconia-Springfield",
+        "lines": [
+          "BL"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "6880 Frontier Dr",
+        "city": "Springfield",
+        "state": "VA",
+        "zip": "22150"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.08391,
+          38.891499
+        ]
+      },
+      "properties": {
+        "station_id": "K01",
+        "name": "Court House",
+        "lines": [
+          "OR",
+          "SV"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "2100 Wilson Blvd",
+        "city": "Arlington",
+        "state": "VA",
+        "zip": "22201"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.096963,
+          38.886373
+        ]
+      },
+      "properties": {
+        "station_id": "K02",
+        "name": "Clarendon",
+        "lines": [
+          "OR",
+          "SV"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "3100 Wilson Blvd",
+        "city": "Arlington",
+        "state": "VA",
+        "zip": "22201"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.104267,
+          38.88331
+        ]
+      },
+      "properties": {
+        "station_id": "K03",
+        "name": "Virginia Square-GMU",
+        "lines": [
+          "OR",
+          "SV"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "3600 Fairfax Drive",
+        "city": "Arlington",
+        "state": "VA",
+        "zip": "22201"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.111845,
+          38.882071
+        ]
+      },
+      "properties": {
+        "station_id": "K04",
+        "name": "Ballston-MU",
+        "lines": [
+          "OR",
+          "SV"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "4230 Fairfax Drive",
+        "city": "Arlington",
+        "state": "VA",
+        "zip": "22201"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.157177,
+          38.885841
+        ]
+      },
+      "properties": {
+        "station_id": "K05",
+        "name": "East Falls Church",
+        "lines": [
+          "OR",
+          "SV"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "2001 N Sycamore St",
+        "city": "Arlington",
+        "state": "VA",
+        "zip": "22205"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.189394,
+          38.90067
+        ]
+      },
+      "properties": {
+        "station_id": "K06",
+        "name": "West Falls Church",
+        "lines": [
+          "OR"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "7040 Haycock Rd",
+        "city": "Falls Church",
+        "state": "VA",
+        "zip": "22043"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.228939,
+          38.883015
+        ]
+      },
+      "properties": {
+        "station_id": "K07",
+        "name": "Dunn Loring-Merrifield",
+        "lines": [
+          "OR"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "2700 Gallows Rd",
+        "city": "Vienna",
+        "state": "VA",
+        "zip": "22180"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.271562,
+          38.877693
+        ]
+      },
+      "properties": {
+        "station_id": "K08",
+        "name": "Vienna/Fairfax-GMU",
+        "lines": [
+          "OR"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "9550 Saintsbury Dr",
+        "city": "Fairfax",
+        "state": "VA",
+        "zip": "22031"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.210167,
+          38.924478
+        ]
+      },
+      "properties": {
+        "station_id": "N01",
+        "name": "McLean",
+        "lines": [
+          "SV"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "1824 Dolley Madison Boulevard",
+        "city": "McLean",
+        "state": "VA",
+        "zip": "22102"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.223314,
+          38.920056
+        ]
+      },
+      "properties": {
+        "station_id": "N02",
+        "name": "Tysons",
+        "lines": [
+          "SV"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "1943 Chain Bridge Road",
+        "city": "McLean",
+        "state": "VA",
+        "zip": "22102"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.235192,
+          38.919749
+        ]
+      },
+      "properties": {
+        "station_id": "N03",
+        "name": "Greensboro",
+        "lines": [
+          "SV"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "8305 Leesburg Pike",
+        "city": "Vienna",
+        "state": "VA",
+        "zip": "22182"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.241988,
+          38.929273
+        ]
+      },
+      "properties": {
+        "station_id": "N04",
+        "name": "Spring Hill",
+        "lines": [
+          "SV"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "1576 Spring Hill Road",
+        "city": "Vienna",
+        "state": "VA",
+        "zip": "22182"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.340179,
+          38.947753
+        ]
+      },
+      "properties": {
+        "station_id": "N06",
+        "name": "Wiehle-Reston East",
+        "lines": [
+          "SV"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "1908 Reston Station Blvd",
+        "city": "Reston",
+        "state": "VA",
+        "zip": "20190"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.360185,
+          38.952768
+        ]
+      },
+      "properties": {
+        "station_id": "N07",
+        "name": "Reston Town Center",
+        "lines": [
+          "SV"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "1998 Edmund Halley Drive",
+        "city": "Reston",
+        "state": "VA",
+        "zip": "20191"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.385178,
+          38.952821
+        ]
+      },
+      "properties": {
+        "station_id": "N08",
+        "name": "Herndon",
+        "lines": [
+          "SV"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "12530 Sunrise Valley Dr",
+        "city": "Herndon",
+        "state": "VA",
+        "zip": "20191"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.415295,
+          38.960758
+        ]
+      },
+      "properties": {
+        "station_id": "N09",
+        "name": "Innovation Center",
+        "lines": [
+          "SV"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "13747-A Sunrise Valley Dr",
+        "city": "Herndon",
+        "state": "VA",
+        "zip": "20171"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.448148,
+          38.955784
+        ]
+      },
+      "properties": {
+        "station_id": "N10",
+        "name": "Washington Dulles International Airport",
+        "lines": [
+          "SV"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "44920 Saarinen Circle",
+        "city": "Dulles",
+        "state": "VA",
+        "zip": "20166"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.460685,
+          38.99204
+        ]
+      },
+      "properties": {
+        "station_id": "N11",
+        "name": "Loudoun Gateway",
+        "lines": [
+          "SV"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "22505 Lockridge Rd",
+        "city": "Ashburn",
+        "state": "VA",
+        "zip": "20166"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.491537,
+          39.005283
+        ]
+      },
+      "properties": {
+        "station_id": "N12",
+        "name": "Ashburn",
+        "lines": [
+          "SV"
+        ],
+        "station_together_1": "",
+        "station_together_2": "",
+        "address": "43624 Croson Ln",
+        "city": "Ashburn",
+        "state": "VA",
+        "zip": "20148"
+      }
+    }
   ]
 }
