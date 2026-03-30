@@ -178,6 +178,13 @@
     }
     #drawBtn:hover { background: #17a84a; }
 
+    /* ── Dark mode toggle button ── */
+    #darkModeBtn {
+      width: 100%; padding: 10px; margin-top: 12px;
+      background: #3e3e3e; color: #ffffff; font-weight: bold;
+      border: none; border-radius: 6px; cursor: pointer; box-sizing: border-box;
+    }
+    #darkModeBtn:hover { background: #17a84a; }
     /* ── Zoom controls ── */
     .leaflet-top.leaflet-left .leaflet-control-zoom { display: none; }
     .leaflet-top.leaflet-right { top: 16px; right: 16px; }
@@ -251,6 +258,8 @@
       <div id="selectedList"></div>
 
       <button id="drawBtn">Show walksheds</button>
+      <button id="darkModeBtn">🌙 Dark map</button>
+</button>
     </div>
   </aside>
 </div>
@@ -263,6 +272,12 @@ L.control.zoom({ position: "topright" }).addTo(map);
 L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
   attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ', maxZoom: 16
 }).addTo(map);
+// Dark mode tile layer (hidden by default)
+const darkTiles = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+  attribution: '© <a href="https://carto.com/">CARTO</a> © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+  subdomains: 'abcd', maxZoom: 16
+});
+let darkMode = false;
 
 const walkshedLayer = L.layerGroup().addTo(map);
 const LINE_COLORS = { RD:"#E5262E", BL:"#1574C4", OR:"#F7941D", SV:"#A0A2A0", GR:"#00A65C", YL:"#FFD32A" };
@@ -488,6 +503,22 @@ document.getElementById("toggleBtn").addEventListener("click", () => {
   document.getElementById("sidebar-content").classList.toggle("collapsed");
   document.getElementById("sidebar-content").classList.toggle("expanded");
   document.getElementById("app").classList.toggle("sidebar-collapsed");
+});
+
+/* ── Dark mode toggle ── */
+document.getElementById("darkModeBtn").addEventListener("click", () => {
+  darkMode = !darkMode;
+  if (darkMode) {
+    map.eachLayer(l => { if (l instanceof L.TileLayer) map.removeLayer(l); });
+    darkTiles.addTo(map);
+    document.getElementById("darkModeBtn").textContent = "☀️ Light map";
+  } else {
+    map.removeLayer(darkTiles);
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+      attribution: 'Tiles © Esri — Esri, DeLorme, NAVTEQ', maxZoom: 16
+    }).addTo(map);
+    document.getElementById("darkModeBtn").textContent = "🌙 Dark map";
+  }
 });
 </script>
 </body>
