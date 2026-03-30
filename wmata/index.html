@@ -307,7 +307,7 @@ loadWalksheds();
 
 /* ── Marker SVG ── */
 function buildMarkerSVG(lines, selected) {
-  const OUTER_R=12, MID_R=7.5, GAP=1, SIZE=30, CX=15, CY=15; /*SIZE = pixel width and height of SVG, CX and CY = center point for circles/arcs*/
+  const OUTER_R=12, MID_R=7.5, GAP=1, SIZE=40, CX=20, CY=20; /*SIZE = pixel width and height of SVG, CX and CY = center point for circles/arcs*/
   const sa = 360 / lines.length;
   function polar(cx,cy,r,deg){ const rad=(deg-90)*Math.PI/180; return {x:cx+r*Math.cos(rad),y:cy+r*Math.sin(rad)}; }
   function arc(cx,cy,oR,iR,a1,a2){ const o1=polar(cx,cy,oR,a1),o2=polar(cx,cy,oR,a2),i1=polar(cx,cy,iR,a2),i2=polar(cx,cy,iR,a1),lg=(a2-a1)>180?1:0; return `M${o1.x} ${o1.y} A${oR} ${oR} 0 ${lg} 1 ${o2.x} ${o2.y} L${i1.x} ${i1.y} A${iR} ${iR} 0 ${lg} 0 ${i2.x} ${i2.y}Z`; }
