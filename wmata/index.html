@@ -129,9 +129,21 @@
       color: #ffffff; margin: 12px 0 6px;
     }
 
-    /* ── Checkboxes ── */
-    .checkboxes label { display: inline-flex; align-items: center; gap: 5px; margin-right: 10px; margin-top: 4px; font-size: 0.875rem; cursor: pointer; }
-    .checkboxes input[type="checkbox"] { accent-color: #3e3e3e; }
+    /* ── Walk time buttons ── */
+    .walk-time-btns { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+    .walk-time-btn {
+      flex: 1; min-width: 48px;
+      padding: 7px 4px;
+      border: 2px solid transparent;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.78rem; font-weight: 700;
+      color: #ffffff;
+      opacity: 0.45;
+      transition: opacity 0.15s, border-color 0.15s;
+    }
+    .walk-time-btn.active { opacity: 1; border-color: rgba(255,255,255,0.6); }
+    .walk-time-btn:hover { opacity: 0.8; }
 
     /* ── Selected stations section ── */
     .section-header { display: flex; align-items: center; justify-content: space-between; margin: 12px 0 6px; }
@@ -234,11 +246,11 @@
       </div>
 
       <div class="section-label">Walk time</div>
-      <div class="checkboxes">
-        <label><input type="checkbox" value="5"  checked> 5 min</label>
-        <label><input type="checkbox" value="10" checked> 10 min</label>
-        <label><input type="checkbox" value="15" checked> 15 min</label>
-        <label><input type="checkbox" value="20" checked> 20 min</label>
+      <div class="walk-time-btns">
+        <button class="walk-time-btn active" data-minutes="5"  style="background:#22c55e;">5 min</button>
+        <button class="walk-time-btn active" data-minutes="10" style="background:#f59e0b;">10 min</button>
+        <button class="walk-time-btn active" data-minutes="15" style="background:#f97316;">15 min</button>
+        <button class="walk-time-btn active" data-minutes="20" style="background:#ef4444;">20 min</button>
       </div>
 
       <div class="section-header">
@@ -385,9 +397,31 @@ function renderChips() {
   const list = document.getElementById("selectedList");
   list.innerHTML = "";
   selectedStations.forEach(name => {
+    const st = Object.values(stationLookup).find(s => s.name === name);
+    const dots = st ? st.lines.map(line => {
+      const color = LINE_COLORS[line] || "#9ca3af";
+      const letter = line[0];
+      const textColor = line === "YL" ? "#111827" : "#ffffff"; // dark text on yellow
+      return `<span style="
+        display:inline-flex; align-items:center; justify-content:center;
+        width:16px; height:16px; border-radius:50%;
+        background:${color}; color:${textColor};
+        font-size:0.55rem; font-weight:700; font-family:sans-serif;
+        flex-shrink:0;
+      ">${letter}</span>`;
+    }).join("") : "";
+
     const chip = document.createElement("div");
     chip.className = "station-chip";
-    chip.innerHTML = `<span class="chip-name">${name}</span><button class="chip-remove" aria-label="Remove ${name}"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><line x1="1" y1="1" x2="11" y2="11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><line x1="11" y1="1" x2="1" y2="11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>`;
+    chip.innerHTML = `
+      <span style="display:inline-flex; gap:3px; align-items:center; flex-shrink:0;">${dots}</span>
+      <span class="chip-name">${name}</span>
+      <button class="chip-remove" aria-label="Remove ${name}">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+          <line x1="1" y1="1" x2="11" y2="11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          <line x1="11" y1="1" x2="1" y2="11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+      </button>`;
     chip.querySelector(".chip-remove").addEventListener("click", () => removeStation(name));
     list.appendChild(chip);
   });
@@ -454,7 +488,9 @@ searchInput.addEventListener("keydown", e => {
 
 /* ── Draw walksheds ── */
 function colorForMinutes(min) { if(min===5) return "#22c55e"; if(min===10) return "#f59e0b"; if(min===15) return "#f97316"; return "#ef4444"; }
-function selectedMinutes() { return Array.from(document.querySelectorAll(".checkboxes input:checked")).map(cb=>Number(cb.value)); }
+function selectedMinutes() {
+  return Array.from(document.querySelectorAll(".walk-time-btn.active")).map(btn => Number(btn.dataset.minutes));
+}
 
 function drawWalksheds(shouldFit) {
   if (!walkshedData) return;
@@ -483,7 +519,10 @@ function drawWalksheds(shouldFit) {
 document.getElementById("drawBtn").addEventListener("click", () => drawWalksheds(true));
 document.getElementById("selectAllBtn").addEventListener("click", selectAll);
 document.getElementById("clearAllBtn").addEventListener("click", clearAll);
-document.querySelectorAll(".checkboxes input").forEach(cb => cb.addEventListener("change", () => drawWalksheds(false)));
+document.querySelectorAll(".walk-time-btn").forEach(btn => btn.addEventListener("click", () => {
+  btn.classList.toggle("active");
+  drawWalksheds(false);
+}));
 document.getElementById("toggleBtn").addEventListener("click", () => {
   document.getElementById("sidebar-content").classList.toggle("collapsed");
   document.getElementById("sidebar-content").classList.toggle("expanded");
