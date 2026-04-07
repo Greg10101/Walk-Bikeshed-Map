@@ -8,16 +8,68 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
 
+  <!-- ── BEGIN: Header banner fonts ── -->
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+  <!-- ── END: Header banner fonts ── -->
+
   <style>
     html, body { height: 100%; margin: 0; font-family: Helvetica, Arial, Inter, sans-serif; }
     #app { position: relative; width: 100%; height: 100%; }
     #map { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
 
+    /* ── BEGIN: Header banner styles ── */
+    :root {
+      --header-bg: #f5f2eb;
+      --header-ink: #1a1a18;
+      --header-accent: #e8500a;
+      --header-muted: #7a7a72;
+    }
+
+    header.site-header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 2000;
+      border-bottom: 2px solid var(--header-ink);
+      padding: 0 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+      background: var(--header-bg);
+    }
+
+    header.site-header .logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      text-decoration: none;
+      color: var(--header-ink);
+    }
+    header.site-header .logo span { color: var(--header-accent); }
+
+    header.site-header nav a {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--header-muted);
+      text-decoration: none;
+      margin-left: 1.8rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    header.site-header nav a:hover { color: var(--header-accent); }
+    /* ── END: Header banner styles ── */
+
+    /* ── BEGIN: Map top offset adjustment for header banner ── */
+    #map { top: 60px; }
+    /* ── END: Map top offset adjustment for header banner ── */
+
     /* ── Floating sidebar ── */
     #sidebar {
-      position: absolute; top: 16px; left: 16px; z-index: 1000;
+      position: absolute; top: 76px; left: 16px; z-index: 1000;
       width: 300px; padding: 12px 14px;
-      background: #014554; color: #e5e7eb;
+      background: #4679b0; color: #ffffff;
       border-radius: 14px;
       box-shadow: 0 8px 32px rgba(0,0,0,0.45), 0 2px 8px rgba(0,0,0,0.3);
       transition: width 0.3s ease; overflow: hidden;
@@ -32,8 +84,8 @@
 
     #toggleBtn {
       flex-shrink: 0; display: flex; align-items: center; justify-content: center;
-      padding: 5px 7px; background: transparent; color: #e5e7eb;
-      border: 1px solid #e5e7eb; border-radius: 6px; cursor: pointer;
+      padding: 5px 7px; background: transparent; color: #ffffff;
+      border: 1px solid #ffffff; border-radius: 6px; cursor: pointer;
       line-height: 1; width: auto !important; margin-top: 0 !important;
     }
     #toggleBtn svg { display: block; width: 16px; height: 16px; transition: transform 0.3s ease; }
@@ -54,7 +106,7 @@
       font-size: 0.875rem; box-sizing: border-box; outline: none;
     }
     #stationSearch::placeholder { color: #6b7280; }
-    #stationSearch:focus { border-color: #1BBF54; }
+    #stationSearch:focus { border-color: #ffffff; }
 
     #stationDropdown {
       display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0;
@@ -74,24 +126,12 @@
     /* ── Section labels ── */
     .section-label {
       font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em;
-      color: #9ca3af; margin: 12px 0 6px;
+      color: #ffffff; margin: 12px 0 6px;
     }
 
-    /* ── Walk time buttons ── */
-    .walk-time-btns { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
-    .walk-time-btn {
-      flex: 1; min-width: 48px;
-      padding: 7px 4px;
-      border: 2px solid transparent;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 0.78rem; font-weight: 700;
-      color: #ffffff;
-      opacity: 0.45;
-      transition: opacity 0.15s, border-color 0.15s;
-    }
-    .walk-time-btn.active { opacity: 1; border-color: rgba(255,255,255,0.6); }
-    .walk-time-btn:hover { opacity: 0.8; }
+    /* ── Checkboxes ── */
+    .checkboxes label { display: inline-flex; align-items: center; gap: 5px; margin-right: 10px; margin-top: 4px; font-size: 0.875rem; cursor: pointer; }
+    .checkboxes input[type="checkbox"] { accent-color: #3e3e3e; }
 
     /* ── Selected stations section ── */
     .section-header { display: flex; align-items: center; justify-content: space-between; margin: 12px 0 6px; }
@@ -112,7 +152,7 @@
     #selectAllBtn:hover { color: #4ade80; }
 
     #selectedList { display: flex; flex-direction: column; gap: 5px; }
-    #selectedList:empty::before { content: "No stations selected"; font-size: 0.8rem; color: #6b7280; font-style: italic; }
+    #selectedList:empty::before { content: "No stations selected"; font-size: 0.8rem; color: #e5e7eb; font-style: italic; }
 
     .station-chip {
       display: flex; align-items: center; justify-content: space-between;
@@ -123,7 +163,7 @@
     @keyframes chipIn { from { opacity:0; transform:translateY(-4px); } to { opacity:1; transform:translateY(0); } }
     .chip-name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .chip-remove {
-      flex-shrink: 0; background: none; border: none; color: #9ca3af; cursor: pointer;
+      flex-shrink: 0; background: none; border: none; color: #ffffff; cursor: pointer;
       padding: 0 2px; font-size: 14px; line-height: 1;
       width: auto !important; margin-top: 0 !important;
       display: flex; align-items: center;
@@ -133,35 +173,23 @@
     /* ── Draw button ── */
     #drawBtn {
       width: 100%; padding: 10px; margin-top: 12px;
-      background: #1BBF54; color: #052e16; font-weight: bold;
+      background: #3e3e3e; color: #ffffff; font-weight: bold;
       border: none; border-radius: 6px; cursor: pointer; box-sizing: border-box;
     }
     #drawBtn:hover { background: #17a84a; }
 
-    /* ── Zoom controls + dark mode button ── */
+    /* ── Zoom controls ── */
     .leaflet-top.leaflet-left .leaflet-control-zoom { display: none; }
-    .leaflet-top.leaflet-right { top: 76px; right: 16px; }
-    .leaflet-top.leaflet-right .leaflet-control-zoom { margin: 0; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.35); width: 30px; }
+    .leaflet-top.leaflet-right { top: 16px; right: 16px; }
+    .leaflet-top.leaflet-right .leaflet-control-zoom { margin: 0; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.35); }
     .leaflet-control-zoom-in, .leaflet-control-zoom-out { background: #3e3e3e !important; color: #ffffff !important; border: none !important; }
     .leaflet-control-zoom-in:hover, .leaflet-control-zoom-out:hover { background: #025f73 !important; color: #fff !important; }
 
-    #darkModeBtn {
-      display: block;
-      margin-top: 8px;
-      width: 30px; height: 30px;
-      background: #3e3e3e;
-      color: #ffffff;
-      border: none;
-      border-radius: 6px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.35);
-      cursor: pointer;
-      font-size: 0.9rem;
-      line-height: 1;
-    }
-    #darkModeBtn:hover { background: #025f73; }
-
     /* ── Mobile ── */
     @media (max-width: 768px) {
+      /* ── BEGIN: Mobile header banner offset adjustment ── */
+      #map { top: 60px; height: calc(100% - 60px); }
+      /* ── END: Mobile header banner offset adjustment ── */
       #sidebar { top: auto; left: 50%; transform: translateX(-50%); bottom: 20px; width: calc(100% - 40px); max-width: 420px; border-radius: 16px; padding: 12px 16px; }
       #app.sidebar-collapsed #sidebar { width: calc(100% - 40px); max-width: 420px; padding: 10px 16px; }
       #sidebar-header { flex-direction: row; justify-content: space-between; }
@@ -173,12 +201,23 @@
 </head>
 
 <body>
+
+<!-- ── BEGIN: Header banner ── -->
+<header class="site-header">
+  <a class="logo" href="../index.html">What's the <span>Walkshed?</span></a>
+  <nav>
+    <a href="#">About</a>
+    <a href="#">Methodology</a>
+  </nav>
+</header>
+<!-- ── END: Header banner ── -->
+
 <div id="app">
   <div id="map"></div>
 
   <aside id="sidebar">
     <div id="sidebar-header">
-      <h2>Walkable WMATA</h2>
+      <h2>WMATA Rail Station Walksheds</h2>
       <button id="toggleBtn" aria-label="Toggle sidebar">
         <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
           <polyline points="10,3 5,8 10,13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -187,7 +226,7 @@
     </div>
 
     <div id="sidebar-content" class="expanded">
-      <p style="margin:0 0 8px;font-size:0.85rem;color:#9ca3af;">Precomputed walking sheds &middot; click map or search</p>
+      <p style="margin:0 0 8px;font-size:0.85rem;color:#ffffff">Click map or search below to select a station(s)</p>
 
       <div class="search-wrap">
         <input id="stationSearch" type="text" placeholder="Search stations&hellip;" autocomplete="off" />
@@ -195,11 +234,11 @@
       </div>
 
       <div class="section-label">Walk time</div>
-      <div class="walk-time-btns">
-        <button class="walk-time-btn active" data-minutes="5"  style="background:#22c55e;">5 min</button>
-        <button class="walk-time-btn active" data-minutes="10" style="background:#f59e0b;">10 min</button>
-        <button class="walk-time-btn active" data-minutes="15" style="background:#f97316;">15 min</button>
-        <button class="walk-time-btn active" data-minutes="20" style="background:#ef4444;">20 min</button>
+      <div class="checkboxes">
+        <label><input type="checkbox" value="5"  checked> 5 min</label>
+        <label><input type="checkbox" value="10" checked> 10 min</label>
+        <label><input type="checkbox" value="15" checked> 15 min</label>
+        <label><input type="checkbox" value="20" checked> 20 min</label>
       </div>
 
       <div class="section-header">
@@ -216,33 +255,14 @@
   </aside>
 </div>
 
-<!-- ── BEGIN: Standalone dark mode toggle button (injected into Leaflet top-right by JS) ── -->
-<button id="darkModeBtn" title="Toggle dark map">🌙</button>
-<!-- ── END: Standalone dark mode toggle button ── -->
-
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 /* ── Map setup ── */
 const map = L.map("map", { zoomControl: false }).setView([38.905, -77.036], 12);
 L.control.zoom({ position: "topright" }).addTo(map);
-
-// Matched light/dark tile pair from Stadia Maps (same data, consistent detail level)
-const lightTiles = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
-  attribution: '© <a href="https://stadiamaps.com/">Stadia Maps</a> © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-  maxZoom: 20
-});
-const darkTiles = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', {
-  attribution: '© <a href="https://stadiamaps.com/">Stadia Maps</a> © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-  maxZoom: 20
-});
-lightTiles.addTo(map);
-let darkMode = false;
-
-// Inject dark mode button into Leaflet's top-right corner, below zoom controls.
-// Deferred with setTimeout so Leaflet has finished rendering its control containers first.
-setTimeout(() => {
-  document.querySelector(".leaflet-top.leaflet-right").appendChild(document.getElementById("darkModeBtn"));
-}, 0);
+L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+  attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ', maxZoom: 16
+}).addTo(map);
 
 const walkshedLayer = L.layerGroup().addTo(map);
 const LINE_COLORS = { RD:"#E5262E", BL:"#1574C4", OR:"#F7941D", SV:"#A0A2A0", GR:"#00A65C", YL:"#FFD32A" };
@@ -287,13 +307,20 @@ loadWalksheds();
 
 /* ── Marker SVG ── */
 function buildMarkerSVG(lines, selected) {
-  const OUTER_R=16, MID_R=10, GAP=1.5, SIZE=40, CX=20, CY=20;
+  const OUTER_R=12, MID_R=7.5, GAP=1, SIZE=40, CX=20, CY=20; /*SIZE = pixel width and height of SVG, CX and CY = center point for circles/arcs*/
   const sa = 360 / lines.length;
   function polar(cx,cy,r,deg){ const rad=(deg-90)*Math.PI/180; return {x:cx+r*Math.cos(rad),y:cy+r*Math.sin(rad)}; }
   function arc(cx,cy,oR,iR,a1,a2){ const o1=polar(cx,cy,oR,a1),o2=polar(cx,cy,oR,a2),i1=polar(cx,cy,iR,a2),i2=polar(cx,cy,iR,a1),lg=(a2-a1)>180?1:0; return `M${o1.x} ${o1.y} A${oR} ${oR} 0 ${lg} 1 ${o2.x} ${o2.y} L${i1.x} ${i1.y} A${iR} ${iR} 0 ${lg} 0 ${i2.x} ${i2.y}Z`; }
   let s = selected ? `<circle cx="${CX}" cy="${CY}" r="19" fill="none" stroke="#fff" stroke-width="2.5" stroke-dasharray="4 2"/>` : "";
-  if (lines.length===1) { s += `<circle cx="${CX}" cy="${CY}" r="${MID_R-GAP}" fill="${LINE_COLORS[lines[0]]}"/>`; }
-  else { lines.forEach((l,i) => { s += `<path d="${arc(CX,CY,OUTER_R,MID_R+GAP,i*sa,(i+1)*sa)}" fill="${LINE_COLORS[l]}"/>`; }); s += `<circle cx="${CX}" cy="${CY}" r="${MID_R}" fill="#111827"/><circle cx="${CX}" cy="${CY}" r="${MID_R-GAP}" fill="white"/>`; }
+  if (lines.length===1) {
+    s += `<circle cx="${CX}" cy="${CY}" r="${MID_R-GAP+2}" fill="#111827"/>`; // ← black outline circle
+    s += `<circle cx="${CX}" cy="${CY}" r="${MID_R-GAP}" fill="${LINE_COLORS[lines[0]]}"/>`;
+  }
+  else {
+    s += `<circle cx="${CX}" cy="${CY}" r="${OUTER_R+2}" fill="#111827"/>`; // ← black outline circle
+    lines.forEach((l,i) => { s += `<path d="${arc(CX,CY,OUTER_R,MID_R+GAP,i*sa,(i+1)*sa)}" fill="${LINE_COLORS[l]}"/>`; });
+    s += `<circle cx="${CX}" cy="${CY}" r="${MID_R}" fill="#111827"/><circle cx="${CX}" cy="${CY}" r="${MID_R-GAP}" fill="white"/>`;
+  }
   return `<svg width="${SIZE}" height="${SIZE}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
 }
 
@@ -358,31 +385,9 @@ function renderChips() {
   const list = document.getElementById("selectedList");
   list.innerHTML = "";
   selectedStations.forEach(name => {
-    const st = Object.values(stationLookup).find(s => s.name === name);
-    const dots = st ? st.lines.map(line => {
-      const color = LINE_COLORS[line] || "#9ca3af";
-      const letter = line[0];
-      const textColor = line === "YL" ? "#111827" : "#ffffff"; // dark text on yellow
-      return `<span style="
-        display:inline-flex; align-items:center; justify-content:center;
-        width:16px; height:16px; border-radius:50%;
-        background:${color}; color:${textColor};
-        font-size:0.55rem; font-weight:700; font-family:sans-serif;
-        flex-shrink:0;
-      ">${letter}</span>`;
-    }).join("") : "";
-
     const chip = document.createElement("div");
     chip.className = "station-chip";
-    chip.innerHTML = `
-      <span style="display:inline-flex; gap:3px; align-items:center; flex-shrink:0;">${dots}</span>
-      <span class="chip-name">${name}</span>
-      <button class="chip-remove" aria-label="Remove ${name}">
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-          <line x1="1" y1="1" x2="11" y2="11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-          <line x1="11" y1="1" x2="1" y2="11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-        </svg>
-      </button>`;
+    chip.innerHTML = `<span class="chip-name">${name}</span><button class="chip-remove" aria-label="Remove ${name}"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><line x1="1" y1="1" x2="11" y2="11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><line x1="11" y1="1" x2="1" y2="11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>`;
     chip.querySelector(".chip-remove").addEventListener("click", () => removeStation(name));
     list.appendChild(chip);
   });
@@ -449,9 +454,7 @@ searchInput.addEventListener("keydown", e => {
 
 /* ── Draw walksheds ── */
 function colorForMinutes(min) { if(min===5) return "#22c55e"; if(min===10) return "#f59e0b"; if(min===15) return "#f97316"; return "#ef4444"; }
-function selectedMinutes() {
-  return Array.from(document.querySelectorAll(".walk-time-btn.active")).map(btn => Number(btn.dataset.minutes));
-}
+function selectedMinutes() { return Array.from(document.querySelectorAll(".checkboxes input:checked")).map(cb=>Number(cb.value)); }
 
 function drawWalksheds(shouldFit) {
   if (!walkshedData) return;
@@ -480,32 +483,11 @@ function drawWalksheds(shouldFit) {
 document.getElementById("drawBtn").addEventListener("click", () => drawWalksheds(true));
 document.getElementById("selectAllBtn").addEventListener("click", selectAll);
 document.getElementById("clearAllBtn").addEventListener("click", clearAll);
-document.querySelectorAll(".walk-time-btn").forEach(btn => btn.addEventListener("click", () => {
-  btn.classList.toggle("active");
-  drawWalksheds(false);
-}));
+document.querySelectorAll(".checkboxes input").forEach(cb => cb.addEventListener("change", () => drawWalksheds(false)));
 document.getElementById("toggleBtn").addEventListener("click", () => {
   document.getElementById("sidebar-content").classList.toggle("collapsed");
   document.getElementById("sidebar-content").classList.toggle("expanded");
   document.getElementById("app").classList.toggle("sidebar-collapsed");
-});
-
-/* ── Dark mode toggle ── */
-document.getElementById("darkModeBtn").addEventListener("click", () => {
-  darkMode = !darkMode;
-  if (darkMode) {
-    map.removeLayer(lightTiles);
-    darkTiles.addTo(map);
-    darkTiles.bringToBack();
-    document.getElementById("darkModeBtn").textContent = "☀️";
-    document.getElementById("darkModeBtn").title = "Switch to light map";
-  } else {
-    map.removeLayer(darkTiles);
-    lightTiles.addTo(map);
-    lightTiles.bringToBack();
-    document.getElementById("darkModeBtn").textContent = "🌙";
-    document.getElementById("darkModeBtn").title = "Switch to dark map";
-  }
 });
 </script>
 </body>
