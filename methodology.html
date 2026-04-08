@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- EDIT: Page title -->
+  <title>Methodology — What's the Walkshed?</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* EDIT: Colour tokens — keep in sync with index.html */
+    :root {
+      --bg: #f5f2eb;
+      --ink: #1a1a18;
+      --accent: #e8500a;
+      --muted: #7a7a72;
+      --border: #dedad2;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 2px solid var(--ink);
+      padding: 0 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+      background: var(--bg);
+    }
+
+    .logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      text-decoration: none;
+      color: var(--ink);
+    }
+    .logo span { color: var(--accent); }
+
+    .back-link {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--accent); }
+
+    /* ── Page layout ── */
+    main {
+      max-width: 740px;          /* EDIT: content column width */
+      padding: 5rem 2.5rem 6rem;
+      margin: 0 auto;
+    }
+
+    /* ── Eyebrow label ── */
+    .eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    /* ── Page title ── */
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.2rem, 5vw, 3.4rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.08;
+      margin-bottom: 1.6rem;
+    }
+
+    /* ── Lead paragraph ── */
+    .lead {
+      font-size: 1.05rem;
+      color: var(--muted);
+      line-height: 1.75;
+      margin-bottom: 3.5rem;
+      padding-bottom: 3.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ── Section headings ── */
+    h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.9rem;
+      margin-top: 3rem;
+    }
+
+    /* ── Body paragraphs ── */
+    p {
+      font-size: 0.97rem;
+      line-height: 1.8;
+      color: var(--ink);
+      margin-bottom: 1.1rem;
+    }
+
+    p:last-child { margin-bottom: 0; }
+
+    /* ── Callout boxes ── */
+
+    /* Standard info callout */
+    .callout {
+      border-left: 3px solid var(--accent);
+      background: #fff;
+      padding: 1.2rem 1.4rem;
+      border-radius: 0 6px 6px 0;
+      margin: 2rem 0;
+    }
+
+    .callout-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+
+    .callout p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 0;
+    }
+
+    /* Note callout (neutral) */
+    .callout.note {
+      border-left-color: var(--border);
+      background: #faf8f4;
+    }
+
+    .callout.note .callout-label { color: var(--muted); }
+
+    /* Warning / caveat callout */
+    .callout.caveat {
+      border-left-color: #c8a94a;
+      background: #fdf9ee;
+    }
+
+    .callout.caveat .callout-label { color: #a07c1a; }
+
+    /* ── Stat row — for displaying key numbers ── */
+    .stat-row {
+      display: flex;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 2rem 0;
+    }
+
+    .stat {
+      flex: 1;
+      background: #fff;
+      padding: 1.4rem 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .stat-value {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ── Section divider ── */
+    .section-rule {
+      height: 1px;
+      background: var(--border);
+      margin: 3.5rem 0;
+    }
+
+    /* ── Mobile ── */
+    @media (max-width: 600px) {
+      main { padding: 3rem 1.2rem 4rem; }
+      header { padding: 0 1.2rem; }
+      .stat-row { flex-direction: column; gap: 1px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- EDIT: Header — back link goes to homepage -->
+  <header>
+    <a class="logo" href="index.html">What's the <span>Walkshed?</span></a>
+    <a class="back-link" href="index.html">← Home</a>
+  </header>
+
+  <main>
+
+    <!-- EDIT: Page eyebrow and title -->
+    <p class="eyebrow">How it works</p>
+    <h1>Methodology</h1>
+
+    <!-- EDIT: Lead paragraph — a short summary readers see first -->
+    <p class="lead">
+      Walkshed polygons on this site represent the area reachable on foot within a set time limit
+      from a transit station, calculated using real pedestrian network data rather than a simple
+      radius. This page explains how those polygons are built, what data sources are used,
+      and where the current limitations lie.
+    </p>
+
+
+    <!-- ── SECTION 1 ── -->
+    <!-- EDIT: Section heading -->
+    <h2>What is a walkshed?</h2>
+
+    <!-- EDIT: Body paragraphs — replace with your own explanation -->
+    <p>
+      A walkshed (sometimes called a pedestrian shed or walkable catchment area) is the set of
+      all points reachable from a given location by walking within a defined time or distance
+      threshold. Unlike a simple circular buffer, a walkshed follows the actual street and path
+      network — so barriers like highways, rivers, and dead-end streets are correctly reflected
+      in the shape.
+    </p>
+    <p>
+      On this site, walksheds are computed per station and represent the area a pedestrian could
+      realistically reach in order to access transit — not the area someone might travel to
+      after alighting.
+    </p>
+
+    <!-- EDIT: Info callout — use for key definitions or "good to know" points -->
+    <div class="callout">
+      <div class="callout-label">Key concept</div>
+      <p>
+        A 10-minute walkshed is not a circle. In a dense grid city it may cover 10+ blocks in
+        every direction; near a highway interchange it may cover just a few streets.
+      </p>
+    </div>
+
+
+    <div class="section-rule"></div>
+
+
+    <!-- ── SECTION 2 ── -->
+    <h2>Data sources</h2>
+
+    <p>
+      Pedestrian network data is sourced from OpenStreetMap (OSM), which provides routable
+      footway, path, and street geometries. Station locations are derived from each agency's
+      official GTFS feed, cross-referenced against OSM node positions where available.
+    </p>
+
+    <!-- EDIT: Note callout — use for neutral context or caveats about data -->
+    <div class="callout note">
+      <div class="callout-label">Note</div>
+      <p>
+        OSM coverage and accuracy varies by city. Urban cores tend to be well-mapped;
+        suburban areas may have incomplete footway data, which can cause walksheds to
+        appear smaller than they really are.
+      </p>
+    </div>
+
+    <!-- EDIT: Stat row — great for showing key numbers at a glance. Add or remove .stat blocks as needed -->
+    <div class="stat-row">
+      <div class="stat">
+        <div class="stat-value">10 min</div>      <!-- EDIT -->
+        <div class="stat-label">Walk time threshold</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">~800m</div>        <!-- EDIT -->
+        <div class="stat-label">Approx. walk distance</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">5 km/h</div>       <!-- EDIT -->
+        <div class="stat-label">Assumed walking speed</div>
+      </div>
+    </div>
+
+
+    <div class="section-rule"></div>
+
+
+    <!-- ── SECTION 3 ── -->
+    <h2>How polygons are computed</h2>
+
+    <p>
+      Walksheds are precomputed offline using a routing library applied to the OSM pedestrian
+      network. For each station, an isochrone is generated representing all points reachable
+      within the time threshold. The resulting polygon is then simplified and stored as a
+      static GeoJSON file, which is loaded directly in the browser with no server-side
+      processing at runtime.
+    </p>
+    <p>
+      This static approach keeps the site fast and free to host, at the cost of requiring a
+      manual rebuild whenever underlying data changes.
+    </p>
+
+    <!-- EDIT: Caveat callout — use for known limitations or warnings -->
+    <div class="callout caveat">
+      <div class="callout-label">Current limitation</div>
+      <p>
+        Walksheds are not updated automatically. They reflect OSM data as of the date noted
+        on each agency page. Significant changes to the street network or station locations
+        may not yet be reflected.
+      </p>
+    </div>
+
+
+    <div class="section-rule"></div>
+
+
+    <!-- ── SECTION 4 ── -->
+    <h2>What's not included</h2>
+
+    <p>
+      Current walksheds do not account for elevation change, pedestrian signal timing,
+      crosswalk availability, or accessibility constraints. They assume a flat, unobstructed
+      walk at a constant speed. Future versions may incorporate slope data and more
+      nuanced pedestrian routing.
+    </p>
+
+
+    <div class="section-rule"></div>
+
+
+    <!-- ── SECTION 5 — optional, remove if not needed ── -->
+    <h2>Reproducing this work</h2>
+
+    <p>
+      All source code and GeoJSON data are available on GitHub under an open licence.
+      If you spot an error or want to contribute data for a new agency, contributions
+      are welcome via the project repository.
+    </p>
+
+    <!-- EDIT: Note callout with link -->
+    <div class="callout note">
+      <div class="callout-label">Open source</div>
+      <p>
+        <!-- EDIT: update href to your actual GitHub repo URL -->
+        Source code and data are published at
+        <a href="https://github.com" style="color: var(--accent);">github.com/yourusername/whatsthewalkshed</a>.
+      </p>
+    </div>
+
+  </main>
+
+</body>
+</html>
