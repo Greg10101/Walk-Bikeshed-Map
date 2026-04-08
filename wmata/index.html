@@ -129,10 +129,16 @@
       color: #ffffff; margin: 12px 0 6px;
     }
 
+    /* ── Disclaimer labels ── */
+    .disclaimer-label {
+      font-size: 0.75rem; text-transform: none; letter-spacing: 0.06em; font-style: italic;
+      color: #ffffff; margin: 0px 0 0px;
+    }
+
     /* ── Walk time buttons ── */
     .walk-time-btns { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
     .walk-time-btn {
-      flex: 1; min-width: 48px;
+      flex: 1; min-width: calc(33% - 6px); max-width: calc(33% - 6px);
       padding: 7px 4px;
       border: 2px solid transparent;
       border-radius: 6px;
@@ -245,13 +251,16 @@
         <div id="stationDropdown"></div>
       </div>
 
-      <div class="section-label">Walk time</div>
+      <div class="section-label">Walk time*</div>
       <div class="walk-time-btns">
-        <button class="walk-time-btn active" data-minutes="5"  style="background:#22c55e;">5 min</button>
-        <button class="walk-time-btn active" data-minutes="10" style="background:#f59e0b;">10 min</button>
+        <button class="walk-time-btn" data-minutes="5"  style="background:#22c55e;">5 min</button>
+        <button class="walk-time-btn" data-minutes="10" style="background:#f59e0b;">10 min</button>
         <button class="walk-time-btn active" data-minutes="15" style="background:#f97316;">15 min</button>
-        <button class="walk-time-btn active" data-minutes="20" style="background:#ef4444;">20 min</button>
-      </div>
+        <button class="walk-time-btn" data-minutes="20" style="background:#ef4444;">20 min</button>
+        <button class="walk-time-btn" data-minutes="25" style="background:#dc2626;">25 min</button>
+        <button class="walk-time-btn" data-minutes="30" style="background:#991b1b;">30 min</button>
+      <div class="disclaimer-label">*Based on a static walking speed of 3mph</div>
+    </div>
 
       <div class="section-header">
         <div class="section-label">Selected stations</div>
@@ -487,7 +496,14 @@ searchInput.addEventListener("keydown", e => {
 });
 
 /* ── Draw walksheds ── */
-function colorForMinutes(min) { if(min===5) return "#22c55e"; if(min===10) return "#f59e0b"; if(min===15) return "#f97316"; return "#ef4444"; }
+function colorForMinutes(min) {
+  if (min ===  5) return "#22c55e";
+  if (min === 10) return "#f59e0b";
+  if (min === 15) return "#f97316";
+  if (min === 20) return "#ef4444";
+  if (min === 25) return "#dc2626";
+  if (min === 30) return "#991b1b";
+}
 function selectedMinutes() {
   return Array.from(document.querySelectorAll(".walk-time-btn.active")).map(btn => Number(btn.dataset.minutes));
 }
