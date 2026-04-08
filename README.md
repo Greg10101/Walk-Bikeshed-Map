@@ -62,6 +62,7 @@ Walking isochrone polygons generated using ArcGIS network analysis tools against
 ```
 Walk-Bikeshed-Map/
 ├── index.html          # Map application (GitHub Pages entry point)
+├── methodology.html    # Methodology page for overall and agency specific map methodology
 ├── README.md   
 └── "Agency Code"/      # Folder for EACH individual agency
     ├── stations.geojson    # Station locations and metadata
