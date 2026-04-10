@@ -284,6 +284,7 @@ L.control.zoom({ position: "topright" }).addTo(map);
 L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
   attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ', maxZoom: 16
 }).addTo(map);
+map.attributionControl.addAttribution('| Last modified: March 2026');
 
 const walkshedLayer = L.layerGroup().addTo(map);
 const LINE_COLORS = { RD:"#E5262E", BL:"#1574C4", OR:"#F7941D", SV:"#A0A2A0", GR:"#00A65C", YL:"#FFD32A" };
