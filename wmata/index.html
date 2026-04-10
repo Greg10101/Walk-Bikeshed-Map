@@ -17,14 +17,66 @@
     #app { position: fixed;   top: 0; left: 0; right: 0; bottom: 0; overflow: hidden; }
     #map { position: fixed;   top: 0; left: 0; right: 0; bottom: 0; overflow: hidden; }
 
-    /* ── BEGIN: Header banner styles ── */
+    /* Set Colors ── */
+    /* NOTE: This only sets colors for code that can use variables. Some colors (like walkshed polygon fills, station colors for chip dots and map dots) must be set manually in the drawWalksheds function below, since they depend on data properties rather than CSS classes. */
     :root {
+      /* ── Header ── */
       --header-bg: #f5f2eb;
       --header-ink: #1a1a18;
       --header-accent: #e8500a;
       --header-muted: #7a7a72;
-    }
 
+      /* ── Sidebar ── */
+      --sidebar-bg: #4679b0; /* Agency branding color 1 */
+      --sidebar-text: #ffffff;
+      --sidebar-border: #ffffff;
+
+      /* ── Search / dropdown ── */
+      --search-bg: #0b1220;
+      --search-placeholder: #6b7280;
+      --search-text: #ffffff;
+      --search-border: #374151;
+      --search-border-focus: #ffffff;
+      --dropdown-bg: #0b1220;
+      --dropdown-hover: #014554;
+      --dropdown-selected: #1BBF54;
+
+      /* ── Buttons ── */
+      --btn-primary-bg: #3e3e3e; /* Agency branding color 2 */
+      --btn-primary-text: #ffffff;
+      --btn-primary-hover: #17a84a;
+      --btn-clear-text: #f87171;
+      --btn-clear-hover: #fca5a5;
+      --btn-select-text: #1BBF54;
+      --btn-select-hover: #4ade80;
+
+      /* ── Zoom ── */
+      --ctrl-bg: #3e3e3e; /* Agency branding color 2 */
+      --ctrl-text: #ffffff;
+      --ctrl-hover: #025f73;
+
+      /* ── Walk time buttons - Note: Must set walkshed polygon colors below manually ── */
+      --walk-5:  #22c55e;
+      --walk-10: #f59e0b;
+      --walk-15: #f97316;
+      --walk-20: #ef4444;
+      --walk-25: #dc2626;
+      --walk-30: #991b1b;
+
+      /* ── Chips ── */
+      --chip-bg: rgba(255,255,255,0.07);
+      --chip-border: rgba(255,255,255,0.12);
+      --chip-remove: #ffffff;
+      --chip-remove-hover: #f87171;
+
+      /* ── Misc ── */
+      --section-label: #ffffff;
+      --disclaimer-label: #ffffff;
+      --muted-text: #ffffff;
+      --empty-text: #ffffff;
+      --checkbox-accent: #3e3e3e;
+    }
+    /* ── BEGIN: Header banner styles ── */
     header.site-header {
       position: fixed;
       top: 0; left: 0; right: 0;
@@ -69,7 +121,7 @@
     #sidebar {
       position: absolute; top: 76px; left: 16px; z-index: 1000;
       width: 300px; padding: 12px 14px;
-      background: #4679b0; color: #ffffff;
+      background: var(--sidebar-bg); color: var(--sidebar-text);
       border-radius: 14px;
       box-shadow: 0 8px 32px rgba(0,0,0,0.45), 0 2px 8px rgba(0,0,0,0.3);
       transition: width 0.3s ease; overflow: hidden;
@@ -84,8 +136,8 @@
 
     #toggleBtn {
       flex-shrink: 0; display: flex; align-items: center; justify-content: center;
-      padding: 5px 7px; background: transparent; color: #ffffff;
-      border: 1px solid #ffffff; border-radius: 6px; cursor: pointer;
+      padding: 5px 7px; background: transparent; color: var(--sidebar-text);
+      border: 1px solid var(--sidebar-border); border-radius: 6px; cursor: pointer;
       line-height: 1; width: auto !important; margin-top: 0 !important;
     }
     #toggleBtn svg { display: block; width: 16px; height: 16px; transition: transform 0.3s ease; }
@@ -101,16 +153,16 @@
     .search-wrap { position: relative; }
     #stationSearch {
       width: 100%; padding: 8px 10px;
-      background: #0b1220; color: #e5e7eb;
-      border: 1px solid #374151; border-radius: 6px;
+      background: var(--search-bg); color: var(--search-text);
+      border: 1px solid var(--search-border); border-radius: 6px;
       font-size: 0.875rem; box-sizing: border-box; outline: none;
     }
-    #stationSearch::placeholder { color: #6b7280; }
-    #stationSearch:focus { border-color: #ffffff; }
+    #stationSearch::placeholder { color: var(--search-placeholder); }
+    #stationSearch:focus { border-color: var(--search-border-focus); }
 
     #stationDropdown {
       display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0;
-      background: #0b1220; border: 1px solid #374151; border-radius: 6px;
+      background: var(--dropdown-bg); border: 1px solid var(--search-border); border-radius: 6px;
       max-height: 180px; overflow-y: auto; z-index: 2000;
       box-shadow: 0 4px 16px rgba(0,0,0,0.4);
     }
@@ -118,21 +170,21 @@
 
     .dropdown-item {
       padding: 7px 10px; font-size: 0.85rem; cursor: pointer;
-      color: #e5e7eb; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      color: var(--search-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
-    .dropdown-item:hover, .dropdown-item.highlighted { background: #014554; }
-    .dropdown-item.already-selected { color: #1BBF54; }
+    .dropdown-item:hover, .dropdown-item.highlighted { background: var(--dropdown-hover); }
+    .dropdown-item.already-selected { color: var(--dropdown-selected); }
 
     /* ── Section labels ── */
     .section-label {
       font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em;
-      color: #ffffff; margin: 12px 0 6px;
+      color: var(--section-label); margin: 12px 0 6px;
     }
 
     /* ── Disclaimer labels ── */
     .disclaimer-label {
       font-size: 0.75rem; text-transform: none; letter-spacing: 0.06em; font-style: italic;
-      color: #ffffff; margin: 0px 0 0px;
+      color: var(--disclaimer-label); margin: 0px 0 0px;
     }
 
     /* ── Walk time buttons ── */
@@ -144,7 +196,7 @@
       border-radius: 6px;
       cursor: pointer;
       font-size: 0.78rem; font-weight: 700;
-      color: #ffffff;
+      color: var(--btn-primary-text);
       opacity: 0.45;
       transition: opacity 0.15s, border-color 0.15s;
     }
@@ -156,52 +208,52 @@
     .section-header .section-label { margin: 0; }
 
     #clearAllBtn {
-      font-size: 0.75rem; color: #f87171; background: none; border: none;
+      font-size: 0.75rem; color: var(--btn-clear-text); background: none; border: none;
       padding: 0; cursor: pointer; width: auto !important; margin-top: 0 !important;
       font-weight: normal; text-decoration: underline; text-underline-offset: 2px;
     }
-    #clearAllBtn:hover { color: #fca5a5; }
+    #clearAllBtn:hover { color: var(--btn-clear-hover); }
 
     #selectAllBtn {
-      font-size: 0.75rem; color: #1BBF54; background: none; border: none;
+      font-size: 0.75rem; color: var(--btn-select-text); background: none; border: none;
       padding: 0; cursor: pointer; width: auto !important; margin-top: 0 !important;
       font-weight: normal; text-decoration: underline; text-underline-offset: 2px;
     }
-    #selectAllBtn:hover { color: #4ade80; }
+    #selectAllBtn:hover { color: var(--btn-select-hover); }
 
     #selectedList { display: flex; flex-direction: column; gap: 5px; }
-    #selectedList:empty::before { content: "No stations selected"; font-size: 0.8rem; color: #e5e7eb; font-style: italic; }
+    #selectedList:empty::before { content: "No stations selected"; font-size: 0.8rem; color: var(--empty-text); font-style: italic; }
 
     .station-chip {
       display: flex; align-items: center; justify-content: space-between;
-      background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+      background: var(--chip-bg); border: 1px solid var(--chip-border);
       border-radius: 6px; padding: 5px 8px; font-size: 0.82rem; gap: 6px;
       animation: chipIn 0.15s ease;
     }
     @keyframes chipIn { from { opacity:0; transform:translateY(-4px); } to { opacity:1; transform:translateY(0); } }
     .chip-name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .chip-remove {
-      flex-shrink: 0; background: none; border: none; color: #ffffff; cursor: pointer;
+      flex-shrink: 0; background: none; border: none; color: var(--chip-remove); cursor: pointer;
       padding: 0 2px; font-size: 14px; line-height: 1;
       width: auto !important; margin-top: 0 !important;
       display: flex; align-items: center;
     }
-    .chip-remove:hover { color: #f87171; }
+    .chip-remove:hover { color: var(--chip-remove-hover); }
 
     /* ── Draw button ── */
     #drawBtn {
       width: 100%; padding: 10px; margin-top: 12px;
-      background: #3e3e3e; color: #ffffff; font-weight: bold;
+      background: var(--btn-primary-bg); color: var(--btn-primary-text); font-weight: bold;
       border: none; border-radius: 6px; cursor: pointer; box-sizing: border-box;
     }
-    #drawBtn:hover { background: #17a84a; }
+    #drawBtn:hover { background: var(--btn-primary-hover); }
 
     /* ── Zoom controls ── */
     .leaflet-top.leaflet-left .leaflet-control-zoom { display: none; }
     .leaflet-top.leaflet-right { top: 16px; right: 16px; }
     .leaflet-top.leaflet-right .leaflet-control-zoom { margin: 0; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.35); }
-    .leaflet-control-zoom-in, .leaflet-control-zoom-out { background: #3e3e3e !important; color: #ffffff !important; border: none !important; }
-    .leaflet-control-zoom-in:hover, .leaflet-control-zoom-out:hover { background: #025f73 !important; color: #fff !important; }
+    .leaflet-control-zoom-in, .leaflet-control-zoom-out { background: var(--ctrl-bg) !important; color: var(--ctrl-text) !important; border: none !important; }
+    .leaflet-control-zoom-in:hover, .leaflet-control-zoom-out:hover { background: var(--ctrl-hover) !important; color: var(--ctrl-text) !important; }
 
     /* ── Mobile ── */
     @media (max-width: 768px) {
@@ -244,7 +296,7 @@
     </div>
 
     <div id="sidebar-content" class="expanded">
-      <p style="margin:0 0 8px;font-size:0.85rem;color:#ffffff">Click map or search below to select a station(s)</p>
+      <p style="margin:0 0 8px;font-size:0.85rem;color: var(--sidebar-text);">Click map or search below to select a station(s)</p>
 
       <div class="search-wrap">
         <input id="stationSearch" type="text" placeholder="Search stations&hellip;" autocomplete="off" />
@@ -253,12 +305,12 @@
 
       <div class="section-label">Walk time*</div>
       <div class="walk-time-btns">
-        <button class="walk-time-btn" data-minutes="5"  style="background:#22c55e;">5 min</button>
-        <button class="walk-time-btn" data-minutes="10" style="background:#f59e0b;">10 min</button>
-        <button class="walk-time-btn active" data-minutes="15" style="background:#f97316;">15 min</button>
-        <button class="walk-time-btn" data-minutes="20" style="background:#ef4444;">20 min</button>
-        <button class="walk-time-btn" data-minutes="25" style="background:#dc2626;">25 min</button>
-        <button class="walk-time-btn" data-minutes="30" style="background:#991b1b;">30 min</button>
+        <button class="walk-time-btn" data-minutes="5"  style="background:var(--walk-5);">5 min</button>
+        <button class="walk-time-btn" data-minutes="10" style="background:var(--walk-10);">10 min</button>
+        <button class="walk-time-btn active" data-minutes="15" style="background:var(--walk-15);">15 min</button>
+        <button class="walk-time-btn" data-minutes="20" style="background:var(--walk-20);">20 min</button>
+        <button class="walk-time-btn" data-minutes="25" style="background:var(--walk-25);">25 min</button>
+        <button class="walk-time-btn" data-minutes="30" style="background:var(--walk-30);">30 min</button>
       <div class="disclaimer-label">*Based on a static walking speed of 3mph</div>
     </div>
 
@@ -287,7 +339,7 @@ L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_L
 map.attributionControl.addAttribution('| Last modified: March 2026');
 
 const walkshedLayer = L.layerGroup().addTo(map);
-const LINE_COLORS = { RD:"#E5262E", BL:"#1574C4", OR:"#F7941D", SV:"#A0A2A0", GR:"#00A65C", YL:"#FFD32A" };
+const LINE_COLORS = { RD:"#E5262E", BL:"#1574C4", OR:"#F7941D", SV:"#A0A2A0", GR:"#00A65C", YL:"#FFD32A" }; // WMATA line colors for station markers - MUST BE EDITED TO MATCH YOUR DATA
 
 /* ── State ── */
 let stationLookup = {};
@@ -496,7 +548,7 @@ searchInput.addEventListener("keydown", e => {
   if (highlightIndex>=0) items[highlightIndex].scrollIntoView({block:"nearest"});
 });
 
-/* ── Draw walksheds ── */
+/* ── Draw walksheds - MUST SET COLORS HERE ── */
 function colorForMinutes(min) {
   if (min ===  5) return "#22c55e";
   if (min === 10) return "#f59e0b";
