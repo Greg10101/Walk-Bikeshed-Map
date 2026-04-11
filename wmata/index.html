@@ -553,8 +553,13 @@ let allStationNames = [];
 let highlightIndex = -1;
 
 function buildDropdownData() {
+  // Build set of codes that actually have walkshed data
   const codesWithData = new Set(walkshedData.features.map(f => f.properties.station_id));
+  // Map to proper names via stationLookup (code is the key)
+  // stationLookup may not be populated yet if stations loads after walksheds —
+  // so we also store the raw codes and resolve names lazily in renderDropdown.
   walkshedCodes = codesWithData;
+  // Resolve names immediately if stationLookup is already populated
   resolveDropdownNames();
 }
 
