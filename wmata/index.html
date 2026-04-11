@@ -186,7 +186,7 @@
     /* ── Disclaimer labels ── */
     .disclaimer-label {
       font-size: 0.75rem; text-transform: none; letter-spacing: 0.06em; font-style: italic;
-      color: var(--disclaimer-label); margin: 4px 0 0;
+      color: var(--disclaimer-label); margin: 0px 0 0;
     }
 
     /* ── Walk time buttons ── */
@@ -319,7 +319,7 @@
     </div>
 
     <div id="sidebar-content" class="expanded">
-      <p style="margin:0 0 8px;font-size:0.85rem;color:var(--muted-text);">Click map or search below to select a station(s)</p>
+      <p style="margin:0 0 8px;font-size:0.85rem;color:var(--sidebar-text);">Click map or search below to select a station(s)</p>
 
       <div class="search-wrap">
         <input id="stationSearch" type="text" placeholder="Search stations&hellip;" autocomplete="off" />
@@ -335,7 +335,7 @@
         <button class="walk-time-btn" data-minutes="25" style="background:var(--walk-25);">25 min</button>
         <button class="walk-time-btn" data-minutes="30" style="background:var(--walk-30);">30 min</button>
       </div>
-      <!-- FIX: closed .walk-time-btns div above before disclaimer -->
+
       <div class="disclaimer-label">*Based on a static walking speed of 3mph</div>
 
       <div class="section-header">
@@ -621,6 +621,7 @@ function drawWalksheds(shouldFit) {
   walkshedLayer.clearLayers();
   if (!selectedStations.size) return;
   const minutes = selectedMinutes();
+  // Join walkshed features to selected stations via station_id → proper name
   const filtered = {
     type: "FeatureCollection",
     features: walkshedData.features.filter(f => {
@@ -634,6 +635,7 @@ function drawWalksheds(shouldFit) {
   const geojsonLayer = L.geoJSON(filtered, {
     style: f => ({ color: colorForMinutes(f.properties.minutes), weight: 1, fillOpacity: 0.25 })
   }).addTo(walkshedLayer);
+  // Only re-fit the map when explicitly requested (adding a station or button click)
   if (shouldFit) map.fitBounds(geojsonLayer.getBounds().pad(0.15));
 }
 
