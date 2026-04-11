@@ -242,13 +242,23 @@
     }
     .chip-remove:hover { color: var(--chip-remove-hover); }
 
-    /* ── Draw button ── */
-    #drawBtn {
-      width: 100%; padding: 10px; margin-top: 12px;
-      background: var(--btn-primary-bg); color: var(--btn-primary-text); font-weight: bold;
-      border: none; border-radius: 6px; cursor: pointer; box-sizing: border-box;
+    /* ── Favorites buttons ── */
+    .fav-row {
+      display: flex; gap: 6px; margin-top: 8px;
     }
-    #drawBtn:hover { background: var(--btn-primary-hover); }
+    .fav-btn {
+      flex: 1; padding: 7px 4px;
+      background: var(--btn-primary-bg);
+      color: var(--btn-primary-text);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 6px; cursor: pointer;
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.04em; text-transform: uppercase;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .fav-btn:hover { background: var(--btn-primary-hover); border-color: rgba(255,255,255,0.6); }
+    .fav-btn:disabled { opacity: 0.3; cursor: default; }
+    .fav-btn:disabled:hover { background: var(--btn-primary-hover); border-color: rgba(255,255,255,0.35); }
 
     /* ── Zoom controls ── */
     .leaflet-top.leaflet-left .leaflet-control-zoom { display: none; }
@@ -259,24 +269,28 @@
 
     /* ── Map style toggle button ── */
     #mapStyleBtn {
-      display: block;
+      display: flex;
+      flex-direction: column;
       margin-top: 8px;
       margin-right: 2px;
       width: 30px;
-      height: 30px;
-      background: var(--ctrl-bg);
-      color: var(--ctrl-text);
-      border: none;
       border-radius: 8px;
+      overflow: hidden;
       box-shadow: 0 4px 16px rgba(0,0,0,0.35);
       cursor: pointer;
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      line-height: 1;
     }
-    #mapStyleBtn:hover { background: var(--ctrl-hover); }
+    .map-style-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 28px;
+      background: var(--ctrl-bg);
+      transition: background 0.15s;
+      cursor: pointer;
+    }
+    .map-style-icon:hover { background: var(--ctrl-hover); }
+    .map-style-icon:first-child { border-bottom: 1px solid rgba(255,255,255,0.1); }
 
     /* ── Mobile ── */
     @media (max-width: 768px) {
@@ -347,11 +361,21 @@
       </div>
       <div id="selectedList"></div>
 
-      <button id="drawBtn">Show walksheds</button>
+      <div class="fav-row">
+        <button class="fav-btn" id="favSaveBtn">⭐ Save Favorites</button>
+        <button class="fav-btn" id="favLoadBtn" disabled>↩ Load Favorites</button>
+      </div>
     </div>
   </aside>
 </div>
-<button id="mapStyleBtn" title="Switch to detailed map"><svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="16" height="16" rx="2" fill="#6ab187"/><rect x="1" y="1" width="16" height="6" rx="2" fill="#7ec8e3"/><rect x="1" y="10" width="16" height="7" rx="0" fill="#c8d6a0"/><rect x="1" y="7" width="16" height="3" rx="0" fill="#e8dfc8"/><rect x="6" y="1" width="2" height="16" rx="0" fill="#f0f0d0"/></svg></button>
+<div id="mapStyleBtn" title="Switch map style">
+  <span id="icon-simple" class="map-style-icon">
+    <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" opacity="1"><rect x="1" y="1" width="16" height="16" rx="2" fill="#888"/><rect x="1" y="1" width="16" height="6" rx="2" fill="#aaa"/><rect x="1" y="10" width="16" height="7" rx="0" fill="#999"/><rect x="1" y="7" width="16" height="3" rx="0" fill="#bbb"/><rect x="6" y="1" width="2" height="16" rx="0" fill="#ccc"/></svg>
+  </span>
+  <span id="icon-detailed" class="map-style-icon">
+    <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" opacity="0.35"><rect x="1" y="1" width="16" height="16" rx="2" fill="#6ab187"/><rect x="1" y="1" width="16" height="6" rx="2" fill="#7ec8e3"/><rect x="1" y="10" width="16" height="7" rx="0" fill="#c8d6a0"/><rect x="1" y="7" width="16" height="3" rx="0" fill="#e8dfc8"/><rect x="6" y="1" width="2" height="16" rx="0" fill="#f0f0d0"/></svg>
+  </span>
+</div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
@@ -361,18 +385,16 @@ L.control.zoom({ position: "topright" }).addTo(map);
 
 const tileLayers = {
   simple: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
-    attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
+    attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ | Last updated: March 2026',
     maxZoom: 16
   }),
   detailed: L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors | Last updated: March 2026',
     maxZoom: 19
   })
 };
 tileLayers.simple.addTo(map);
 let currentStyle = 'simple';
-
-map.attributionControl.addAttribution('| Last modified: March 2026');
 
 // Add map style button as a proper Leaflet custom control so placement is guaranteed
 const MapStyleControl = L.Control.extend({
@@ -390,13 +412,24 @@ const icons = {
   detailed: `<svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="16" height="16" rx="2" fill="#6ab187"/><rect x="1" y="1" width="16" height="6" rx="2" fill="#7ec8e3"/><rect x="1" y="10" width="16" height="7" rx="0" fill="#c8d6a0"/><rect x="1" y="7" width="16" height="3" rx="0" fill="#e8dfc8"/><rect x="6" y="1" width="2" height="16" rx="0" fill="#f0f0d0"/></svg>`
 };
 
-document.getElementById("mapStyleBtn").addEventListener("click", () => {
+document.getElementById("icon-simple").addEventListener("click", () => {
+  if (currentStyle === 'simple') return; // already active, do nothing
   map.removeLayer(tileLayers[currentStyle]);
-  currentStyle = currentStyle === 'simple' ? 'detailed' : 'simple';
+  currentStyle = 'simple';
   tileLayers[currentStyle].addTo(map);
   tileLayers[currentStyle].bringToBack();
-  document.getElementById("mapStyleBtn").innerHTML = currentStyle === 'simple' ? icons.detailed : icons.simple;
-  document.getElementById("mapStyleBtn").title = currentStyle === 'simple' ? 'Switch to detailed map' : 'Switch to simple map';
+  document.getElementById("icon-simple").querySelector("svg").setAttribute("opacity", "1");
+  document.getElementById("icon-detailed").querySelector("svg").setAttribute("opacity", "0.35");
+});
+
+document.getElementById("icon-detailed").addEventListener("click", () => {
+  if (currentStyle === 'detailed') return; // already active, do nothing
+  map.removeLayer(tileLayers[currentStyle]);
+  currentStyle = 'detailed';
+  tileLayers[currentStyle].addTo(map);
+  tileLayers[currentStyle].bringToBack();
+  document.getElementById("icon-simple").querySelector("svg").setAttribute("opacity", "0.35");
+  document.getElementById("icon-detailed").querySelector("svg").setAttribute("opacity", "1");
 });
 
 const walkshedLayer = L.layerGroup().addTo(map);
@@ -645,7 +678,6 @@ function drawWalksheds(shouldFit) {
 }
 
 /* ── Events ── */
-document.getElementById("drawBtn").addEventListener("click", () => drawWalksheds(true));
 document.getElementById("selectAllBtn").addEventListener("click", selectAll);
 document.getElementById("clearAllBtn").addEventListener("click", clearAll);
 document.querySelectorAll(".walk-time-btn").forEach(btn => btn.addEventListener("click", () => {
@@ -657,6 +689,48 @@ document.getElementById("toggleBtn").addEventListener("click", () => {
   document.getElementById("sidebar-content").classList.toggle("expanded");
   document.getElementById("app").classList.toggle("sidebar-collapsed");
 });
+/* ── Favorites ── */
+const FAV_KEY = 'walkshed_favorite';
+
+function saveFavorite() {
+  const favorite = {
+    stations: [...selectedStations],
+    minutes: selectedMinutes()
+  };
+  localStorage.setItem(FAV_KEY, JSON.stringify(favorite));
+  document.getElementById("favLoadBtn").disabled = false;
+  // Brief visual confirmation
+  const btn = document.getElementById("favSaveBtn");
+  btn.textContent = "✓ Saved";
+  setTimeout(() => btn.textContent = "⭐ Save Favorites", 1500);
+}
+
+function loadFavorite() {
+  const raw = localStorage.getItem(FAV_KEY);
+  if (!raw) return;
+  const favorite = JSON.parse(raw);
+
+  // Clear current selection
+  clearAll();
+
+  // Restore walk time buttons
+  document.querySelectorAll(".walk-time-btn").forEach(btn => {
+    btn.classList.toggle("active", favorite.minutes.includes(Number(btn.dataset.minutes)));
+  });
+
+  // Restore stations
+  favorite.stations.forEach(name => {
+    if (allStationNames.includes(name)) toggleStation(name);
+  });
+}
+
+// Check on load if a favorite already exists
+if (localStorage.getItem(FAV_KEY)) {
+  document.getElementById("favLoadBtn").disabled = false;
+}
+
+document.getElementById("favSaveBtn").addEventListener("click", saveFavorite);
+document.getElementById("favLoadBtn").addEventListener("click", loadFavorite);
 </script>
 </body>
 </html>
