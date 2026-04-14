@@ -128,13 +128,13 @@
       box-shadow: 0 8px 32px rgba(0,0,0,0.45), 0 2px 8px rgba(0,0,0,0.3);
       transition: width 0.3s ease; overflow: hidden;
     }
-    #app.sidebar-collapsed #sidebar { width: 46px; }
+    #app.sidebar-collapsed #sidebar { width: 300px; }
 
     /* ── Sidebar header ── */
     #sidebar-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; white-space: nowrap; }
     #sidebar-header h2 { margin: 0; font-size: 1rem; white-space: nowrap; overflow: hidden; opacity: 1; transition: opacity 0.15s ease; }
-    #app.sidebar-collapsed #sidebar-header h2 { opacity: 0; pointer-events: none; }
-    #app.sidebar-collapsed #sidebar-header { justify-content: center; }
+    #app.sidebar-collapsed #sidebar-header h2 { opacity: 1; pointer-events: none; }
+    #app.sidebar-collapsed #sidebar-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; white-space: nowrap;}
 
     #toggleBtn {
       flex-shrink: 0; display: flex; align-items: center; justify-content: center;
@@ -143,8 +143,8 @@
       line-height: 1; width: auto !important; margin-top: 0 !important;
     }
     #toggleBtn svg { display: block; width: 16px; height: 16px; transition: transform 0.3s ease; }
-    #toggleBtn svg { transform: rotate(0deg); }
-    #app.sidebar-collapsed #toggleBtn svg { transform: rotate(180deg); }
+    #toggleBtn svg { transform: rotate(90deg); }
+    #app.sidebar-collapsed #toggleBtn svg { transform: rotate(270deg); }
 
     /* ── Collapsible content ── */
     #sidebar-content { overflow: hidden; transition: max-height 0.35s ease, opacity 0.25s ease, margin-top 0.3s ease; }
@@ -186,7 +186,7 @@
     /* ── Disclaimer labels ── */
     .disclaimer-label {
       font-size: 0.75rem; text-transform: none; letter-spacing: 0.06em; font-style: italic;
-      color: var(--disclaimer-label); margin: 0px 0 0;
+      color: var(--disclaimer-label); margin: 6px 0 0;
     }
 
     /* ── Walk time buttons ── */
