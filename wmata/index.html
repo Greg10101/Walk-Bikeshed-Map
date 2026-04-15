@@ -367,8 +367,8 @@
 
       <div class="section-label">Walk time*</div>
       <div class="walk-time-btns">
-        <button class="walk-time-btn" data-minutes="5"  style="background:var(--walk-5);">5 min</button>
-        <button class="walk-time-btn" data-minutes="10" style="background:var(--walk-10);">10 min</button>
+        <button class="walk-time-btn active" data-minutes="5"  style="background:var(--walk-5);">5 min</button>
+        <button class="walk-time-btn active" data-minutes="10" style="background:var(--walk-10);">10 min</button>
         <button class="walk-time-btn active" data-minutes="15" style="background:var(--walk-15);">15 min</button>
         <button class="walk-time-btn" data-minutes="20" style="background:var(--walk-20);">20 min</button>
         <button class="walk-time-btn" data-minutes="25" style="background:var(--walk-25);">25 min</button>
@@ -759,10 +759,33 @@ function drawWalksheds(shouldFit) {
 /* ── Events ── */
 document.getElementById("selectAllBtn").addEventListener("click", selectAll);
 document.getElementById("clearAllBtn").addEventListener("click", clearAll);
-document.querySelectorAll(".walk-time-btn").forEach(btn => btn.addEventListener("click", () => {
-  btn.classList.toggle("active");
-  drawWalksheds(false);
-}));
+document.querySelectorAll(".walk-time-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const clickedVal = Number(btn.dataset.minutes);
+    const allBtns = document.querySelectorAll(".walk-time-btn");
+    
+    // Determine the current highest active value
+    let currentMax = 0;
+    allBtns.forEach(b => {
+      if (b.classList.contains("active")) {
+        currentMax = Math.max(currentMax, Number(b.dataset.minutes));
+      }
+    });
+
+    allBtns.forEach(b => {
+      const thisVal = Number(b.dataset.minutes);
+      // If clicking the current max, turn everything off. 
+      // Otherwise, turn on everything up to the clicked value.
+      if (clickedVal === currentMax || thisVal > clickedVal) {
+        b.classList.remove("active");
+      } else {
+        b.classList.add("active");
+      }
+    });
+
+    drawWalksheds(false);
+  });
+});
 document.getElementById("toggleBtn").addEventListener("click", () => {
   document.getElementById("sidebar-content").classList.toggle("collapsed");
   document.getElementById("sidebar-content").classList.toggle("expanded");
