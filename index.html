@@ -67,6 +67,44 @@
     }
     nav a:hover { color: var(--accent); }
 
+        .nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.25rem;
+      color: var(--ink);
+    }
+
+    .nav-toggle svg { display: block; }
+
+    @media (max-width: 700px) {
+      .nav-toggle { display: block; }
+
+      nav {
+        display: none;
+        position: fixed;
+        top: 60px;
+        left: 0; right: 0;
+        background: var(--bg);
+        border-bottom: 2px solid var(--ink);
+        flex-direction: column;
+        padding: 1rem 2.5rem;
+        gap: 0;
+      }
+
+      nav.open { display: flex; }
+
+      nav a {
+        margin-left: 0;
+        padding: 0.85rem 0;
+        border-bottom: 1px solid var(--border);
+        font-size: 0.85rem;
+      }
+
+      nav a:last-child { border-bottom: none; }
+    }
+
     /* ── Left sidebar panel ── */
     .hero-panel {
       position: fixed;
@@ -319,11 +357,20 @@
 
   <!-- ── EDIT: Header nav links ── -->
   <header>
-    <a class="logo" href="index.html">What's the <span>Walkshed?</span></a>
-    <nav>
-      <a href="#">About</a>           <!-- EDIT: change href to "about.html" when ready -->
-      <a href="#">Methodology</a>     <!-- EDIT: change href to "methodology.html" when ready -->
-    </nav>
+    <a href="#" class="logo">What's the<span> Walkshed?</span></a>
+  <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect y="4" width="22" height="2" fill="currentColor"/>
+      <rect y="10" width="22" height="2" fill="currentColor"/>
+      <rect y="16" width="22" height="2" fill="currentColor"/>
+    </svg>
+  </button>
+  <nav id="main-nav">
+    <a href="about.html">About</a>
+    <a href="methodology.html">Methodology</a>
+    <a href="contact.html">Contact</a>
+    <a href="support.html">Support Us</a>
+  </nav>
   </header>
 
   <!-- ── Left sidebar ── -->
@@ -524,6 +571,10 @@
       document.querySelectorAll('.leaflet-marker-icon').forEach(el => {
         el.style.cursor = 'pointer';
       });
+    });
+
+    document.getElementById('nav-toggle').addEventListener('click', () => {
+    document.getElementById('main-nav').classList.toggle('open');
     });
 
   </script>
