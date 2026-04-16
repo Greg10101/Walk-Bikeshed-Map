@@ -1,0 +1,35 @@
+const AGENCIES = {
+
+  wmata: {
+    name: "WMATA Rail Station Walksheds",
+    mapCenter: [38.905, -77.036],
+    mapZoom: 12,
+    sidebarColor: "#4679b0",
+    buttonColor: "#3e3e3e",
+    hasLinesToggle: true,
+    markerStyle: "pie",
+    lines: {
+      rd: { color: "#E5262E", abbr: "R" },
+      bl: { color: "#1574C4", abbr: "B" },
+      or: { color: "#F7941D", abbr: "O" },
+      sv: { color: "#A0A2A0", abbr: "S" },
+      gr: { color: "#00A65C", abbr: "G" },
+      yl: { color: "#FFD32A", abbr: "Y" },
+    }
+  },
+
+  denver: {
+    name: "RTD Denver Rail Walksheds",
+    mapCenter: [39.7392, -104.9903],
+    mapZoom: 11,
+    sidebarColor: "#c41230",  // RTD red — update as needed
+    buttonColor: "#1a1a18",
+    hasLinesToggle: false,
+    markerStyle: "dumbbell",
+    lines: {
+      // Add RTD line codes, colors, and abbreviations here
+      // e.g. w: { color: "#FFD700", abbr: "W" },
+    }
+  },
+
+};
