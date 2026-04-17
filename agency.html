@@ -633,8 +633,9 @@
 
   // ── Marker SVG — routes to style-specific function ──
   function buildMarkerSVG(lines, selected) {
+    if (agency.markerStyle === 'pie')      return buildPieSVG(lines, selected);
     if (agency.markerStyle === 'dumbbell') return buildDumbbellSVG(lines, selected);
-    return buildPieSVG(lines, selected);
+    return buildSquareSVG(lines, selected); // default fallback
   }
 
   // WMATA style — pie-slice segments for multi-line, solid dot for single
@@ -702,6 +703,23 @@
     return `<svg width="${totalWidth}" height="${HEIGHT}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
   }
 
+  // Default style — vertically sliced square, one slice per line
+  function buildSquareSVG(lines, selected) {
+    const SIZE = 20, PAD = 1;
+    const inner = SIZE - PAD * 2;
+    const sliceW = inner / lines.length;
+    let s = selected ? `<rect x="0" y="0" width="${SIZE}" height="${SIZE}" rx="3" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="4 2"/>` : '';
+    // Clip to rounded rect
+    const clipId = 'sq-' + Math.random().toString(36).slice(2);
+    s += `<clipPath id="${clipId}"><rect x="${PAD}" y="${PAD}" width="${inner}" height="${inner}" rx="3"/></clipPath>`;
+    lines.forEach((line, i) => {
+      const x = PAD + i * sliceW;
+      s += `<rect x="${x}" y="${PAD}" width="${sliceW}" height="${inner}" fill="${LINE_COLORS[line] || '#888'}" clip-path="url(#${clipId})"/>`;
+    });
+    s += `<rect x="${PAD}" y="${PAD}" width="${inner}" height="${inner}" rx="3" fill="none" stroke="#111827" stroke-width="1.5"/>`;
+    return `<svg width="${SIZE}" height="${SIZE}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+  }
+
   // Returns [width, height] for a marker given its style and line count
   function markerSize(lines) {
     if (agency.markerStyle === 'dumbbell') {
@@ -711,8 +729,8 @@
       const h = DOT_R * 2 + PAD * 2;
       return [w, h];
     }
-    // pie style
-    return lines.length === 1 ? [20, 20] : [40, 40];
+    if (agency.markerStyle === 'pie') return lines.length === 1 ? [20, 20] : [40, 40];
+    return [20, 20]; // square and default
   }
 
   function refreshMarker(station) {
