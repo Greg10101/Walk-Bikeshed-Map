@@ -6,6 +6,7 @@ const AGENCIES = {
     mapZoom: 12,
     sidebarColor: "#4679b0",
     buttonColor: "#3e3e3e",
+    devMode: false,
     hasLinesToggle: true,
     markerStyle: "pie",
     lines: {
@@ -18,12 +19,13 @@ const AGENCIES = {
     }
   },
 
-  denver: {
+  rtd: {
     name: "RTD Denver Rail Walksheds",
     mapCenter: [39.7392, -104.9903],
     mapZoom: 11,
-    sidebarColor: "#c41230",  // RTD red — update as needed
-    buttonColor: "#1a1a18",
+    sidebarColor: "#FFFFFF",
+    buttonColor: "#CE0E2D",
+    devMode: true,
     hasLinesToggle: false,
     markerStyle: "dumbbell",
     lines: {
