@@ -553,7 +553,7 @@
         if (agency.ready) {
           // EDIT: agency page path — currently expects subfolder e.g. bart/index.html
           selLink.style.display = 'inline-block';
-          selLink.href = `${agency.id}/index.html`;
+          selLink.href = `agency.html?id=${agency.id}`;
         } else {
           selLink.style.display = 'none';
           const badge = document.createElement('span');

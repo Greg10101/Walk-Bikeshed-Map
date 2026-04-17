@@ -1,0 +1,987 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>What's the Walkshed?</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    html, body { height: 100%; margin: 0; font-family: var(--sidebar-font); overflow: hidden; }
+    #app { position: fixed; top: 0; left: 0; right: 0; bottom: 0; overflow: hidden; }
+    #map { position: fixed; top: 60px; left: 0; right: 0; bottom: 0; overflow: hidden; }
+
+    /* ── Colour tokens ── */
+    :root {
+      --header-bg: #f5f2eb;
+      --header-ink: #1a1a18;
+      --header-accent: #e8500a;
+      --header-muted: #7a7a72;
+      --header-border: #dedad2;
+
+      /* Agency colours — set by JS on load */
+      --sidebar-bg: #4679b0;
+      --sidebar-text: #ffffff;
+      --sidebar-border: #ffffff;
+      --btn-primary-bg: #3e3e3e;
+
+      --search-bg: #0b1220;
+      --search-placeholder: #6b7280;
+      --search-text: #ffffff;
+      --search-border: #374151;
+      --search-border-focus: #ffffff;
+      --dropdown-bg: #0b1220;
+      --dropdown-hover: #014554;
+      --dropdown-selected: #1BBF54;
+
+      --btn-primary-text: #ffffff;
+      --btn-primary-hover: #17a84a;
+      --btn-clear-text: #f87171;
+      --btn-clear-hover: #fca5a5;
+      --btn-select-text: #1BBF54;
+      --btn-select-hover: #4ade80;
+
+      --ctrl-bg: #3e3e3e;
+      --ctrl-text: #ffffff;
+      --ctrl-hover: #025f73;
+
+      --walk-5:  #22c55e;
+      --walk-10: #f59e0b;
+      --walk-15: #f97316;
+      --walk-20: #ef4444;
+      --walk-25: #dc2626;
+      --walk-30: #991b1b;
+
+      --chip-bg: rgba(255,255,255,0.07);
+      --chip-border: rgba(255,255,255,0.12);
+      --chip-remove: #ffffff;
+      --chip-remove-hover: #f87171;
+
+      --section-label: #ffffff;
+      --disclaimer-label: #ffffff;
+      --empty-text: #ffffff;
+      --checkbox-accent: #3e3e3e;
+    }
+
+    /* ── Header ── */
+    header.site-header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 2000;
+      border-bottom: 2px solid var(--header-ink);
+      padding: 0 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+      background: var(--header-bg);
+    }
+    header.site-header .logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      text-decoration: none;
+      color: var(--header-ink);
+    }
+    header.site-header .logo span { color: var(--header-accent); }
+
+    header.site-header nav a {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--header-muted);
+      text-decoration: none;
+      margin-left: 1.8rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    header.site-header nav a:hover { color: var(--header-accent); }
+
+    /* ── Hamburger ── */
+    .nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.25rem;
+      color: var(--header-ink);
+    }
+    .nav-toggle svg { display: block; }
+
+    @media (max-width: 700px) {
+      .nav-toggle { display: block; }
+
+      header.site-header nav {
+        display: none;
+        position: fixed;
+        top: 60px;
+        left: 0; right: 0;
+        background: var(--header-bg);
+        border-bottom: 2px solid var(--header-ink);
+        flex-direction: column;
+        padding: 1rem 2.5rem;
+        gap: 0;
+        z-index: 1999;
+      }
+
+      header.site-header nav.open { display: flex; }
+
+      header.site-header nav a {
+        margin-left: 0;
+        padding: 0.85rem 0;
+        border-bottom: 1px solid var(--header-border);
+        font-size: 0.85rem;
+      }
+
+      header.site-header nav a:last-child { border-bottom: none; }
+    }
+
+    /* ── Floating sidebar ── */
+    #sidebar {
+      position: absolute; top: 76px; left: 16px; z-index: 1000;
+      width: 300px; padding: 12px 14px;
+      background: var(--sidebar-bg); color: var(--sidebar-text);
+      border-radius: 14px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.45), 0 2px 8px rgba(0,0,0,0.3);
+      transition: width 0.3s ease; overflow: hidden;
+    }
+
+    /* ── Sidebar header ── */
+    #sidebar-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; white-space: nowrap; }
+    #sidebar-header h2 { margin: 0; font-size: 1rem; white-space: nowrap; overflow: hidden; opacity: 1; transition: opacity 0.15s ease; }
+
+    #toggleBtn {
+      flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+      padding: 5px 7px; background: transparent; color: var(--sidebar-text);
+      border: 1px solid var(--sidebar-border); border-radius: 6px; cursor: pointer;
+      line-height: 1; width: auto !important; margin-top: 0 !important;
+    }
+    #toggleBtn svg { display: block; width: 16px; height: 16px; transition: transform 0.3s ease; transform: rotate(90deg); }
+    #app.sidebar-collapsed #toggleBtn svg { transform: rotate(270deg); }
+
+    /* ── Collapsible content ── */
+    #sidebar-content { overflow: hidden; transition: max-height 0.35s ease, opacity 0.25s ease, margin-top 0.3s ease; }
+    #sidebar-content.expanded { max-height: 700px; opacity: 1; margin-top: 10px; }
+    #sidebar-content.collapsed { max-height: 0; opacity: 0; margin-top: 0; }
+
+    /* ── Station search ── */
+    .search-wrap { position: relative; }
+    #stationSearch {
+      width: 100%; padding: 8px 10px;
+      background: var(--search-bg); color: var(--search-text);
+      border: 1px solid var(--search-border); border-radius: 6px;
+      font-size: 0.875rem; box-sizing: border-box; outline: none;
+    }
+    #stationSearch::placeholder { color: var(--search-placeholder); }
+    #stationSearch:focus { border-color: var(--search-border-focus); }
+
+    #stationDropdown {
+      display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+      background: var(--dropdown-bg); border: 1px solid var(--search-border); border-radius: 6px;
+      max-height: 180px; overflow-y: auto; z-index: 2000;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    }
+    #stationDropdown.open { display: block; }
+
+    .dropdown-item {
+      padding: 7px 10px; font-size: 0.85rem; cursor: pointer;
+      color: var(--search-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .dropdown-item:hover, .dropdown-item.highlighted { background: var(--dropdown-hover); }
+    .dropdown-item.already-selected { color: var(--dropdown-selected); }
+
+    /* ── Section labels ── */
+    .section-label {
+      font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em;
+      color: var(--section-label); margin: 12px 0 6px;
+    }
+
+    .disclaimer-label {
+      font-size: 0.75rem; text-transform: none; letter-spacing: 0.06em; font-style: italic;
+      color: var(--disclaimer-label); margin: 6px 0 0;
+    }
+
+    /* ── Walk time buttons ── */
+    .walk-time-btns { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+    .walk-time-btn {
+      flex: 1; min-width: calc(33% - 6px); max-width: calc(33% - 6px);
+      padding: 7px 4px;
+      border: 2px solid transparent; border-radius: 6px; cursor: pointer;
+      font-size: 0.78rem; font-weight: 700;
+      color: var(--btn-primary-text);
+      opacity: 0.45;
+      transition: opacity 0.15s, border-color 0.15s;
+    }
+    .walk-time-btn.active { opacity: 1; border-color: rgba(255,255,255,0.6); }
+    .walk-time-btn:hover { opacity: 0.8; }
+
+    /* ── Selected stations ── */
+    .section-header { display: flex; align-items: center; justify-content: space-between; margin: 12px 0 6px; }
+    .section-header .section-label { margin: 0; }
+
+    #clearAllBtn {
+      font-size: 0.75rem; color: var(--btn-clear-text); background: none; border: none;
+      padding: 0; cursor: pointer; width: auto !important; margin-top: 0 !important;
+      font-weight: normal; text-decoration: underline; text-underline-offset: 2px;
+    }
+    #clearAllBtn:hover { color: var(--btn-clear-hover); }
+
+    #selectAllBtn {
+      font-size: 0.75rem; color: var(--btn-select-text); background: none; border: none;
+      padding: 0; cursor: pointer; width: auto !important; margin-top: 0 !important;
+      font-weight: normal; text-decoration: underline; text-underline-offset: 2px;
+    }
+    #selectAllBtn:hover { color: var(--btn-select-hover); }
+
+    #selectedList { display: flex; flex-direction: column; gap: 5px; }
+    #selectedList:empty::before { content: "No stations selected"; font-size: 0.8rem; color: var(--empty-text); font-style: italic; }
+
+    .station-chip {
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--chip-bg); border: 1px solid var(--chip-border);
+      border-radius: 6px; padding: 5px 8px; font-size: 0.82rem; gap: 6px;
+      animation: chipIn 0.15s ease;
+    }
+    @keyframes chipIn { from { opacity:0; transform:translateY(-4px); } to { opacity:1; transform:translateY(0); } }
+    .chip-name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .chip-remove {
+      flex-shrink: 0; background: none; border: none; color: var(--chip-remove); cursor: pointer;
+      padding: 0 2px; font-size: 14px; line-height: 1;
+      width: auto !important; margin-top: 0 !important;
+      display: flex; align-items: center;
+    }
+    .chip-remove:hover { color: var(--chip-remove-hover); }
+
+    /* ── Favorites ── */
+    .fav-row { display: flex; gap: 6px; margin-top: 8px; }
+    .fav-btn {
+      flex: 1; padding: 7px 4px;
+      background: var(--btn-primary-bg);
+      color: var(--btn-primary-text);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 6px; cursor: pointer;
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.04em; text-transform: uppercase;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .fav-btn:hover { background: var(--btn-primary-hover); border-color: rgba(255,255,255,0.6); }
+    .fav-btn:disabled { opacity: 0.3; cursor: default; }
+    .fav-btn:disabled:hover { background: var(--btn-primary-bg); border-color: rgba(255,255,255,0.35); }
+
+    /* ── Zoom controls ── */
+    .leaflet-top.leaflet-left .leaflet-control-zoom { display: none; }
+    .leaflet-top.leaflet-right { top: 16px; right: 16px; }
+    .leaflet-top.leaflet-right .leaflet-control-zoom { margin: 0; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.35); }
+    .leaflet-control-zoom-in, .leaflet-control-zoom-out { background: var(--ctrl-bg) !important; color: var(--ctrl-text) !important; border: none !important; }
+    .leaflet-control-zoom-in:hover, .leaflet-control-zoom-out:hover { background: var(--ctrl-hover) !important; color: var(--ctrl-text) !important; }
+
+    /* ── Map style toggle ── */
+    #mapStyleBtn {
+      display: flex; flex-direction: column;
+      margin-top: 8px; margin-right: 2px;
+      width: 30px; border-radius: 8px; overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.35); cursor: pointer;
+    }
+    .map-style-icon {
+      display: flex; align-items: center; justify-content: center;
+      width: 30px; height: 28px;
+      background: var(--ctrl-bg); transition: background 0.15s; cursor: pointer;
+    }
+    .map-style-icon:hover { background: var(--ctrl-hover); }
+    .map-style-icon:first-child { border-bottom: 1px solid rgba(255,255,255,0.1); }
+
+    /* ── Lines toggle ── */
+    #linesToggleBtn {
+      display: flex; flex-direction: column;
+      margin-top: 8px; margin-right: 2px;
+      width: 30px; border-radius: 8px; overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.35); cursor: pointer;
+    }
+    .lines-icon {
+      display: flex; align-items: center; justify-content: center;
+      width: 30px; height: 30px;
+      background: var(--ctrl-bg); transition: background 0.15s; cursor: pointer;
+    }
+    .lines-icon:hover { background: var(--ctrl-hover); }
+    .lines-icon.inactive { opacity: 0.5; }
+
+    /* ── Mobile ── */
+    @media (max-width: 768px) {
+      #map { top: 60px; height: calc(100% - 60px); }
+      #sidebar { top: auto; left: 50%; transform: translateX(-50%); bottom: 20px; width: calc(100% - 40px); max-width: 420px; border-radius: 16px; padding: 12px 16px; }
+      #app.sidebar-collapsed #sidebar { width: calc(100% - 40px); max-width: 420px; padding: 10px 16px; }
+      #sidebar-header { flex-direction: row; justify-content: space-between; }
+      #app.sidebar-collapsed #sidebar-header h2 { opacity: 1; pointer-events: auto; }
+      #toggleBtn svg { transform: rotate(-90deg); }
+      #app.sidebar-collapsed #toggleBtn svg { transform: rotate(90deg); }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- ── Header ── -->
+<header class="site-header">
+  <a class="logo" href="../index.html">What's the <span>Walkshed?</span></a>
+  <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect y="4" width="22" height="2" fill="currentColor"/>
+      <rect y="10" width="22" height="2" fill="currentColor"/>
+      <rect y="16" width="22" height="2" fill="currentColor"/>
+    </svg>
+  </button>
+  <nav id="main-nav">
+    <a href="../index.html">Home</a>
+    <a href="../about.html">About</a>
+    <a href="../methodology.html">Methodology</a>
+    <a href="../contact.html">Contact</a>
+    <a href="../support.html">Support Us</a>
+  </nav>
+</header>
+
+<div id="app">
+  <div id="map"></div>
+
+  <aside id="sidebar">
+    <div id="sidebar-header">
+      <!-- Populated by JS -->
+      <h2 id="sidebar-title"></h2>
+      <button id="toggleBtn" aria-label="Toggle sidebar">
+        <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <polyline points="10,3 5,8 10,13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <div id="sidebar-content" class="expanded">
+      <p style="margin:0 0 8px;font-size:0.85rem;color:var(--sidebar-text);">Click map or search below to select a station(s)</p>
+
+      <div class="search-wrap">
+        <input id="stationSearch" type="text" placeholder="Search stations…" autocomplete="off" />
+        <div id="stationDropdown"></div>
+      </div>
+
+      <div class="section-label">Walk time*</div>
+      <div class="walk-time-btns">
+        <button class="walk-time-btn active" data-minutes="5"  style="background:var(--walk-5);">5 min</button>
+        <button class="walk-time-btn active" data-minutes="10" style="background:var(--walk-10);">10 min</button>
+        <button class="walk-time-btn active" data-minutes="15" style="background:var(--walk-15);">15 min</button>
+        <button class="walk-time-btn" data-minutes="20" style="background:var(--walk-20);">20 min</button>
+        <button class="walk-time-btn" data-minutes="25" style="background:var(--walk-25);">25 min</button>
+        <button class="walk-time-btn" data-minutes="30" style="background:var(--walk-30);">30 min</button>
+      </div>
+
+      <div class="disclaimer-label">*Based on a static walking speed of 3mph</div>
+
+      <div class="section-header">
+        <div class="section-label">Selected stations</div>
+        <div style="display:flex;gap:10px;">
+          <button id="selectAllBtn">Select all</button>
+          <button id="clearAllBtn">Clear all</button>
+        </div>
+      </div>
+      <div id="selectedList"></div>
+
+      <div class="fav-row">
+        <button class="fav-btn" id="favSaveBtn">⭐ Save Favorites</button>
+        <button class="fav-btn" id="favLoadBtn" disabled>↩ Load Favorites</button>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<!-- Map style toggle -->
+<div id="mapStyleBtn" title="Switch map style">
+  <span id="icon-simple" class="map-style-icon">
+    <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" opacity="1"><rect x="1" y="1" width="16" height="16" rx="2" fill="#888"/><rect x="1" y="1" width="16" height="6" rx="2" fill="#aaa"/><rect x="1" y="10" width="16" height="7" rx="0" fill="#999"/><rect x="1" y="7" width="16" height="3" rx="0" fill="#bbb"/><rect x="6" y="1" width="2" height="16" rx="0" fill="#ccc"/></svg>
+  </span>
+  <span id="icon-detailed" class="map-style-icon">
+    <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" opacity="0.35"><rect x="1" y="1" width="16" height="16" rx="2" fill="#6ab187"/><rect x="1" y="1" width="16" height="6" rx="2" fill="#7ec8e3"/><rect x="1" y="10" width="16" height="7" rx="0" fill="#c8d6a0"/><rect x="1" y="7" width="16" height="3" rx="0" fill="#e8dfc8"/><rect x="6" y="1" width="2" height="16" rx="0" fill="#f0f0d0"/></svg>
+  </span>
+</div>
+
+<!-- Lines toggle — hidden by default, shown by JS if agency has lines -->
+<div id="linesToggleBtn" title="Toggle transit lines" style="display:none;">
+  <span class="lines-icon" id="lines-icon">
+    <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+      <path d="M2 4 Q8 4 14 4" stroke="#E5262E" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <path d="M2 8 Q8 8 14 8" stroke="#1574C4" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <path d="M2 12 Q8 12 14 12" stroke="#00A65C" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    </svg>
+  </span>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<!-- Load agency config -->
+<script src="../agencies.js"></script>
+
+<script>
+  // ── Resolve agency from URL ──
+  const params = new URLSearchParams(window.location.search);
+  const agencyId = params.get('id');
+  const agency = AGENCIES[agencyId];
+
+  if (!agency) {
+    document.body.innerHTML = '<p style="padding:2rem;font-family:sans-serif;">Unknown agency. Check the URL parameter.</p>';
+    throw new Error('Unknown agency: ' + agencyId);
+  }
+
+  // ── Apply agency config ──
+  document.title = agency.name + ' — What\'s the Walkshed?';
+  document.getElementById('sidebar-title').textContent = agency.name;
+  document.documentElement.style.setProperty('--sidebar-font', agency.font); 
+  document.documentElement.style.setProperty('--sidebar-bg', agency.sidebarColor);
+  document.documentElement.style.setProperty('--btn-primary-bg', agency.buttonColor);
+  document.documentElement.style.setProperty('--ctrl-bg', agency.buttonColor);
+  document.documentElement.style.setProperty('--checkbox-accent', agency.buttonColor);
+  
+  // If agency primary color is dark, switch sidebar text and accents to light
+  if (agency.sidebarTextDark) {
+  document.documentElement.style.setProperty('--sidebar-text', '#1a1a18');
+  document.documentElement.style.setProperty('--sidebar-border', '#1a1a18');
+  document.documentElement.style.setProperty('--section-label', '#1a1a18');
+  document.documentElement.style.setProperty('--disclaimer-label', '#1a1a18');
+  document.documentElement.style.setProperty('--search-bg', '#FFFFFF');
+  document.documentElement.style.setProperty('--empty-text', '#4a4a42');
+  document.documentElement.style.setProperty('--chip-bg', 'rgba(0,0,0,0.06)');
+  document.documentElement.style.setProperty('--chip-border', 'rgba(0,0,0,0.15)');
+  document.documentElement.style.setProperty('--chip-remove', '#1a1a18');
+}
+  // -- In development warning toggle visibility --
+  if (agency.devMode) {
+  const modal = document.createElement('div');
+  modal.innerHTML = `
+    <div id="dev-modal" style="
+      position: fixed; inset: 0; z-index: 9999;
+      background: rgba(0,0,0,0.6);
+      display: flex; align-items: center; justify-content: center;
+      padding: 1.5rem;
+    ">
+      <div style="
+        background: var(--header-bg); border: 2px solid var(--header-ink);
+        border-left: 6px solid #c8a94a;
+        border-radius: 8px; padding: 2.5rem;
+        max-width: 480px; width: 100%;
+        font-family: 'DM Sans', sans-serif;
+        box-shadow: 0 8px 40px rgba(0,0,0,0.35);
+      ">
+        <div style="
+          font-family: 'DM Mono', monospace; font-size: 0.65rem;
+          letter-spacing: 0.14em; text-transform: uppercase;
+          color: #a07c1a; margin-bottom: 0.75rem;
+        ">⚠ Development notice</div>
+        <div style="
+          font-family: 'Syne', sans-serif; font-size: 1.4rem;
+          font-weight: 800; letter-spacing: -0.02em;
+          margin-bottom: 1rem;
+        ">This page is in development</div>
+        <p style="
+          font-size: 0.9rem; color: var(--header-muted);
+          line-height: 1.7; margin-bottom: 1.8rem;
+        ">Information on this page is placeholder content and may be incomplete or incorrect. Do not rely on it as a source of accurate information.</p>
+        <button onclick="document.getElementById('dev-modal').remove()" style="
+          background: var(--header-accent); color: #fff;
+          font-family: 'DM Mono', monospace; font-size: 0.72rem;
+          letter-spacing: 0.08em; text-transform: uppercase;
+          border: none; border-radius: 4px;
+          padding: 0.75rem 1.4rem; cursor: pointer;
+        ">I understand, continue →</button>
+      </div>
+    </div>`;
+  document.body.appendChild(modal.firstElementChild);
+}
+
+  // ── Lines toggle visibility ──
+  if (agency.hasLinesToggle) {
+    document.getElementById('linesToggleBtn').style.display = 'flex';
+  }
+
+  // ── Line color/abbr lookup (from config) ──
+  const LINE_COLORS = {};
+  const LINE_ABBR = {};
+  Object.entries(agency.lines).forEach(([code, val]) => {
+    LINE_COLORS[code] = val.color;
+    LINE_ABBR[code] = val.abbr;
+  });
+
+  // ── Data paths (relative to agency subfolder) ──
+  const DATA_PATH = agencyId + '/';
+
+  // ── Map setup ──
+  const map = L.map('map', { zoomControl: false }).setView(agency.mapCenter, agency.mapZoom);
+  L.control.zoom({ position: 'topright' }).addTo(map);
+
+  const tileLayers = {
+    simple: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+      attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
+      maxZoom: 16
+    }),
+    detailed: L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      maxZoom: 19
+    })
+  };
+  tileLayers.simple.addTo(map);
+  let currentStyle = 'simple';
+
+  const MapStyleControl = L.Control.extend({
+    options: { position: 'topright' },
+    onAdd: function() { return document.getElementById('mapStyleBtn'); }
+  });
+  new MapStyleControl().addTo(map);
+
+  document.getElementById('icon-simple').addEventListener('click', () => {
+    if (currentStyle === 'simple') return;
+    map.removeLayer(tileLayers[currentStyle]);
+    currentStyle = 'simple';
+    tileLayers[currentStyle].addTo(map);
+    tileLayers[currentStyle].bringToBack();
+    document.getElementById('icon-simple').querySelector('svg').setAttribute('opacity', '1');
+    document.getElementById('icon-detailed').querySelector('svg').setAttribute('opacity', '0.35');
+  });
+
+  document.getElementById('icon-detailed').addEventListener('click', () => {
+    if (currentStyle === 'detailed') return;
+    map.removeLayer(tileLayers[currentStyle]);
+    currentStyle = 'detailed';
+    tileLayers[currentStyle].addTo(map);
+    tileLayers[currentStyle].bringToBack();
+    document.getElementById('icon-simple').querySelector('svg').setAttribute('opacity', '0.35');
+    document.getElementById('icon-detailed').querySelector('svg').setAttribute('opacity', '1');
+  });
+
+  // ── Lines layer (optional) ──
+  const linesLayer = L.layerGroup().addTo(map);
+  let linesVisible = false;
+  let linesData = null;
+
+  if (agency.hasLinesToggle) {
+    const LinesToggleControl = L.Control.extend({
+      options: { position: 'topright' },
+      onAdd: function() { return document.getElementById('linesToggleBtn'); }
+    });
+    new LinesToggleControl().addTo(map);
+
+    fetch(DATA_PATH + 'lines.geojson')
+      .then(r => r.json())
+      .then(data => { linesData = data; })
+      .catch(err => console.error('Failed to load lines.geojson:', err));
+
+    function drawLines() {
+      linesLayer.clearLayers();
+      if (!linesData) return;
+      L.geoJSON(linesData, {
+        style: f => ({
+          color: LINE_COLORS[f.properties.line] || '#ffffff',
+          weight: 3,
+          opacity: 0.85
+        })
+      }).addTo(linesLayer);
+    }
+
+    document.getElementById('lines-icon').addEventListener('click', () => {
+      linesVisible = !linesVisible;
+      if (linesVisible) {
+        drawLines();
+        document.getElementById('lines-icon').classList.remove('inactive');
+      } else {
+        linesLayer.clearLayers();
+        document.getElementById('lines-icon').classList.add('inactive');
+      }
+    });
+  }
+
+  // ── Walkshed layer ──
+  const walkshedLayer = L.layerGroup().addTo(map);
+
+  // ── State ──
+  let stationLookup = {};
+  let walkshedData = null;
+  const selectedStations = new Set();
+
+  // ── Load data ──
+  async function loadStations() {
+    const data = await fetch(DATA_PATH + 'stations.geojson').then(r => r.json());
+    data.features.forEach(f => {
+      const name = f.properties.name;
+      const code = f.properties.station_id;
+      const existing = Object.values(stationLookup).find(s => s.name === name);
+      if (existing) {
+        f.properties.lines.forEach(l => { if (!existing.lines.includes(l)) existing.lines.push(l); });
+        stationLookup[code] = existing;
+      } else {
+        stationLookup[code] = { name, lat: f.geometry.coordinates[1], lon: f.geometry.coordinates[0], lines: [...f.properties.lines], marker: null };
+      }
+    });
+    drawStationMarkers();
+    resolveDropdownNames();
+  }
+
+  async function loadWalksheds() {
+    walkshedData = await fetch(DATA_PATH + 'walksheds.geojson')
+      .then(r => { if (!r.ok) throw new Error(r.statusText); return r.json(); })
+      .catch(err => console.error('Failed to load walksheds.geojson:', err));
+    buildDropdownData();
+  }
+
+  loadStations();
+  loadWalksheds();
+
+  // ── Marker SVG — routes to style-specific function ──
+  function buildMarkerSVG(lines, selected) {
+    if (agency.markerStyle === 'pie')      return buildPieSVG(lines, selected);
+    if (agency.markerStyle === 'dumbbell') return buildDumbbellSVG(lines, selected);
+    return buildSquareSVG(lines, selected); // default fallback
+  }
+
+  // WMATA style — pie-slice segments for multi-line, solid dot for single
+  function buildPieSVG(lines, selected) {
+    const OUTER_R=12, MID_R=7.5, GAP=1, SIZE=40, CX=20, CY=20;
+    const sa = 360 / lines.length;
+    function polar(cx,cy,r,deg){ const rad=(deg-90)*Math.PI/180; return {x:cx+r*Math.cos(rad),y:cy+r*Math.sin(rad)}; }
+    function arc(cx,cy,oR,iR,a1,a2){ const o1=polar(cx,cy,oR,a1),o2=polar(cx,cy,oR,a2),i1=polar(cx,cy,iR,a2),i2=polar(cx,cy,iR,a1),lg=(a2-a1)>180?1:0; return `M${o1.x} ${o1.y} A${oR} ${oR} 0 ${lg} 1 ${o2.x} ${o2.y} L${i1.x} ${i1.y} A${iR} ${iR} 0 ${lg} 0 ${i2.x} ${i2.y}Z`; }
+    let s = selected ? `<circle cx="${CX}" cy="${CY}" r="19" fill="none" stroke="#fff" stroke-width="2.5" stroke-dasharray="4 2"/>` : '';
+    if (lines.length === 1) {
+      s += `<circle cx="${CX}" cy="${CY}" r="${MID_R-GAP+2}" fill="#111827"/>`;
+      s += `<circle cx="${CX}" cy="${CY}" r="${MID_R-GAP}" fill="${LINE_COLORS[lines[0]] || '#888'}"/>`;
+    } else {
+      s += `<circle cx="${CX}" cy="${CY}" r="${OUTER_R+2}" fill="#111827"/>`;
+      lines.forEach((l,i) => { s += `<path d="${arc(CX,CY,OUTER_R,MID_R+GAP,i*sa,(i+1)*sa)}" fill="${LINE_COLORS[l] || '#888'}"/>`; });
+      s += `<circle cx="${CX}" cy="${CY}" r="${MID_R}" fill="#111827"/><circle cx="${CX}" cy="${CY}" r="${MID_R-GAP}" fill="white"/>`;
+    }
+    return `<svg width="${SIZE}" height="${SIZE}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+  }
+
+  // RTD style — colored dots connected by a dark bar (dumbbell)
+  function buildDumbbellSVG(lines, selected) {
+    const DOT_R = 6;
+    const SPACING = 16;   // center-to-center distance between dots
+    const PAD = 4;        // padding around the outermost dots
+    const n = lines.length;
+
+    if (n === 1) {
+      // Single line — just a plain colored dot, same visual weight as pie single
+      const SIZE = 20, CX = 10, CY = 10;
+      let s = selected ? `<circle cx="${CX}" cy="${CY}" r="9" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="3 2"/>` : '';
+      s += `<circle cx="${CX}" cy="${CY}" r="${DOT_R+1}" fill="#111827"/>`;
+      s += `<circle cx="${CX}" cy="${CY}" r="${DOT_R}" fill="${LINE_COLORS[lines[0]] || '#888'}"/>`;
+      return `<svg width="${SIZE}" height="${SIZE}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+    }
+
+    // Multi-line — horizontal row of colored dots joined by a dark connecting bar
+    const totalWidth = (n - 1) * SPACING + DOT_R * 2 + PAD * 2;
+    const HEIGHT = DOT_R * 2 + PAD * 2;
+    const CY = HEIGHT / 2;
+    const startX = PAD + DOT_R;
+
+    let s = '';
+
+    // Selection ring around the whole group
+    if (selected) {
+      const rx = totalWidth / 2 - 1;
+      const ry = HEIGHT / 2 - 1;
+      s += `<rect x="1" y="1" width="${totalWidth - 2}" height="${HEIGHT - 2}" rx="${ry}" ry="${ry}" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="4 2"/>`;
+    }
+
+    // Connecting bar between first and last dot
+    const barX1 = startX;
+    const barX2 = startX + (n - 1) * SPACING;
+    s += `<line x1="${barX1}" y1="${CY}" x2="${barX2}" y2="${CY}" stroke="#1a1a18" stroke-width="3" stroke-linecap="round"/>`;
+
+    // Dots — one per line
+    lines.forEach((line, i) => {
+      const cx = startX + i * SPACING;
+      const color = LINE_COLORS[line] || '#888';
+      s += `<circle cx="${cx}" cy="${CY}" r="${DOT_R + 1}" fill="#111827"/>`;
+      s += `<circle cx="${cx}" cy="${CY}" r="${DOT_R}" fill="${color}"/>`;
+    });
+
+    return `<svg width="${totalWidth}" height="${HEIGHT}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+  }
+
+  // Default style — vertically sliced square, one slice per line
+  function buildSquareSVG(lines, selected) {
+    const SIZE = 20, PAD = 1;
+    const inner = SIZE - PAD * 2;
+    const sliceW = inner / lines.length;
+    let s = selected ? `<rect x="0" y="0" width="${SIZE}" height="${SIZE}" rx="3" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="4 2"/>` : '';
+    // Clip to rounded rect
+    const clipId = 'sq-' + Math.random().toString(36).slice(2);
+    s += `<clipPath id="${clipId}"><rect x="${PAD}" y="${PAD}" width="${inner}" height="${inner}" rx="3"/></clipPath>`;
+    lines.forEach((line, i) => {
+      const x = PAD + i * sliceW;
+      s += `<rect x="${x}" y="${PAD}" width="${sliceW}" height="${inner}" fill="${LINE_COLORS[line] || '#888'}" clip-path="url(#${clipId})"/>`;
+    });
+    s += `<rect x="${PAD}" y="${PAD}" width="${inner}" height="${inner}" rx="3" fill="none" stroke="#111827" stroke-width="1.5"/>`;
+    return `<svg width="${SIZE}" height="${SIZE}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+  }
+
+  // Returns [width, height] for a marker given its style and line count
+  function markerSize(lines) {
+    if (agency.markerStyle === 'dumbbell') {
+      if (lines.length === 1) return [20, 20];
+      const DOT_R = 6, SPACING = 16, PAD = 4;
+      const w = (lines.length - 1) * SPACING + DOT_R * 2 + PAD * 2;
+      const h = DOT_R * 2 + PAD * 2;
+      return [w, h];
+    }
+    if (agency.markerStyle === 'pie') return lines.length === 1 ? [20, 20] : [40, 40];
+    return [20, 20]; // square and default
+  }
+
+  function refreshMarker(station) {
+    if (!station.marker) return;
+    const sel = selectedStations.has(station.name);
+    const [w, h] = markerSize(station.lines);
+    station.marker.setIcon(L.divIcon({ html: buildMarkerSVG(station.lines, sel), className: '', iconSize:[w,h], iconAnchor:[w/2,h/2] }));
+  }
+
+  function drawStationMarkers() {
+    Object.values(stationLookup).forEach(station => {
+      const [w, h] = markerSize(station.lines);
+      const marker = L.marker([station.lat, station.lon], {
+        icon: L.divIcon({ html: buildMarkerSVG(station.lines, false), className:'', iconSize:[w,h], iconAnchor:[w/2,h/2] })
+      }).bindTooltip(station.name, { permanent: false }).addTo(map);
+      marker.on('click', () => toggleStation(station.name));
+      station.marker = marker;
+    });
+  }
+
+  // ── Selection ──
+  function toggleStation(name) {
+    const adding = !selectedStations.has(name);
+    if (adding) { selectedStations.add(name); } else { selectedStations.delete(name); }
+    const st = Object.values(stationLookup).find(s => s.name === name);
+    if (st) refreshMarker(st);
+    renderChips();
+    drawWalksheds(adding);
+  }
+
+  function removeStation(name) {
+    selectedStations.delete(name);
+    const st = Object.values(stationLookup).find(s => s.name === name);
+    if (st) refreshMarker(st);
+    renderChips();
+    drawWalksheds(false);
+  }
+
+  function selectAll() {
+    allStationNames.forEach(name => {
+      selectedStations.add(name);
+      const st = Object.values(stationLookup).find(s => s.name === name);
+      if (st) refreshMarker(st);
+    });
+    renderChips();
+    drawWalksheds(true);
+  }
+
+  function clearAll() {
+    const names = [...selectedStations];
+    selectedStations.clear();
+    names.forEach(name => { const st = Object.values(stationLookup).find(s => s.name === name); if (st) refreshMarker(st); });
+    renderChips();
+    drawWalksheds(false);
+  }
+
+  // ── Chips ──
+  function renderChips() {
+    const list = document.getElementById('selectedList');
+    list.innerHTML = '';
+    selectedStations.forEach(name => {
+      const st = Object.values(stationLookup).find(s => s.name === name);
+      const dots = st ? st.lines.map(line => {
+        const color = LINE_COLORS[line] || '#9ca3af';
+        const abbr = LINE_ABBR[line] || line[0].toUpperCase();
+        // Use dark text on light colors (yellow/silver)
+        const lightLines = new Set(
+          Object.entries(agency.lines)
+            .filter(([,v]) => isLightColor(v.color))
+            .map(([k]) => k)
+        );
+        const textColor = lightLines.has(line) ? '#111827' : '#ffffff';
+        return `<span style="
+          display:inline-flex; align-items:center; justify-content:center;
+          width:16px; height:16px; border-radius:50%;
+          background:${color}; color:${textColor};
+          font-size:0.55rem; font-weight:700; font-family:sans-serif;
+          flex-shrink:0;
+        ">${abbr}</span>`;
+      }).join('') : '';
+
+      const chip = document.createElement('div');
+      chip.className = 'station-chip';
+      chip.innerHTML = `
+        <span style="display:inline-flex; gap:3px; align-items:center; flex-shrink:0;">${dots}</span>
+        <span class="chip-name">${name}</span>
+        <button class="chip-remove" aria-label="Remove ${name}">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <line x1="1" y1="1" x2="11" y2="11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            <line x1="11" y1="1" x2="1" y2="11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+        </button>`;
+      chip.querySelector('.chip-remove').addEventListener('click', () => removeStation(name));
+      list.appendChild(chip);
+    });
+  }
+
+  // Helper: determine if a hex color is light enough to need dark text
+  function isLightColor(hex) {
+    const r = parseInt(hex.slice(1,3),16);
+    const g = parseInt(hex.slice(3,5),16);
+    const b = parseInt(hex.slice(5,7),16);
+    // Perceived luminance
+    return (0.299*r + 0.587*g + 0.114*b) > 160;
+  }
+
+  // ── Search dropdown ──
+  let allStationNames = [];
+  let highlightIndex = -1;
+  let walkshedCodes = new Set();
+
+  function buildDropdownData() {
+    const codesWithData = new Set(walkshedData.features.map(f => f.properties.station_id));
+    walkshedCodes = codesWithData;
+    resolveDropdownNames();
+  }
+
+  function resolveDropdownNames() {
+    if (!walkshedCodes.size || !Object.keys(stationLookup).length) return;
+    const names = [];
+    walkshedCodes.forEach(code => {
+      if (stationLookup[code]) names.push(stationLookup[code].name);
+    });
+    allStationNames = [...new Set(names)].sort();
+  }
+
+  const searchInput = document.getElementById('stationSearch');
+  const dropdown    = document.getElementById('stationDropdown');
+
+  function renderDropdown(query) {
+    const q = query.trim().toLowerCase();
+    const matches = q ? allStationNames.filter(n => n.toLowerCase().includes(q)) : allStationNames;
+    dropdown.innerHTML = '';
+    highlightIndex = -1;
+    if (!matches.length) { dropdown.classList.remove('open'); return; }
+    matches.forEach(name => {
+      const item = document.createElement('div');
+      item.className = 'dropdown-item' + (selectedStations.has(name) ? ' already-selected' : '');
+      item.textContent = name;
+      item.addEventListener('mousedown', e => { e.preventDefault(); toggleStation(name); searchInput.value = ''; renderDropdown(''); });
+      dropdown.appendChild(item);
+    });
+    dropdown.classList.add('open');
+  }
+
+  searchInput.addEventListener('input',  () => renderDropdown(searchInput.value));
+  searchInput.addEventListener('focus',  () => renderDropdown(searchInput.value));
+  searchInput.addEventListener('blur',   () => setTimeout(() => dropdown.classList.remove('open'), 150));
+  searchInput.addEventListener('keydown', e => {
+    const items = dropdown.querySelectorAll('.dropdown-item');
+    if (!items.length) return;
+    if (e.key==='ArrowDown') { e.preventDefault(); highlightIndex=Math.min(highlightIndex+1,items.length-1); }
+    else if (e.key==='ArrowUp') { e.preventDefault(); highlightIndex=Math.max(highlightIndex-1,0); }
+    else if (e.key==='Enter' && highlightIndex>=0) { e.preventDefault(); toggleStation(items[highlightIndex].textContent); searchInput.value=''; renderDropdown(''); return; }
+    else if (e.key==='Escape') { dropdown.classList.remove('open'); return; }
+    items.forEach((el,i) => el.classList.toggle('highlighted', i===highlightIndex));
+    if (highlightIndex>=0) items[highlightIndex].scrollIntoView({block:'nearest'});
+  });
+
+  // ── Draw walksheds ──
+  function colorForMinutes(min) {
+    if (min ===  5) return '#22c55e';
+    if (min === 10) return '#f59e0b';
+    if (min === 15) return '#f97316';
+    if (min === 20) return '#ef4444';
+    if (min === 25) return '#dc2626';
+    if (min === 30) return '#991b1b';
+  }
+
+  function selectedMinutes() {
+    return Array.from(document.querySelectorAll('.walk-time-btn.active')).map(btn => Number(btn.dataset.minutes));
+  }
+
+  function drawWalksheds(shouldFit) {
+    if (!walkshedData) return;
+    walkshedLayer.clearLayers();
+    if (!selectedStations.size) return;
+    const minutes = selectedMinutes();
+    const filtered = {
+      type: 'FeatureCollection',
+      features: walkshedData.features.filter(f => {
+        const station = stationLookup[f.properties.station_id];
+        return station &&
+               selectedStations.has(station.name) &&
+               minutes.includes(f.properties.minutes);
+      })
+    };
+    if (!filtered.features.length) return;
+    const geojsonLayer = L.geoJSON(filtered, {
+      style: f => ({ color: colorForMinutes(f.properties.minutes), weight: 1, fillOpacity: 0.25 })
+    }).addTo(walkshedLayer);
+    if (shouldFit) map.fitBounds(geojsonLayer.getBounds().pad(0.15));
+  }
+
+  // ── Events ──
+  document.getElementById('selectAllBtn').addEventListener('click', selectAll);
+  document.getElementById('clearAllBtn').addEventListener('click', clearAll);
+
+  document.querySelectorAll('.walk-time-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const clickedVal = Number(btn.dataset.minutes);
+      const allBtns = document.querySelectorAll('.walk-time-btn');
+      let currentMax = 0;
+      allBtns.forEach(b => { if (b.classList.contains('active')) currentMax = Math.max(currentMax, Number(b.dataset.minutes)); });
+      allBtns.forEach(b => {
+        const thisVal = Number(b.dataset.minutes);
+        if (clickedVal === currentMax || thisVal > clickedVal) { b.classList.remove('active'); }
+        else { b.classList.add('active'); }
+      });
+      drawWalksheds(false);
+    });
+  });
+
+  document.getElementById('toggleBtn').addEventListener('click', () => {
+    document.getElementById('sidebar-content').classList.toggle('collapsed');
+    document.getElementById('sidebar-content').classList.toggle('expanded');
+    document.getElementById('app').classList.toggle('sidebar-collapsed');
+  });
+
+  document.getElementById('nav-toggle').addEventListener('click', () => {
+    document.getElementById('main-nav').classList.toggle('open');
+  });
+
+  // ── Favorites ──
+  const FAV_KEY = 'walkshed_favorite_' + agencyId;
+
+  function saveFavorite() {
+    localStorage.setItem(FAV_KEY, JSON.stringify({ stations: [...selectedStations], minutes: selectedMinutes() }));
+    document.getElementById('favLoadBtn').disabled = false;
+    const btn = document.getElementById('favSaveBtn');
+    btn.textContent = '✓ Saved';
+    setTimeout(() => btn.textContent = '⭐ Save Favorites', 1500);
+  }
+
+  function loadFavorite() {
+    const raw = localStorage.getItem(FAV_KEY);
+    if (!raw) return;
+    const favorite = JSON.parse(raw);
+    clearAll();
+    document.querySelectorAll('.walk-time-btn').forEach(btn => {
+      btn.classList.toggle('active', favorite.minutes.includes(Number(btn.dataset.minutes)));
+    });
+    favorite.stations.forEach(name => { if (allStationNames.includes(name)) toggleStation(name); });
+  }
+
+  if (localStorage.getItem(FAV_KEY)) {
+    document.getElementById('favLoadBtn').disabled = false;
+  }
+
+  document.getElementById('favSaveBtn').addEventListener('click', saveFavorite);
+  document.getElementById('favLoadBtn').addEventListener('click', loadFavorite);
+</script>
+</body>
+</html>
