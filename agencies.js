@@ -6,6 +6,8 @@ const AGENCIES = {
     mapZoom: 12,
     sidebarColor: "#4679b0",
     buttonColor: "#3e3e3e",
+    // Agency font type placeholder until we have added custom font config properties
+    sidebarTextDark: false,
     devMode: false,
     hasLinesToggle: true,
     markerStyle: "pie",
@@ -23,8 +25,10 @@ const AGENCIES = {
     name: "RTD Denver Rail Walksheds",
     mapCenter: [39.7392, -104.9903],
     mapZoom: 11,
-    sidebarColor: "#FFFFFF",
+    sidebarColor: "#FFFFFF", // Used white becuase either primary color (red or blue) is too much for the menu
     buttonColor: "#CE0E2D",
+        // Agency font type placeholder until we have added custom font config properties
+    sidebarTextDark: true,
     devMode: true,
     hasLinesToggle: false,
     markerStyle: "dumbbell",
