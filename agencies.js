@@ -9,12 +9,12 @@ const AGENCIES = {
     hasLinesToggle: true,
     markerStyle: "pie",
     lines: {
-      rd: { color: "#E5262E", abbr: "R" },
-      bl: { color: "#1574C4", abbr: "B" },
-      or: { color: "#F7941D", abbr: "O" },
-      sv: { color: "#A0A2A0", abbr: "S" },
-      gr: { color: "#00A65C", abbr: "G" },
-      yl: { color: "#FFD32A", abbr: "Y" },
+      RD: { color: "#E5262E", abbr: "R" },
+      BL: { color: "#1574C4", abbr: "B" },
+      OR: { color: "#F7941D", abbr: "O" },
+      SV: { color: "#A0A2A0", abbr: "S" },
+      GR: { color: "#00A65C", abbr: "G" },
+      YL: { color: "#FFD32A", abbr: "Y" },
     }
   },
 
