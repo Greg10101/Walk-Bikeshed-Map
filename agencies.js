@@ -7,7 +7,7 @@ const AGENCIES = {
     sidebarColor: "#4679b0",
     buttonColor: "#3e3e3e",
     // Agency font type placeholder until we have added custom font config properties
-    sidebarTextDark: false,
+    sidebarTextDark: false, // Flage TRUE if the sidebar text should be dark (for light backgrounds) or false if it should be light (for dark backgrounds)
     devMode: false,
     hasLinesToggle: true,
     markerStyle: "pie",
@@ -28,7 +28,7 @@ const AGENCIES = {
     sidebarColor: "#FFFFFF", // Used white becuase either primary color (red or blue) is too much for the menu
     buttonColor: "#CE0E2D",
         // Agency font type placeholder until we have added custom font config properties
-    sidebarTextDark: true,
+    sidebarTextDark: true, // Flage TRUE if the sidebar text should be dark (for light backgrounds) or false if it should be light (for dark backgrounds)
     devMode: true,
     hasLinesToggle: false,
     markerStyle: "dumbbell",
