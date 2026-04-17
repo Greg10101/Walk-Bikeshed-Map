@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
 
   <style>
-    html, body { height: 100%; margin: 0; font-family: 'DM Sans', Helvetica, Arial, sans-serif; overflow: hidden; }
+    html, body { height: 100%; margin: 0; font-family: var(--sidebar-font); overflow: hidden; }
     #app { position: fixed; top: 0; left: 0; right: 0; bottom: 0; overflow: hidden; }
     #map { position: fixed; top: 60px; left: 0; right: 0; bottom: 0; overflow: hidden; }
 
@@ -433,7 +433,7 @@
   // ── Apply agency config ──
   document.title = agency.name + ' — What\'s the Walkshed?';
   document.getElementById('sidebar-title').textContent = agency.name;
-
+  document.documentElement.style.setProperty('--sidebar-font', agency.font); 
   document.documentElement.style.setProperty('--sidebar-bg', agency.sidebarColor);
   document.documentElement.style.setProperty('--btn-primary-bg', agency.buttonColor);
   document.documentElement.style.setProperty('--ctrl-bg', agency.buttonColor);
