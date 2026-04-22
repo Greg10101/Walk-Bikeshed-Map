@@ -309,6 +309,20 @@
     .lines-icon:hover { background: var(--ctrl-hover); }
     .lines-icon.inactive { opacity: 0.5; }
 
+    /* ── Locate me button ── */
+    #locateBtn {
+      display: flex; flex-direction: column;
+      margin-top: 8px; margin-right: 2px;
+      width: 30px; border-radius: 8px; overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.35); cursor: pointer;
+    }
+    .locate-icon {
+      display: flex; align-items: center; justify-content: center;
+      width: 30px; height: 30px;
+      background: var(--ctrl-bg); transition: background 0.15s; cursor: pointer;
+    }
+    .locate-icon:hover { background: var(--ctrl-hover); }
+
     /* ── Mobile ── */
     @media (max-width: 768px) {
       #map { top: 60px; height: calc(100% - 60px); }
@@ -407,6 +421,20 @@
       <path d="M2 4 Q8 4 14 4" stroke="#E5262E" stroke-width="2.5" fill="none" stroke-linecap="round"/>
       <path d="M2 8 Q8 8 14 8" stroke="#1574C4" stroke-width="2.5" fill="none" stroke-linecap="round"/>
       <path d="M2 12 Q8 12 14 12" stroke="#00A65C" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    </svg>
+  </span>
+</div>
+
+<!-- Locate me button -->
+<div id="locateBtn" title="Show my location">
+  <span class="locate-icon" id="locate-icon">
+    <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none">
+      <circle cx="8" cy="8" r="3" fill="currentColor" stroke="none"/>
+      <circle cx="8" cy="8" r="5.5" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="8" y1="1" x2="8" y2="3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="8" y1="13" x2="8" y2="15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="1" y1="8" x2="3" y2="8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="13" y1="8" x2="15" y2="8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
     </svg>
   </span>
 </div>
@@ -591,6 +619,67 @@
       }
     });
   }
+
+  // ── Locate me control ──
+  const LocateControl = L.Control.extend({
+    options: { position: 'topright' },
+    onAdd: function() { return document.getElementById('locateBtn'); }
+  });
+  new LocateControl().addTo(map);
+
+  let locationMarker = null;
+  let locationCircle = null;
+
+  document.getElementById('locate-icon').addEventListener('click', () => {
+    if (!navigator.geolocation) {
+      alert('Geolocation is not supported by your browser.');
+      return;
+    }
+    let watchId = null;
+
+  if (watchId !== null) {
+    // Already watching — re-center on current marker position
+    if (locationMarker) map.setView(locationMarker.getLatLng(), Math.max(map.getZoom(), 15));
+    return;
+  }
+
+  watchId = navigator.geolocation.watchPosition(
+    pos => {
+      const { latitude: lat, longitude: lng, accuracy } = pos.coords;
+
+      if (!locationMarker) {
+        // First fix — create markers and zoom in
+        locationCircle = L.circle([lat, lng], {
+          radius: accuracy,
+          color: '#4a90e2',
+          fillColor: '#4a90e2',
+          fillOpacity: 0.1,
+          weight: 1
+        }).addTo(map);
+
+        locationMarker = L.circleMarker([lat, lng], {
+          radius: 8,
+          color: '#fff',
+          weight: 2,
+          fillColor: '#4a90e2',
+          fillOpacity: 1
+        }).addTo(map);
+
+        map.setView([lat, lng], Math.max(map.getZoom(), 15));
+      } else {
+        // Subsequent fixes — just move the markers silently
+        locationMarker.setLatLng([lat, lng]);
+        locationCircle.setLatLng([lat, lng]);
+        locationCircle.setRadius(accuracy);
+      }
+    },
+    err => {
+      alert('Could not get your location: ' + err.message);
+      watchId = null;
+    },
+    { enableHighAccuracy: true, timeout: 10000 }
+  );
+  });
 
   // ── Walkshed layer ──
   const walkshedLayer = L.layerGroup().addTo(map);
