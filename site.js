@@ -8,8 +8,7 @@ const SITE = {
   description: "Explore the real pedestrian catchment area around transit stops — not just a radius.",
 
   // ── Base path ──
-  // Use "/" for local development, "/Walk-Bikeshed-Map/" for GitHub Pages
-  basePath: "/Walk-Bikeshed-Map/",
+  basePath: "",
 
   // ── Contact ──
   contactEmail: "",              // e.g. "hello@example.com"
@@ -42,6 +41,6 @@ const SITE = {
 
   // ── Dev mode ──
   // Pages listed here will show the development warning modal on load
-  devPages: ["contact.html", "support.html", "about.html"],
+  devPages: ["methodology.html","contact.html", "support.html", "about.html"],
 
 };
