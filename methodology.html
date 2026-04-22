@@ -7,6 +7,7 @@
   <!-- EDIT: Page title -->
   <title>Methodology — What's the Walkshed?</title>
 
+  <script src="site.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -266,65 +267,19 @@
 </head>
 <body>
 
-<!-- Development notice modal — remove when content is ready -->
-<div id="dev-modal" style="
-  position: fixed; inset: 0; z-index: 9999;
-  background: rgba(0,0,0,0.6);
-  display: flex; align-items: center; justify-content: center;
-  padding: 1.5rem;
-">
-  <div style="
-    background: var(--bg); border: 2px solid var(--ink);
-    border-left: 6px solid #c8a94a;
-    border-radius: 8px; padding: 2.5rem;
-    max-width: 480px; width: 100%;
-    font-family: 'DM Sans', sans-serif;
-    box-shadow: 0 8px 40px rgba(0,0,0,0.35);
-  ">
-    <div style="
-      font-family: 'DM Mono', monospace; font-size: 0.65rem;
-      letter-spacing: 0.14em; text-transform: uppercase;
-      color: #a07c1a; margin-bottom: 0.75rem;
-    ">⚠ Development notice</div>
-    <div style="
-      font-family: 'Syne', sans-serif; font-size: 1.4rem;
-      font-weight: 800; letter-spacing: -0.02em;
-      margin-bottom: 1rem;
-    ">This page is in development</div>
-    <p style="
-      font-size: 0.9rem; color: var(--muted);
-      line-height: 1.7; margin-bottom: 1.8rem;
-    ">Text on this page is placeholder content and may be incomplete or incorrect. Do not rely on it as a source of accurate information.</p>
-    <button onclick="document.getElementById('dev-modal').remove()" style="
-      background: var(--accent); color: #fff;
-      font-family: 'DM Mono', monospace; font-size: 0.72rem;
-      letter-spacing: 0.08em; text-transform: uppercase;
-      border: none; border-radius: 4px;
-      padding: 0.75rem 1.4rem; cursor: pointer;
-      transition: background 0.15s;
-    " onmouseover="this.style.background='#c93f00'"
-       onmouseout="this.style.background='var(--accent)'">
-      I understand, continue →
-    </button>
-  </div>
-</div>
-
-<!-- EDIT: Header -->
-<header>
-  <a class="logo" href="index.html">What's the <span>Walkshed?</span></a>
+<!-- Header -->
+<header class="site-header">
+  <a class="logo" href="index.html">
+    <script>document.write(SITE.logoText + '<span>' + SITE.logoAccent + '</span>')</script>
+  </a>
   <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
-    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
       <rect y="4" width="22" height="2" fill="currentColor"/>
       <rect y="10" width="22" height="2" fill="currentColor"/>
       <rect y="16" width="22" height="2" fill="currentColor"/>
     </svg>
   </button>
-  <nav id="main-nav">
-    <a href="about.html">About</a>
-    <a href="methodology.html">Methodology</a>
-    <a href="contact.html">Contact</a>
-    <a href="support.html">Support Us</a>
-  </nav>
+  <nav id="main-nav"></nav>
 </header>
 
   <main>
@@ -476,9 +431,52 @@
   </main>
 
 <script>
+  // ── Build nav from site config ──
+  const nav = document.getElementById('main-nav');
+  SITE.nav.forEach(item => {
+    const a = document.createElement('a');
+    a.href = SITE.basePath + item.path;
+    a.textContent = item.label;
+    nav.appendChild(a);
+  });
+
+  // ── Hamburger toggle ──
   document.getElementById('nav-toggle').addEventListener('click', () => {
     document.getElementById('main-nav').classList.toggle('open');
   });
+
+  // ── Dev modal ──
+  const currentPage = window.location.pathname.split('/').pop();
+  if (SITE.devPages.includes(currentPage)) {
+    const modal = document.createElement('div');
+    modal.innerHTML = `
+      <div id="dev-modal" style="
+        position:fixed;inset:0;z-index:9999;
+        background:rgba(0,0,0,0.6);
+        display:flex;align-items:center;justify-content:center;padding:1.5rem;">
+        <div style="
+          background:var(--bg,#f5f2eb);border:2px solid var(--ink,#1a1a18);
+          border-left:6px solid #c8a94a;border-radius:8px;padding:2.5rem;
+          max-width:480px;width:100%;font-family:'DM Sans',sans-serif;
+          box-shadow:0 8px 40px rgba(0,0,0,0.35);">
+          <div style="font-family:'DM Mono',monospace;font-size:0.65rem;
+            letter-spacing:0.14em;text-transform:uppercase;color:#a07c1a;margin-bottom:0.75rem;">
+            ⚠ Development notice</div>
+          <div style="font-family:'Syne',sans-serif;font-size:1.4rem;
+            font-weight:800;letter-spacing:-0.02em;margin-bottom:1rem;">
+            This page is in development</div>
+          <p style="font-size:0.9rem;color:var(--muted,#7a7a72);line-height:1.7;margin-bottom:1.8rem;">
+            Text on this page is placeholder content and may be incomplete or incorrect.
+            Do not rely on it as a source of accurate information.</p>
+          <button onclick="document.getElementById('dev-modal').remove()" style="
+            background:#e8500a;color:#fff;font-family:'DM Mono',monospace;
+            font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;
+            border:none;border-radius:4px;padding:0.75rem 1.4rem;cursor:pointer;">
+            I understand, continue →</button>
+        </div>
+      </div>`;
+    document.body.appendChild(modal.firstElementChild);
+  }
 </script>
 
 </body>
