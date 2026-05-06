@@ -12,7 +12,7 @@
   <style>
     html, body { height: 100%; margin: 0; font-family: var(--sidebar-font); overflow: hidden; }
     #app { position: fixed; top: 0; left: 0; right: 0; bottom: 0; overflow: hidden; }
-    #map { position: fixed; top: 60px; left: 0; right: 0; bottom: 0; overflow: hidden; }
+    #map { position: fixed; top: 60px; left: 0; right: 0; bottom: 28px; overflow: hidden; z-index: 1; }
 
     /* ── Colour tokens ── */
     :root {
@@ -326,12 +326,35 @@
     /* ── Mobile ── */
     @media (max-width: 768px) {
       #map { top: 60px; height: calc(100% - 60px); }
-      #sidebar { top: auto; left: 50%; transform: translateX(-50%); bottom: 20px; width: calc(100% - 40px); max-width: 420px; border-radius: 16px; padding: 12px 16px; }
+      #sidebar { top: auto; left: 50%; transform: translateX(-50%); bottom: 50px; width: calc(100% - 40px); max-width: 420px; border-radius: 16px; padding: 12px 16px; }
       #app.sidebar-collapsed #sidebar { width: calc(100% - 40px); max-width: 420px; padding: 10px 16px; }
       #sidebar-header { flex-direction: row; justify-content: space-between; }
       #app.sidebar-collapsed #sidebar-header h2 { opacity: 1; pointer-events: auto; }
       #toggleBtn svg { transform: rotate(-90deg); }
       #app.sidebar-collapsed #toggleBtn svg { transform: rotate(90deg); }
+      .leaflet-control-attribution { margin-bottom: 28px !important; }
+    }
+    /* ── Map footer ── */
+    #map-footer {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      height: 28px;
+      background: var(--header-bg);
+      border-top: 1px solid var(--header-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--header-muted);
+      letter-spacing: 0.04em;
+      z-index: 400;;
+    }
+    #map-footer span { white-space: nowrap; }
+
+    @media (max-width: 768px) {
+      #map-footer { gap: 0.9rem; font-size: 0.62rem; }
     }
   </style>
 </head>
@@ -402,6 +425,10 @@
       </div>
     </div>
   </aside>
+      <div id="map-footer">
+      <span id="footer-created"></span>
+      <span id="footer-updated"></span>
+    </div>
 </div>
 
 <!-- Map style toggle -->
@@ -458,6 +485,8 @@
   // ── Apply agency config ──
   document.title = agency.name + ' — What\'s the Walkshed?';
   document.getElementById('sidebar-title').textContent = agency.name;
+  if (agency.createdBy) document.getElementById('footer-created').textContent = 'Created by ' + agency.createdBy;
+  if (agency.lastUpdated) document.getElementById('footer-updated').textContent = 'Last updated ' + agency.lastUpdated;
   document.documentElement.style.setProperty('--sidebar-font', agency.font); 
   document.documentElement.style.setProperty('--sidebar-bg', agency.sidebarColor);
   document.documentElement.style.setProperty('--btn-primary-bg', agency.buttonColor);
