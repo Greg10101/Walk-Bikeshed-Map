@@ -1,6 +1,8 @@
 const AGENCIES = {
 
   wmata: {
+    createdBy: 'Greg Thivierge, Emma Knisley', //Optional: Add author(s) of the map here to give them credit in the footer
+    lastUpdated: 'April 2026', // Optional but please include to give map users a sense of how current the data is
     name: "WMATA Rail Station Walksheds",
     mapCenter: [38.905, -77.036],
     mapZoom: 12,
@@ -22,6 +24,8 @@ const AGENCIES = {
   },
 
   rtd: {
+    createdBy: 'Greg Thivierge, Emma Knisely', //Optional: Add author(s) of the map here to give them credit in the footer
+    lastUpdated: 'April 2026', // Optional but please include to give map users a sense of how current the data is
     name: "RTD Denver Rail Walksheds",
     mapCenter: [39.7392, -104.9903],
     mapZoom: 11,
