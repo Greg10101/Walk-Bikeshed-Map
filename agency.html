@@ -140,6 +140,19 @@
       header.site-header nav a:last-child { border-bottom: none; }
     }
 
+    /* ── Walkshed tooltip ── */
+    .walkshed-tooltip {
+      background: rgba(0,0,0,0.75);
+      border: none;
+      border-radius: 4px;
+      color: #fff;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      padding: 4px 8px;
+      box-shadow: none;
+    }
+    .walkshed-tooltip::before { display: none; }
+
     /* ── Floating sidebar ── */
     #sidebar {
       position: absolute; top: 76px; left: 16px; z-index: 1000;
@@ -1034,9 +1047,15 @@
       })
     };
     if (!filtered.features.length) return;
-    const geojsonLayer = L.geoJSON(filtered, {
-      style: f => ({ color: colorForMinutes(f.properties.minutes), weight: 1, fillOpacity: 0.25 })
-    }).addTo(walkshedLayer);
+      const geojsonLayer = L.geoJSON(filtered, {
+        style: f => ({ color: colorForMinutes(f.properties.minutes), weight: 1, fillOpacity: 0.25 }),
+        onEachFeature: (feature, layer) => {
+          layer.bindTooltip(`${feature.properties.minutes} min walk`, {
+            sticky: true,
+            className: 'walkshed-tooltip'
+          });
+        }
+      }).addTo(walkshedLayer);
     if (shouldFit) map.fitBounds(geojsonLayer.getBounds().pad(0.15));
   }
 
