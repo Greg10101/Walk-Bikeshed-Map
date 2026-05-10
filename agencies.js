@@ -37,8 +37,17 @@ const AGENCIES = {
     hasLinesToggle: false,
     markerStyle: "dumbbell",
     lines: {
-      // Add RTD line codes, colors, and abbreviations here
-      // e.g. w: { color: "#FFD700", abbr: "W" },
+      A: { color: "#54C0E8", abbr: "A" },  
+      B: { color: "#4C9C2E", abbr: "B" },  
+      D: { color: "#047835", abbr: "D" },
+      E: { color: "#691F74", abbr: "E" },
+      FF: { color: "#003595", abbr: "FF" },  
+      G: { color: "#F4B223", abbr: "G" },  
+      H: { color: "#0055B8", abbr: "H" },
+      L: { color: "#FFCD00", abbr: "L" },
+      N: { color: "#904199", abbr: "N" },  
+      R: { color: "#C1D32F", abbr: "R" },
+      W: { color: "#0091B3", abbr: "W" },  
     }
   },
 
