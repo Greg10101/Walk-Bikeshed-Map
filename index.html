@@ -449,13 +449,17 @@
     // ============================================================
 
 
-    // EDIT: Map starting position [lat, lng] and zoom level
+    // Map starting position [lat, lng] and zoom level
     const map = L.map('map', { center: [42, -97], zoom: 4, scrollWheelZoom: true });
 
-    // EDIT: Map tile style — current: light/minimal CartoDB
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-      attribution: '© <a href="https://carto.com/">CARTO</a> © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-      subdomains: 'abcd', maxZoom: 14,
+    // Map tile style — current: ESRI Light Gray
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+      attribution: 'Tiles &copy; Esri &mdash; Esri, HERE, Garmin, OpenStreetMap contributors',
+      maxZoom: 16,
+    }).addTo(map);
+    // ESRI Lables
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}', {
+    maxZoom: 16,
     }).addTo(map);
 
 
